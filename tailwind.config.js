@@ -7,6 +7,9 @@ module.exports = {
         pinkCustom: '#FF70DB',
         blueCustom: '#0037FF',
       },
+      fontFamily: {
+        crimson: ['Crimson Text', 'serif'],
+      },
     },
   },
   plugins: [],

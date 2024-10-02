@@ -1,6 +1,10 @@
 <section class="w-full bg-gradient-to-b from-pinkCustom to-blueCustom h-screen flex flex-col justify-center items-center">
     <div class="w-[31.25rem] h-[27.5rem]">
-        <app-card-l>
+        <app-card-l [content]="pruebacontent">
         </app-card-l>
     </div>    
 </section>
+
+<ng-template #pruebacontent>
+    <app-input type="email" [icon]="'user'" [placeholder]="'Escriba el usuario'" ></app-input>
+</ng-template>

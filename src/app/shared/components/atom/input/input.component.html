@@ -1,0 +1,9 @@
+<section class="w-full flex flex-col justify-start gap-2]">
+    <label *ngIf="label != null">{{label}}</label>
+    <div class="w-full h-[2.875rem] flex flex-row bg-white bg-opacity-50 rounded-[1.25rem] px-4 py-3 gap-5">
+        <app-icon *ngIf="icon != null" [name]="icon"></app-icon>
+        <input class="w-full outline-none bg-transparent placeholder:font-crimson text-white font-medium placeholder:text-lg placeholder:text-white placeholder:opacity-70" 
+               [type]="type" 
+               [placeholder]="placeholder">
+    </div>
+</section>
