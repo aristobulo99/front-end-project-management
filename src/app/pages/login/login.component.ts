@@ -3,6 +3,7 @@ import { CardLComponent } from '../../shared/components/atom/card-l/card-l.compo
 import { LoginFormComponent } from '../../shared/components/organisms/login-form/login-form.component';
 import { Router } from '@angular/router';
 import { LoadingService } from '../../core/services/loading/loading.service';
+import { ToastService } from '../../core/services/toastr/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,8 @@ import { LoadingService } from '../../core/services/loading/loading.service';
 export class LoginComponent {
   constructor(
     private router: Router,
-    private loading: LoadingService
+    private loading: LoadingService,
+    private toastService: ToastService,
   ){}
 
   goToRegisterUser(){
