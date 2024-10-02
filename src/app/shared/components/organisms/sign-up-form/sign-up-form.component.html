@@ -1,0 +1,31 @@
+<section class="w-full flex flex-col items-center gap-[1.875rem] p-[2.625rem]">
+    <h1 class="font-crimson font-extrabold text-white text-5xl leading-[3.875rem]">Sign up</h1>
+
+    <form class="w-full flex flex-col items-center gap-[1.875rem]">
+        <div class="w-full flex flex-col justify-start gap-[1.438rem]">
+            <app-input [type]="'text'" 
+                       [icon]="'user'" 
+                       [placeholder]="'Escriba el nombre completo'">
+            </app-input>
+
+            <app-input [type]="'email'" 
+                       [icon]="'mail'" 
+                       [placeholder]="'Escriba el correo electronico'">
+            </app-input>
+
+            <app-input [type]="'password'" 
+                       [icon]="'lock'" 
+                       [placeholder]="'Escriba la contraseña'">
+            </app-input>
+
+            <app-input [type]="'password'" 
+                       [icon]="'lock'" 
+                       [placeholder]="'Escriba la confirmacion de la contraseña'">
+            </app-input>
+        </div>
+
+        <app-button class="w-full" [name]="'Registrar'"></app-button>
+    </form>
+
+</section>
+

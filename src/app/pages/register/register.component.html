@@ -1,0 +1,13 @@
+<section class="w-full bg-gradient-to-b from-pinkCustom to-blueCustom h-screen flex flex-col justify-center items-center">
+    <section class="w-[31.25rem] h-[30.375rem]">
+        <app-card-l [content]="signUpForm"></app-card-l>
+    </section> 
+
+    <p class="absolute top-[95%] w-full flex flex-row justify-center font-crimson font-medium text-base text-white leading-[1.313rem] gap-1">
+        <span class="opacity-40">¿Ya eres miembro? </span> <span class="hover:underline cursor-pointer" (click)="goToLogin()">Iniciar sesión</span>
+    </p>
+</section>
+
+<ng-template #signUpForm>
+    <app-sign-up-form></app-sign-up-form>
+</ng-template>
