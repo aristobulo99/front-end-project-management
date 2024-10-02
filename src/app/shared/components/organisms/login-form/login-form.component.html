@@ -1,0 +1,27 @@
+<section class="w-full flex flex-col items-center gap-[4.125rem] p-[2.625rem]">
+    <h1 class="font-crimson font-extrabold text-white text-5xl leading-[3.875rem]">Login</h1>
+
+    <form class="w-full flex flex-col items-center gap-[0.938rem]">
+        <div class="w-full flex flex-col justify-start gap-[1.438rem]">
+            <app-input [type]="'email'" 
+                       [icon]="'user'" 
+                       [placeholder]="'Escriba el correo'">
+            </app-input>
+
+            <app-input [type]="'password'" 
+                       [icon]="'lock'" 
+                       [placeholder]="'Escriba la contraseña'">
+            </app-input>
+        </div>
+
+        <div class="w-full flex flex-col justify-center gap-[1.375rem]">
+            <div class="w-full flex flex-col items-end">
+                <p class="font-crimson font-medium text-white text-base cursor-pointer hover:underline">¿Has olvidado tu contraseña?</p>
+            </div>
+
+            <app-button [name]="'Iniciar sesión'"></app-button>
+
+        </div>
+    </form>
+
+</section>
