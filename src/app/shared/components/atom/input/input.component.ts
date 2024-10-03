@@ -29,10 +29,4 @@ export class InputComponent {
       'border-2 ': !this.valid,
     }
   }
-
-  get styleInput(){
-    console.log(this.valid)
-    let colorPlaceholder = this.valid ? 'placeholder:text-white' : 'placeholder:text-red-700'
-    return colorPlaceholder
-  }
 }
