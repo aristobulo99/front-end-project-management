@@ -1,10 +1,13 @@
 <section class="w-full flex flex-col justify-start gap-2]">
     <label *ngIf="label != null">{{label}}</label>
-    <div class="w-full h-[2.875rem] flex flex-row bg-white bg-opacity-50 rounded-[1.25rem] px-4 py-3 gap-5">
-        <app-icon *ngIf="icon != null" [name]="icon"></app-icon>
-        <input class="w-full outline-none bg-transparent placeholder:font-crimson text-white font-medium placeholder:text-lg placeholder:text-white placeholder:opacity-70" 
+    <div class="w-full h-[2.875rem] flex flex-row bg-white bg-opacity-50 rounded-[1.25rem] px-4 py-3 gap-5 border-red-700" 
+         [ngClass]="styleDivInput">
+        <app-icon *ngIf="icon != null" [name]="icon" [valid]="valid"></app-icon>
+        <input class="w-full outline-none bg-transparent text-white font-bold placeholder:font-crimson placeholder:font-medium placeholder:text-lg" 
+               [ngClass]="{'placeholder:text-white placeholder:opacity-70':valid, ' placeholder:text-red-700': !valid}"
                [type]="type" 
                [placeholder]="placeholder" 
-               autocomplete="off">
+               autocomplete="new-password" 
+               [formControl]="control">
     </div>
 </section>

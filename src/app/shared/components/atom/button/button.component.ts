@@ -1,14 +1,23 @@
+import { NgClass } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-button',
   standalone: true,
-  imports: [],
+  imports: [NgClass],
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss'
 })
 export class ButtonComponent {
 
-  @Input() name!: string
+  @Input() name!: string;
+  @Input() valid: boolean = true;
+
+  get styleButton(){
+    return {
+      'hover:bg-opacity-70 opacity-100': this.valid,
+      'opacity-40': !this.valid
+    }
+  }
 
 }

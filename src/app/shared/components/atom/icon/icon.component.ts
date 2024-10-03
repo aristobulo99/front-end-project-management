@@ -11,5 +11,6 @@ import { Component, Input } from '@angular/core';
 export class IconComponent {
 
   @Input() name!: string;
+  @Input() valid: boolean = true;
 
 }
