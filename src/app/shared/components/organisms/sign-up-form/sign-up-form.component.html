@@ -1,27 +1,28 @@
 <section class="w-full flex flex-col items-center gap-[1.875rem] p-[2.625rem]">
     <h1 class="font-crimson font-extrabold text-white text-5xl leading-[3.875rem]">Sign up</h1>
 
-    <form class="w-full flex flex-col items-center gap-[1.875rem]">
+    <form class="w-full flex flex-col items-center gap-[1.875rem]" [formGroup]="formsSignUp">
         <div class="w-full flex flex-col justify-start gap-[1.438rem]">
-            <app-input [type]="'text'" 
-                       [icon]="'user'" 
-                       [placeholder]="'Escriba el nombre completo'">
-            </app-input>
+            @for (formInput of formsInputs; track $index) {
+                <div class="w-full flex flex-col justify-start gap-1">
+                    <app-input  [type]="formInput.type" 
+                       [icon]="formInput.icon" 
+                       [placeholder]="formInput.placeholder" 
+                       [control]="formsSignUp.controls[''+formInput.formInfo?.formName] | formControl" 
+                       [valid]="fieldValidation(''+formInput.formInfo?.formName)">
+                    </app-input>
+                    @if (fieldHasError(''+formInput.formInfo?.formName, 'required')) {
+                        <p class="font-crimson font-medium text-base text-red-700 ml-2">Campo obligatorio</p>
+                    }
+                    @if (fieldHasError(''+formInput.formInfo?.formName, 'email')) {
+                        <p class="font-crimson font-medium text-base text-red-700 ml-2">Correo no valido</p>
+                    }
+                </div>
+                
+            }
+            
 
-            <app-input [type]="'email'" 
-                       [icon]="'mail'" 
-                       [placeholder]="'Escriba el correo electronico'">
-            </app-input>
-
-            <app-input [type]="'password'" 
-                       [icon]="'lock'" 
-                       [placeholder]="'Escriba la contraseña'">
-            </app-input>
-
-            <app-input [type]="'password'" 
-                       [icon]="'lock'" 
-                       [placeholder]="'Escriba la confirmacion de la contraseña'">
-            </app-input>
+            
         </div>
 
         <app-button class="w-full" [name]="'Registrar'"></app-button>
