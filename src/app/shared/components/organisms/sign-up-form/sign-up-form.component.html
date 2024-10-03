@@ -17,15 +17,10 @@
                     @if (fieldHasError(''+formInput.formInfo?.formName, 'email')) {
                         <p class="font-crimson font-medium text-base text-red-700 ml-2">Correo no valido</p>
                     }
-                </div>
-                
+                </div>   
             }
-            
-
-            
         </div>
-
-        <app-button class="w-full" [name]="'Registrar'"></app-button>
+        <app-button class="w-full" [name]="'Registrar'" [valid]="formsSignUp.valid"></app-button>
     </form>
 
 </section>
