@@ -33,23 +33,31 @@ export class RegisterComponent {
     try{
       const resp: UserCreate = await this.singUpService.postCreateUser(data);
       this.toastService.showSuccess(`Bienvenido, ${resp.name}.`, '¡Registro exitoso!');
-      this.loading.activeLoading = false;
       this.goToLogin();
     }catch(e:any){
       if (e instanceof HttpErrorResponse) {
-        switch(e.error){
-          case 'User already exists with email':
-            this.toastService.showInfo('Ya hay un usuario registrado con ese correo');
-            break;
-          case 'The email is not valid':
-            this.toastService.showInfo('El correo no es valido');
-            break;
-        }
-    } else {
+        this.handleHttpError(e.error);
+      } else {
         console.error('Error inesperado:', e);
+        this.toastService.showError('Ocurrió un error inesperado. Intenta nuevamente.');
+      }
+    }finally {
+      this.loading.activeLoading = false;
     }
+  }
+
+  private handleHttpError(error: string) {
+    switch (error) {
+      case 'User already exists with email':
+        this.toastService.showInfo('Ya hay un usuario registrado con ese correo');
+        break;
+      case 'The email is not valid':
+        this.toastService.showInfo('El correo no es válido');
+        break;
+      default:
+        this.toastService.showError('Ocurrió un error inesperado.');
+        break;
     }
-    this.loading.activeLoading = false;
   }
 
 }
