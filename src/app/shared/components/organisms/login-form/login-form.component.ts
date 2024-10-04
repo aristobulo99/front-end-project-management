@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { InputComponent } from '../../atom/input/input.component';
 import { ButtonComponent } from '../../atom/button/button.component';
 import { InputControl } from '../../../../core/interfaces/input.interface';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormControlPipe } from '../../../pipe/form-control/form-control.pipe';
+import { Login } from '../../../../core/interfaces/login.interdace';
 
 @Component({
   selector: 'app-login-form',
@@ -19,6 +20,8 @@ import { FormControlPipe } from '../../../pipe/form-control/form-control.pipe';
   styleUrl: './login-form.component.scss'
 })
 export class LoginFormComponent implements OnInit {
+
+  @Output() loginEvent: EventEmitter<Login> = new EventEmitter();
 
   public formsInputs: InputControl[] = [
     {
@@ -66,6 +69,14 @@ export class LoginFormComponent implements OnInit {
 
   fieldHasError(field: string, errorCode: string): boolean {
     return (this.formLogin.get(field)?.touched &&  this.formLogin.get(field)?.hasError(errorCode)) as boolean
+  }
+
+  loginUser(){
+    const dataLogin: Login = {
+      email: this.formLogin.get('email')?.value,
+      password: this.formLogin.get('password')?.value
+    }
+    this.loginEvent.emit(dataLogin);
   }
 
 }
