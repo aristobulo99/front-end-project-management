@@ -3,6 +3,8 @@ import { RouterOutlet } from '@angular/router';
 import { NgxLoadingModule } from '@dchtools/ngx-loading-v18';
 import { LoadingService } from './core/services/loading/loading.service';
 import { ToastrModule } from 'ngx-toastr';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +12,7 @@ import { ToastrModule } from 'ngx-toastr';
   imports: [
     RouterOutlet, 
     NgxLoadingModule,
-    ToastrModule
+    ToastrModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

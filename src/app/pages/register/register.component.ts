@@ -2,6 +2,11 @@ import { Component } from '@angular/core';
 import { CardLComponent } from '../../shared/components/atom/card-l/card-l.component';
 import { SignUpFormComponent } from '../../shared/components/organisms/sign-up-form/sign-up-form.component';
 import { Router } from '@angular/router';
+import { SignUpService } from '../../core/services/sign-up/sign-up.service';
+import { User } from '../../core/interfaces/user.interface';
+import { LoadingService } from '../../core/services/loading/loading.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ToastService } from '../../core/services/toastr/toast.service';
 
 @Component({
   selector: 'app-register',
@@ -13,11 +18,33 @@ import { Router } from '@angular/router';
 export class RegisterComponent {
 
   constructor(
-    private router: Router
+    private router: Router,
+    private loading: LoadingService,
+    private singUpService: SignUpService,
+    private toastService: ToastService
   ){}
 
   goToLogin(){
     this.router.navigate(['/login']);
+  }
+
+  async createUserData(data: User) {
+    this.loading.activeLoading = true;
+    try{
+      await this.singUpService.postCreateUser(data);
+    }catch(e:any){
+      console.error(e);
+      if (e instanceof HttpErrorResponse) {
+        switch(e.error){
+          case 'User already exists with email':
+            this.toastService.showInfo('Ya hay un usuario registrado con ese correo');
+            break;
+        }
+    } else {
+        console.error('Error inesperado:', e);
+    }
+    }
+    this.loading.activeLoading = false;
   }
 
 }
