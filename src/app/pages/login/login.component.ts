@@ -37,8 +37,10 @@ export class LoginComponent {
     this.loading.activeLoading = true;
     try{
       const loginResponse: LoginResponse = await this.authService.login(data);
-      this.authService.loginResponse = loginResponse;
+      localStorage.setItem('access-token', loginResponse.token);
+      this.authService.startTokenRefreshTimer();
       this.toastService.showSuccess('¡Bienvenido!');
+      this.router.navigate(['/home'])
     }catch(e: any){
       if(e instanceof HttpErrorResponse){
         this.handleHttpError(e.error);
