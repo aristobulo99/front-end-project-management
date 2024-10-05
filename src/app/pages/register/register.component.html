@@ -9,5 +9,5 @@
 </section>
 
 <ng-template #signUpForm>
-    <app-sign-up-form></app-sign-up-form>
+    <app-sign-up-form (userData)="createUserData($event)"></app-sign-up-form>
 </ng-template>

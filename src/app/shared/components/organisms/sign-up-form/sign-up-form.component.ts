@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { InputComponent } from '../../atom/input/input.component';
 import { ButtonComponent } from '../../atom/button/button.component';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputControl } from '../../../../core/interfaces/input.interface';
 import { FormControlPipe } from '../../../pipe/form-control/form-control.pipe';
+import { User } from '../../../../core/interfaces/user.interface';
+import { ToastService } from '../../../../core/services/toastr/toast.service';
 
 @Component({
   selector: 'app-sign-up-form',
@@ -13,12 +15,14 @@ import { FormControlPipe } from '../../../pipe/form-control/form-control.pipe';
     ButtonComponent,
     FormsModule,
     ReactiveFormsModule,
-    FormControlPipe
+    FormControlPipe,
   ],
   templateUrl: './sign-up-form.component.html',
   styleUrl: './sign-up-form.component.scss'
 })
 export class SignUpFormComponent implements OnInit {
+
+  @Output() userData: EventEmitter<User> = new EventEmitter();
 
   public formsInputs: InputControl[] = [
     {
@@ -61,7 +65,10 @@ export class SignUpFormComponent implements OnInit {
   ];
   public formsSignUp: FormGroup = new FormGroup({});
 
-  constructor(private fb: FormBuilder) { }
+  constructor(
+    private fb: FormBuilder,
+    private toastService: ToastService
+  ) { }
 
   ngOnInit(): void {
     this.initFormsSigbUp()
@@ -85,5 +92,25 @@ export class SignUpFormComponent implements OnInit {
   fieldHasError(field: string, errorCode: string): boolean {
     return (this.formsSignUp.get(field)?.touched &&  this.formsSignUp.get(field)?.hasError(errorCode)) as boolean
   }
+
+   createUser(){
+    if(!this.validatePasswordEquality()){
+      this.toastService.showInfo('Las contraseñas son diferentes', 'Advertencia')
+      return
+    }
+    const data: User = {
+      name: this.formsSignUp.get('name')?.value,
+      email: this.formsSignUp.get('email')?.value,
+      password: this.formsSignUp.get('password')?.value
+    };
+    this.userData.emit(data);
+   }
+
+   validatePasswordEquality(){
+    const password = this.formsSignUp.get('password')?.value;
+    const confirmPassword = this.formsSignUp.get('confirmPassword')?.value;
+
+    return password === confirmPassword;
+   }
 
 }

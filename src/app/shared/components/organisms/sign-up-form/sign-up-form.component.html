@@ -20,7 +20,7 @@
                 </div>   
             }
         </div>
-        <app-button class="w-full" [name]="'Registrar'" [valid]="formsSignUp.valid"></app-button>
+        <app-button class="w-full" [name]="'Registrar'" [valid]="formsSignUp.valid" (selectButton)="createUser()"></app-button>
     </form>
 
 </section>
