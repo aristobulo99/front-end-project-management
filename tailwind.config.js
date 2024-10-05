@@ -6,6 +6,7 @@ module.exports = {
       colors: {
         pinkCustom: '#FF70DB',
         blueCustom: '#0037FF',
+        yellowCustom: '#EEBD11',
       },
       fontFamily: {
         crimson: ['Crimson Text', 'serif'],

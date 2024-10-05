@@ -1,0 +1,20 @@
+<section class="flex flex-row items-center w-full h-[4rem] px-3 bg-gradient-to-r from-pinkCustom to-blueCustom">
+    <div class="w-full flex flex-row justify-between items-center">
+
+        <div class="flex flex-row gap-3">
+            <div class="w-[2.25rem] h-[2.25rem] flex flex-col justify-center items-center hover:bg-pink-500">
+                <app-icon class="w-[1.5rem] h-[1.5rem]" [name]="'menu'"></app-icon>
+            </div>
+
+            <div class="flex flex-row gap-1 items-center">
+                <app-icon class="w-[1.5rem] h-[1.5rem]" [name]="'landscape'"></app-icon>
+
+                <h1 class="font-crimson font-extrabold text-white text-xl leading-6">AgilePro</h1>
+            </div>
+
+        </div>
+
+        <app-profile-icon [nameUser]="userData ? userData.name : undefined"></app-profile-icon>
+    </div>
+
+</section>

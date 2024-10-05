@@ -58,6 +58,11 @@ export class AuthService {
     this.router.navigate(['/login'])
   }
 
+  isAuthenticated(): boolean {
+    const token = localStorage.getItem('access-token');
+    return !!token;
+  }
+
   private startInactivityWatch() {
     window.addEventListener('click', () => this.resetInactivityTimeout());
     window.addEventListener('keydown', () => this.resetInactivityTimeout());
