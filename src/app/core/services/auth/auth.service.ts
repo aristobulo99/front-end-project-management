@@ -68,13 +68,7 @@ export class AuthService {
 
   private resetInactivityTimeout() {
     clearTimeout(this.inactivityTimeout);
-    const date = new Date();
     this.inactivityTimeout = setTimeout(() => {
-      const nowDate  = new Date();
-      const differenceInMillis = nowDate.getTime() - date.getTime();
-      const differenceInMinutes = Math.floor(differenceInMillis / 60000);
-
-      console.log('A los ' + differenceInMinutes + ' Cerro sesion automaticamnete');
       this.logout();
       this.toasService.showInfo('Sesión cerrada por inactividad.')
     }, this.INACTIVITY_LIMIT);
