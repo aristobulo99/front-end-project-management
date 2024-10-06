@@ -1,0 +1,16 @@
+<nav class="w-[17.813rem] h-full border-r-2 shadow-2xl">
+    <ul class="flex flex-col w-full h-full justify-start items-start pt-[1.5rem] overflow-y-auto gap-[0.25rem] divide-y divide-slate-700 divide-opacity-25">
+        @for (route of routes; track $index) {
+            <li class="flex flex-row justify-start items-center w-full h-[2rem] gap-2 pl-[0.875rem] cursor-pointer bg-white" 
+                (click)="selectRoute($index)"
+                [routerLink]="[route.route.path]"
+                [ngClass]="styleLi(route.select)">
+                <app-icon [name]="route.icon" [select]="route.select"></app-icon>
+                <p class="font-crimson font-extrabold text-sm" 
+                   [ngClass]="styleText(route.select)">{{route.pathName}}</p>
+            </li>
+        }
+        
+    </ul>
+
+</nav>

@@ -1,3 +1,7 @@
-<p>home works!</p>
+<section class="w-full h-[90.5vh] flex flex-row">
+    <app-sidebar></app-sidebar>
+    
+    <app-button class="w-96" [name]="'Cerrar sesion'" (selectButton)="logout()"></app-button>
+    <router-outlet></router-outlet>
+</section>
 
-<app-button class="w-96" [name]="'Cerrar sesion'" (selectButton)="logout()"></app-button>

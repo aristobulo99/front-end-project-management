@@ -1,7 +1,12 @@
 <ng-container *ngIf="name != null">
-    @if (valid) {
+    @if (valid && !select) {
         <img [src]="'/assets/icons/'+name+'/'+name+'.svg'">
-    }@else {
+    }
+    @if (!valid && !select) {
         <img [src]="'/assets/icons/'+name+'/'+name+'-error.svg'">
+    }
+
+    @if (valid && select) {
+        <img [src]="'/assets/icons/'+name+'/'+name+'-select.svg'">
     }
 </ng-container>
