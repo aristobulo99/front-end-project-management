@@ -30,7 +30,7 @@ export class SidebarComponent implements OnInit {
 
   styleLi(select: boolean){
     return {
-      'rounded-r-xl bg-gradient-to-r bg-opacity-80 from-pinkCustom to-blueCustom': select,
+      'rounded-r-lg bg-gradient-to-r bg-opacity-80 from-pinkCustom to-blueCustom': select,
       'bg-white': !select
     }
   }
