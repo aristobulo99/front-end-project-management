@@ -13,6 +13,9 @@
                     @for (project of item.project; track $index) {
                         <app-card-project [featured]="project.outstanding"></app-card-project>
                     }
+                    @if (item.title == 'TUS PROYECTOS') {
+                        <app-card-project [fieldCreation]="true"></app-card-project>
+                    }
                 </div>
             </section>
         }
