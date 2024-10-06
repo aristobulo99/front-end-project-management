@@ -3,6 +3,7 @@ import { IconComponent } from '../../atom/icon/icon.component';
 import { ProfileIconComponent } from '../../atom/profile-icon/profile-icon.component';
 import { UserService } from '../../../../core/services/user/user.service';
 import { UserCreate } from '../../../../core/interfaces/user.interface';
+import { HeaderService } from '../../../../core/services/header/header.service';
 
 @Component({
   selector: 'app-header',
@@ -19,7 +20,8 @@ export class HeaderComponent implements OnInit{
   public userData: UserCreate | undefined = undefined;
 
   constructor(
-    private userService: UserService
+    private userService: UserService,
+    private headerService: HeaderService
   ){}
 
   ngOnInit(): void {
@@ -28,6 +30,10 @@ export class HeaderComponent implements OnInit{
 
   async getUserData(){
     this.userData = await this.userService.getUser();
+  }
+
+  selectMenu(){
+    this.headerService.sidebarDeployment = !this.headerService.sidebarDeployment; 
   }
 
 
