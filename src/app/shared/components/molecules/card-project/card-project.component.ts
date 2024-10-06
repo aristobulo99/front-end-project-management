@@ -19,8 +19,8 @@ export class CardProjectComponent {
 
   get styleSection(){
     return {
-      'justify-between border-[0.063rem] ': !this.fieldCreation,
-      'justify-center items-center border-dashed border-2 ': this.fieldCreation
+      'justify-between border-[0.063rem] bg-black bg-opacity-[18%] ': !this.fieldCreation,
+      'justify-center items-center border-dashed border-2 bg-white ': this.fieldCreation
     }
   }
 
