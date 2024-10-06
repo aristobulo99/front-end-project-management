@@ -13,5 +13,6 @@ export class IconComponent {
   @Input() name!: string;
   @Input() valid: boolean = true;
   @Input() select: boolean = false;
+  @Input() opacity: boolean = false;
 
 }
