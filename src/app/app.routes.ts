@@ -19,9 +19,13 @@ export const routes: Routes = [
     },
     {
         path: 'home',
-        component: HomeComponent,
+        loadChildren: () => import('./pages/home/home.routes').then(m => m.HomeRoutignModule),
         canActivate: [AuthGuard]
     },
+    { 
+        path: '', 
+        redirectTo: '/home', 
+        pathMatch: 'full' },
     {
         path:'**',
         redirectTo: '/login'
