@@ -18,10 +18,17 @@ export class CardProjectComponent {
   @Input() featured: boolean = false;
   @Input() fieldCreation: boolean = false;
   @Output() featureEvent: EventEmitter<boolean> = new EventEmitter();
+  @Output() selectCard: EventEmitter<void> = new EventEmitter();
 
 
   selectStar(){
     this.featureEvent.emit(!this.featured);
   }
+
+  selectSectionCard(){
+    this.selectCard.emit();
+  }
+
+  
 
 }

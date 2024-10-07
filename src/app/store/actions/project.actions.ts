@@ -32,6 +32,19 @@ la acción es un mensaje que comunica a los reducers o efectos para que ejecuten
         props<{ project: PatchProject }>()
     );
 
+//Solicitud para actualizar los proyectos frecuentes en el localStorage
+    // Esta acción se despacha cuando se seleccione un proyecto
+    export const postFrequentProject = createAction(
+        "[Project] Post Frequent Project",
+        props<{ projectId: string }>()
+    );
+
+    // Esta acción se despacha cuando se obtiene la lista de ids de los proyetos recientes
+    export const postFrequentProjectSuccess = createAction(
+        "[Project] Post Frequent Project Success",
+        props<{ projectIds: string[] }>()
+    );
+
 // Esta acción se despacha si ocurre un error durante la solicitud
 export const getProjectsFailure = createAction(
     "[Projects] Get Projects Failure",

@@ -7,8 +7,8 @@ import { Observable, Subject, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../store/app.state';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
-import { getProjectsRequest, patchOutstandingProjectRequest } from '../../../../store/actions/project.actions';
-import { selectProjects, selectProjectsFeatured } from '../../../../store/selectors/project.selectors';
+import { getProjectsRequest, patchOutstandingProjectRequest, postFrequentProject, postFrequentProjectSuccess } from '../../../../store/actions/project.actions';
+import { selectPostFrequentProject, selectProjects, selectProjectsFeatured } from '../../../../store/selectors/project.selectors';
 import { LoadingService } from '../../../../core/services/loading/loading.service';
 
 @Component({
@@ -61,7 +61,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
   startTheStore(){
     this.loading.activeLoading = true;
+    console.log(localStorage.getItem('frequent-project')?.split(','))
     this.store.dispatch(getProjectsRequest());
+    this.store.dispatch(postFrequentProjectSuccess({projectIds: localStorage.getItem('frequent-project')?.split(',') || []}));
 
     this.store.select(selectProjectsFeatured)
       .pipe(takeUntil(this.unsubscribe$))
@@ -69,12 +71,19 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         this.listProjects[0].project = projectsValue;
       });
 
+    this.store.select(selectPostFrequentProject)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(projectsValue => {
+        this.listProjects[1].project = projectsValue;
+      });
+
     this.store.select(selectProjects)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(projectsValue => {
         this.listProjects[2].project = projectsValue;
       });
-      this.loading.activeLoading = false;
+
+    this.loading.activeLoading = false;
   }
 
   updateFeaturedStatus(feature: boolean, projectId: number){
@@ -83,8 +92,10 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       feature
     }
     this.store.dispatch(patchOutstandingProjectRequest({patchData}));
-    
+  }
 
+  selectProject(project: Project){
+    this.store.dispatch(postFrequentProject({projectId: `${project.id}`}));
   }
 
   

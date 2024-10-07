@@ -13,7 +13,8 @@
                     @for (project of item.project; track $index) {
                         <app-card-project [nameCard]="project.name" 
                                           [featured]="project.featureProject" 
-                                          (featureEvent)="updateFeaturedStatus($event, project.id)"></app-card-project>
+                                          (featureEvent)="updateFeaturedStatus($event, project.id)" 
+                                          (selectCard)="selectProject(project)"></app-card-project>
                     }
                     @if (item.title == 'TUS PROYECTOS') {
                         <app-card-project [fieldCreation]="true"></app-card-project>

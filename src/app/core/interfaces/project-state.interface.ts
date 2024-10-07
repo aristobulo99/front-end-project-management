@@ -4,6 +4,7 @@ export interface ProjectState {
     projects: Project[],
     selectedProject?: Project,
     patchProject?: PatchProject,
+    frequentProjectIds?: string[]
     loading: boolean,
     error?: string,
     success?: boolean,

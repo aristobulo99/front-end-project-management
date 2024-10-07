@@ -3,9 +3,11 @@ import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { ProjectService } from "../../core/services/project/project.service";
 import { ToastService } from "../../core/services/toastr/toast.service";
 import { catchError, exhaustMap, map, of } from "rxjs";
-import { getProjectsFailure, getProjectsRequest, getProjectsSuccess, patchOutstandingProjectRequest, patchOutstandingProjectSuccess } from "../actions/project.actions";
+import { getProjectsFailure, getProjectsRequest, getProjectsSuccess, patchOutstandingProjectRequest, patchOutstandingProjectSuccess, postFrequentProject, postFrequentProjectSuccess } from "../actions/project.actions";
 import { LoadingService } from "../../core/services/loading/loading.service";
 import { HttpErrorResponse } from "@angular/common/http";
+import { tap } from 'rxjs/operators';
+import { Store } from "@ngrx/store";
 
 @Injectable()
 export class ProjectEffects {
@@ -14,7 +16,8 @@ export class ProjectEffects {
         private actions$: Actions,
         private projectService: ProjectService,
         private toastService: ToastService,
-        private loadingService: LoadingService
+        private loadingService: LoadingService,
+        private store: Store
     ){}
 
     
@@ -75,6 +78,25 @@ export class ProjectEffects {
                 )
             )
         )
-    )
+    );
+
+    postFrequentProject$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(postFrequentProject),
+            tap(({ projectId }) => {
+                const storedIds = localStorage.getItem('frequent-project') || '';
+                const projectIds = storedIds.split(',').filter(id => id !== '');
+
+                if (!projectIds.includes(projectId)) {
+                    projectIds.push(projectId);
+                }
+
+                localStorage.setItem('frequent-project', projectIds.join(','));
+
+                this.store.dispatch(postFrequentProjectSuccess({ projectIds }));
+            })
+        ),
+        { dispatch: false }
+    );
 
 }

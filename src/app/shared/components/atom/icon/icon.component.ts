@@ -16,7 +16,8 @@ export class IconComponent {
   @Input() opacity: boolean = false;
   @Output() clickEvent: EventEmitter<void> = new EventEmitter();
 
-  selectIcon(){
+  selectIcon(event: MouseEvent){
+    event.stopPropagation();
     this.clickEvent.emit();
   }
 

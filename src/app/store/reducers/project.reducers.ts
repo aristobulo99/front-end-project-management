@@ -1,12 +1,13 @@
 import { createReducer, on } from "@ngrx/store";
 import { ProjectState } from "../../core/interfaces/project-state.interface";
-import { getProjectsFailure, getProjectsRequest, getProjectsSuccess, patchOutstandingProjectRequest, patchOutstandingProjectSuccess } from "../actions/project.actions";
+import { getProjectsFailure, getProjectsRequest, getProjectsSuccess, patchOutstandingProjectRequest, patchOutstandingProjectSuccess, postFrequentProjectSuccess } from "../actions/project.actions";
 
 export const initialStateProject: ProjectState = {
     projects: [],
     loading: false,
     error: '',
-    status: "idle"
+    status: "idle",
+    frequentProjectIds: []
 }
 
 export const _projectsReducer = createReducer(
@@ -31,6 +32,13 @@ export const _projectsReducer = createReducer(
         ...state,
         patchProject: project,
         projects: state.projects.map((p) => p.id === project.project_id ? {...p, featureProject: project.feature_project } : p),
+        loading: true,
+        success: false,
+    })),
+    on(postFrequentProjectSuccess, (state, { projectIds }) => ({
+        ...state,
+        projects: state.projects,
+        frequentProjectIds: projectIds,
         loading: true,
         success: false,
     })),

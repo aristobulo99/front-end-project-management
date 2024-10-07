@@ -1,5 +1,5 @@
 <ng-container *ngIf="name != null">
-    <div class="w-full h-full" (click)="selectIcon()">
+    <div class="w-full h-full" (click)="selectIcon($event)">
         @if (valid && !select && !opacity) {
             <img [src]="'/assets/icons/'+name+'/'+name+'.svg'">
         }
