@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection, isDevMode } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -7,16 +7,22 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@a
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { AuthInterceptor } from './core/services/interceptor/auth-interceptor.service';
+import { provideStore } from '@ngrx/store';
+import { provideEffects } from '@ngrx/effects';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { ROOT_REDUCERS } from './store/app.state';
+import { ProjectEffects } from './store/effects/project.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }), 
+    provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideToastr(),
     provideAnimations(),
-    provideHttpClient(
-      withInterceptorsFromDi()
-    ),
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
-  ]
+    provideHttpClient(withInterceptorsFromDi()),
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    provideStore(ROOT_REDUCERS),
+    provideEffects(ProjectEffects),
+    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() })
+]
 };

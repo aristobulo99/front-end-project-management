@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IconComponent } from '../../atom/icon/icon.component';
 import { NgClass } from '@angular/common';
 
@@ -14,14 +14,14 @@ import { NgClass } from '@angular/common';
 })
 export class CardProjectComponent {
 
+  @Input() nameCard: string | undefined = undefined;
   @Input() featured: boolean = false;
   @Input() fieldCreation: boolean = false;
+  @Output() featureEvent: EventEmitter<boolean> = new EventEmitter();
 
-  get styleSection(){
-    return {
-      'justify-between border-[0.063rem] bg-black bg-opacity-[18%] ': !this.fieldCreation,
-      'justify-center items-center border-dashed border-2 bg-white ': this.fieldCreation
-    }
+
+  selectStar(){
+    this.featureEvent.emit(!this.featured);
   }
 
 }
