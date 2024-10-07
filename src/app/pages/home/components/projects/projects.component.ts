@@ -73,7 +73,7 @@ export class ProjectsComponent implements OnInit {
       () => {
         this.startTheStore();
         this.loading.activeLoading = false;
-      }, 500
+      }, 700
     )
   }
 

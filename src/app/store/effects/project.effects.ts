@@ -28,7 +28,7 @@ export class ProjectEffects {
                         (error) => {
                             let errorMessage: string;
 
-                            switch (error.message) {
+                            switch (error.error) {
                                 case 'User not found':
                                     errorMessage = 'El usuario no fue encontrado.';
                                     break;
@@ -56,23 +56,17 @@ export class ProjectEffects {
                 (action) => this.projectService.patchProject(action.patchData.id, action.patchData.outstanding).pipe(
                     map(data => patchOutstandingProjectSuccess({project: data})),
                     catchError(
-                        (error) => {
+                        (e) => {
                             let errorMessage: string;
 
-                            if(error instanceof HttpErrorResponse){
-                                switch (error.message) {
-                                    case 'Project not found':
-                                        errorMessage = 'proyecto no encontrado';
-                                        break;
-                                    default:
-                                        errorMessage = 'Se produjo un error inesperado.';
-                                }
-                                this.toastService.showInfo(errorMessage);
-                            } else {
-                                console.error('Error inesperado:', error);
-                                errorMessage = 'Se produjo un error inesperado.';
-                                this.toastService.showError('Ocurrió un error inesperado. Intenta nuevamente.');
+                            switch (e.error) {
+                                case 'Project not found':
+                                    errorMessage = 'proyecto no encontrado';
+                                    break;
+                                default:
+                                    errorMessage = 'Se produjo un error inesperado.';
                             }
+                            this.toastService.showInfo(errorMessage);
                     
                             this.loadingService.activeLoading = false;
                             return of(getProjectsFailure({ error: errorMessage }));
