@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { PatchDataOutstanding, Project, ProjectCreate } from "../../core/interfaces/project.interface";
+import { PatchFeature, PatchProject, Project, ProjectCreate } from "../../core/interfaces/project.interface";
 
 /*
 la acción es un mensaje que comunica a los reducers o efectos para que ejecuten una operación. Cuando despachas una acción:
@@ -23,13 +23,13 @@ la acción es un mensaje que comunica a los reducers o efectos para que ejecuten
     // Accion para inicial la actualizacion del estado
     export const patchOutstandingProjectRequest = createAction(
         "[Project] Patch Outstanding project",
-        props<{ patchData: PatchDataOutstanding}>()
+        props<{ patchData: PatchFeature}>()
     );
 
     // Esta acción se despacha cuando el proyecto actualizado se obtienen correctamente
     export const patchOutstandingProjectSuccess = createAction(
         "[Project] Patch Outstanding project success",
-        props<{ project: ProjectCreate }>()
+        props<{ project: PatchProject }>()
     );
 
 // Esta acción se despacha si ocurre un error durante la solicitud

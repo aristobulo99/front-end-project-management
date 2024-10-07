@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CardProjectComponent } from '../../../../shared/components/molecules/card-project/card-project.component';
 import { IconComponent } from '../../../../shared/components/atom/icon/icon.component';
-import { PatchDataOutstanding, Project, SectionProject } from '../../../../core/interfaces/project.interface';
+import { PatchFeature, Project, SectionProject } from '../../../../core/interfaces/project.interface';
 import { mockProject } from '../../../../core/mocks/project.mock';
-import { Observable } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../store/app.state';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
@@ -24,28 +24,26 @@ import { LoadingService } from '../../../../core/services/loading/loading.servic
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.scss'
 })
-export class ProjectsComponent implements OnInit {
+export class ProjectsComponent implements OnInit, OnDestroy {
 
   public listProjects: SectionProject[] = [
     {
       icon: 'star',
       title: 'Proyectos destacados',
-      project: new Observable()
+      project: []
     },
     {
       icon: 'schedule',
       title: 'Vistos recientemente',
-      project: new Observable()
+      project: []
     },
     {
       title: 'TUS PROYECTOS',
-      project: new Observable()
+      project: []
     }
     
   ];
-  public projects: Observable<Project[]> = new Observable();
-  public projectsFeature: Observable<Project[]> = new Observable();
-  public projectsRecent: Observable<Project[]> = new Observable();
+  unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(
     private store: Store<AppState>,
@@ -56,25 +54,37 @@ export class ProjectsComponent implements OnInit {
     this.startTheStore();
   }
 
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   startTheStore(){
+    this.loading.activeLoading = true;
     this.store.dispatch(getProjectsRequest());
-    this.listProjects[0].project = this.store.select(selectProjectsFeatured);
-    this.listProjects[2].project = this.store.select(selectProjects);
+
+    this.store.select(selectProjectsFeatured)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(projectsValue => {
+        this.listProjects[0].project = projectsValue;
+      });
+
+    this.store.select(selectProjects)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(projectsValue => {
+        this.listProjects[2].project = projectsValue;
+      });
+      this.loading.activeLoading = false;
   }
 
   updateFeaturedStatus(feature: boolean, projectId: number){
-    this.loading.activeLoading = true;
-    const patchData: PatchDataOutstanding = {
+    const patchData: PatchFeature = {
       id: projectId,
-      outstanding: {outstanding: feature}
+      feature
     }
     this.store.dispatch(patchOutstandingProjectRequest({patchData}));
-    setTimeout(
-      () => {
-        this.startTheStore();
-        this.loading.activeLoading = false;
-      }, 700
-    )
+    
+
   }
 
   

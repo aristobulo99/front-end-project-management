@@ -30,6 +30,7 @@ export const _projectsReducer = createReducer(
     on(patchOutstandingProjectSuccess, (state, {project}) => ({
         ...state,
         patchProject: project,
+        projects: state.projects.map((p) => p.id === project.project_id ? {...p, featureProject: project.feature_project } : p),
         loading: true,
         success: false,
     })),

@@ -11,7 +11,7 @@ export const selectProjects = createSelector(
 
 export const selectProjectsFeatured = createSelector(
     selectProjectsState,
-    (state) => state.projects.filter(project => project.outstanding === true)
+    (state) => state.projects.filter(project => project.featureProject === true)
 );
 
 export const selectLoading = createSelector(
@@ -24,7 +24,7 @@ export const selectSuccess = createSelector(
     (state) => state.success
 );
 
-export const selectPatchProject = createSelector(
+export const selectPatchFeatureProject = createSelector(
     selectProjectsState,
     (state) => state.patchProject
 );

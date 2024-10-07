@@ -53,15 +53,15 @@ export class ProjectEffects {
         () => this.actions$.pipe(
             ofType(patchOutstandingProjectRequest),
             exhaustMap(
-                (action) => this.projectService.patchProject(action.patchData.id, action.patchData.outstanding).pipe(
+                (action) => this.projectService.patchFeatureProject(action.patchData.id, action.patchData.feature).pipe(
                     map(data => patchOutstandingProjectSuccess({project: data})),
                     catchError(
                         (e) => {
                             let errorMessage: string;
 
                             switch (e.error) {
-                                case 'Project not found':
-                                    errorMessage = 'proyecto no encontrado';
+                                case 'User not related to the project':
+                                    errorMessage = 'Usuario no relacionado con el proyecto';
                                     break;
                                 default:
                                     errorMessage = 'Se produjo un error inesperado.';

@@ -1,7 +1,7 @@
 <section class="w-[55.125rem] h-full flex flex-col gap-[1.375rem]">
     @for (item of listProjects; track $index) {
-        <section class="w-full h-auto flex flex-col items-start" *ngIf="(item.project | async) as itemProject">
-            @if (itemProject.length > 0) {
+        @if (item.project.length > 0) {
+            <section class="w-full h-auto flex flex-col items-start" *ngIf="(item.project)">
                 <div class="h-[1.875rem] flex flex-row justify-start items-center gap-[0.625rem]">
                     @if (item.icon) {
                         <app-icon class="w-6 h-6" [name]="item.icon" [opacity]="true"></app-icon>
@@ -10,17 +10,18 @@
                     <p class="font-crimson font-extrabold text-black text-base leading-[1.313rem]">{{item.title}}</p>
                 </div>
                 <div class="grid grid-cols-4 gap-3 ml-[2.125rem]">
-                    @for (project of (item.project | async); track $index) {
-                        <app-card-project [nameCard]="project.projectName" 
-                                          [featured]="project.outstanding" 
-                                          (featureEvent)="updateFeaturedStatus($event, project.projectId)"></app-card-project>
+                    @for (project of item.project; track $index) {
+                        <app-card-project [nameCard]="project.name" 
+                                          [featured]="project.featureProject" 
+                                          (featureEvent)="updateFeaturedStatus($event, project.id)"></app-card-project>
                     }
                     @if (item.title == 'TUS PROYECTOS') {
                         <app-card-project [fieldCreation]="true"></app-card-project>
                     }
                 </div>
-            }
-        </section>
+            </section>
+        }
+        
     }
     <br>
 </section>

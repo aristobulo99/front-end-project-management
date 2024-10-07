@@ -7,15 +7,14 @@ export function mockProject(iteration: number): Project[]{
     for(let i = 0; i < iteration; i++){
         project.push(
             {
-                userId: faker.number.int({ min: 1, max: 100 }),
-                userName: faker.person.fullName(),
-                projectId: faker.number.int({ min: 1, max: 100 }),
-                projectName: faker.company.name(),
-                projectDescription: faker.company.buzzPhrase(),
+                id: faker.number.int({ min: 1, max: 100 }),
+                name: faker.company.name(),
+                description: faker.company.buzzPhrase(),
                 startDate: faker.date.anytime(),
-                endDate: faker.date.anytime(),
-                roleProject: RoleProject.PROJECT_ADMIN,
-                outstanding: faker.datatype.boolean()
+                endingDate: faker.date.anytime(),
+                outstanding: faker.datatype.boolean(),
+                projectEnable: faker.datatype.boolean(),
+                featureProject: faker.datatype.boolean(),
             }
         )
     }

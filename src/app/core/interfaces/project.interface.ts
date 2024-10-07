@@ -16,26 +16,32 @@ export interface ProjectCreate {
 }
 
 export interface Project {
-    userId: number,
-    userName: string,
-    projectId: number,
-    projectName: string,
-    projectDescription: string,
+    id: number,
+    name: string,
+    description: string,
     startDate: Date,
-    endDate: Date,
-    roleProject: RoleProject,
-    outstanding: boolean
+    endingDate: Date,
+    outstanding: boolean,
+    projectEnable: boolean,
+    featureProject: boolean
 }
 
 export interface SectionProject {
     icon?: string,
     title: string,
-    project: Observable<Project[]>
+    project: Project[]
 }
 
-export interface Outstanding extends Omit<ProjectCreate, 'name' | 'description' | 'startDate' | 'endingDate'>{}
 
-export interface PatchDataOutstanding{
+export interface PatchFeature{
     id: number,
-    outstanding: Outstanding
+    feature: boolean
+}
+
+export interface PatchProject {
+    id: number,
+    project_id: number,
+    user_id: number,
+    roleProject: RoleProject,
+    feature_project: boolean
 }
