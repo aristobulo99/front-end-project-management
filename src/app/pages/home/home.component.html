@@ -1,10 +1,12 @@
 <section class="w-full h-[90.5vh] flex flex-row">
-    <app-sidebar class="relative transform transition-transform duration-300" [ngClass]="{
-        'translate-x-[0rem]': sidebarDeployment,
-        'translate-x-[-17.813rem]': !sidebarDeployment
-      }"></app-sidebar>
+    <app-sidebar class="relative transform transition-transform duration-150" 
+                 [ngClass]="{
+                    'translate-x-[0rem]': sidebarDeployment,
+                    'translate-x-[-17.813rem]': !sidebarDeployment}"></app-sidebar>
     
-    <app-button class="w-96" [name]="'Cerrar sesion'" (selectButton)="logout()"></app-button>
-    <router-outlet></router-outlet>
+    <!-- <app-button class="w-96" [name]="'Cerrar sesion'" (selectButton)="logout()"></app-button> -->
+     <section class="w-full h-full p-6 overflow-y-auto">
+       <router-outlet></router-outlet>
+     </section>
 </section>
 

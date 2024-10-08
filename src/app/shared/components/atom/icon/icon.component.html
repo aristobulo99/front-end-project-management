@@ -1,12 +1,19 @@
 <ng-container *ngIf="name != null">
-    @if (valid && !select) {
-        <img [src]="'/assets/icons/'+name+'/'+name+'.svg'">
-    }
-    @if (!valid && !select) {
-        <img [src]="'/assets/icons/'+name+'/'+name+'-error.svg'">
-    }
-
-    @if (valid && select) {
-        <img [src]="'/assets/icons/'+name+'/'+name+'-select.svg'">
-    }
+    <div class="w-full h-full" (click)="selectIcon($event)">
+        @if (valid && !select && !opacity) {
+            <img [src]="'/assets/icons/'+name+'/'+name+'.svg'">
+        }
+        @if (!valid && !select) {
+            <img [src]="'/assets/icons/'+name+'/'+name+'-error.svg'">
+        }
+    
+        @if (valid && select && !opacity) {
+            <img [src]="'/assets/icons/'+name+'/'+name+'-select.svg'">
+        }
+    
+        @if (valid && !select && opacity) {
+            <img [src]="'/assets/icons/'+name+'/'+name+'-opacity.svg'">
+        }
+    </div>
+    
 </ng-container>

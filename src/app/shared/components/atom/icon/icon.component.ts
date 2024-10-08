@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-icon',
@@ -13,5 +13,12 @@ export class IconComponent {
   @Input() name!: string;
   @Input() valid: boolean = true;
   @Input() select: boolean = false;
+  @Input() opacity: boolean = false;
+  @Output() clickEvent: EventEmitter<void> = new EventEmitter();
+
+  selectIcon(event: MouseEvent){
+    event.stopPropagation();
+    this.clickEvent.emit();
+  }
 
 }
