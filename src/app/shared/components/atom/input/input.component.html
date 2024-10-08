@@ -2,12 +2,24 @@
     <label *ngIf="label != null">{{label}}</label>
     <div class="w-full h-[2.875rem] flex flex-row bg-white bg-opacity-50 rounded-[1.25rem] px-4 py-3 gap-5 border-red-700" 
          [ngClass]="styleDivInput">
-        <app-icon *ngIf="icon != null" [name]="icon" [valid]="valid"></app-icon>
-        <input class="w-full outline-none bg-transparent text-white font-bold placeholder:font-crimson placeholder:font-medium placeholder:text-lg" 
-               [ngClass]="{'placeholder:text-white placeholder:opacity-70':valid, ' placeholder:text-red-700': !valid}"
-               [type]="type" 
-               [placeholder]="placeholder" 
-               autocomplete="new-password" 
-               [formControl]="control">
+         <app-icon *ngIf="icon != null" [name]="icon" [valid]="valid"></app-icon>
+         @if(datePiker){
+            <input class="w-full outline-none bg-transparent text-white font-bold placeholder:font-crimson placeholder:font-medium placeholder:text-lg" 
+                    [ngClass]="{'placeholder:text-white placeholder:opacity-70':valid, ' placeholder:text-red-700': !valid}"
+                    [type]="type" 
+                    [placeholder]="placeholder" 
+                    autocomplete="new-password" 
+                    [formControl]="control" 
+                    [matDatepicker]="datePiker">
+         }@else {
+            <input class="w-full outline-none bg-transparent text-white font-bold placeholder:font-crimson placeholder:font-medium placeholder:text-lg" 
+                    [ngClass]="{'placeholder:text-white placeholder:opacity-70':valid, ' placeholder:text-red-700': !valid}"
+                    [type]="type" 
+                    [placeholder]="placeholder" 
+                    autocomplete="new-password" 
+                    [formControl]="control">
+         }
+            
+        
     </div>
 </section>

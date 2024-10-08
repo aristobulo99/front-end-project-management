@@ -1,0 +1,13 @@
+
+<section class="w-full h-auto flex flex-row justify-end items-center">
+    <app-input class="w-full" 
+               (click)="picker.open()"
+               [type]="'text'"
+               [placeholder]="placeholder"
+               [control]="control" 
+               [datePiker]="picker"></app-input>
+    <mat-datepicker #picker></mat-datepicker>
+    <div class="w-6 h-6 absolute mr-4">
+        <app-icon [name]="'date'" (clickEvent)="picker.open()"></app-icon>
+    </div>
+</section>
