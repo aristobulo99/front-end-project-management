@@ -23,6 +23,7 @@ export class InputComponent {
   @Input() placeholder!: string | undefined;
   @Input() control: FormControl = new FormControl('');
   @Input() valid: boolean = true;
+  @Input() backgroundColor: 'light' | 'medio' = 'light'
 
   get styleDivInput(){
     return {
