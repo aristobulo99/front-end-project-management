@@ -10,6 +10,7 @@ import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { getProjectsRequest, patchOutstandingProjectRequest, postFrequentProject, postFrequentProjectSuccess } from '../../../../store/actions/project.actions';
 import { selectPostFrequentProject, selectProjects, selectProjectsFeatured } from '../../../../store/selectors/project.selectors';
 import { LoadingService } from '../../../../core/services/loading/loading.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-projects',
@@ -47,7 +48,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
   constructor(
     private store: Store<AppState>,
-    private loading: LoadingService
+    private loading: LoadingService,
+    private router: Router
   ){}
 
   ngOnInit(): void {
@@ -61,7 +63,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
   startTheStore(){
     this.loading.activeLoading = true;
-    console.log(localStorage.getItem('frequent-project')?.split(','))
     this.store.dispatch(getProjectsRequest());
     this.store.dispatch(postFrequentProjectSuccess({projectIds: localStorage.getItem('frequent-project')?.split(',') || []}));
 
@@ -96,6 +97,10 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
   selectProject(project: Project){
     this.store.dispatch(postFrequentProject({projectId: `${project.id}`}));
+  }
+
+  createProject(){
+    this.router.navigate(['/home/register-project'])
   }
 
   

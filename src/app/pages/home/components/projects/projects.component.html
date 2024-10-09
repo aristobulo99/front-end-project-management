@@ -17,7 +17,7 @@
                                           (selectCard)="selectProject(project)"></app-card-project>
                     }
                     @if (item.title == 'TUS PROYECTOS') {
-                        <app-card-project [fieldCreation]="true"></app-card-project>
+                        <app-card-project [fieldCreation]="true" (selectCard)="createProject()"></app-card-project>
                     }
                 </div>
             </section>

@@ -12,14 +12,8 @@ export class ButtonComponent {
 
   @Input() name!: string;
   @Input() valid: boolean = true;
+  @Input() color: 'blueCustom' | 'pinkCustom' = 'blueCustom'
   @Output() selectButton: EventEmitter<void> = new EventEmitter();
-
-  get styleButton(){
-    return {
-      'hover:bg-opacity-70 opacity-100': this.valid,
-      'opacity-40': !this.valid
-    }
-  }
 
   clickButton() {
     if(this.valid){

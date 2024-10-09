@@ -1,0 +1,49 @@
+<section class="w-full flex flex-col gap-[4.875rem]">
+    <form class="w-[25rem] grid grid-rows-3 grid-flow-col gap-6" [formGroup]="fgProject">
+        @for (item of formsInputs; track $index) {
+            <div class="w-[25rem] h-[3.5rem]">
+                <div class="w-full flex flex-col justify-start gap-1">
+                    @switch (item.type) {
+                        @case ('text') {
+                            @if (item.textAre) {
+                                <app-text-area class="h-[12.8rem]" [backgroundColor]="'medio'"
+                                               [valid]="!item.formInfo?.validatorRequered" 
+                                               [placeholder]="item.placeholder"
+                                               [control]="fgProject.controls[''+item.formInfo?.formName] | formControl"></app-text-area>
+                            }@else {
+                                <app-input [type]="item.type" 
+                                           [placeholder]="item.placeholder" 
+                                           [control]="fgProject.controls[''+item.formInfo?.formName] | formControl" 
+                                           [valid]="fieldValidation(''+item.formInfo?.formName)"
+                                           [backgroundColor]="'medio'"></app-input>
+                            }
+                            
+                        }
+                        @case ('date') {
+                            <app-input-date [placeholder]="''+item.placeholder" 
+                                            [backgroundColor]="'medio'"
+                                            [valid]="fieldValidation(''+item.formInfo?.formName)" 
+                                            [control]="fgProject.controls[''+item.formInfo?.formName] | formControl"></app-input-date>
+                        }
+                    }
+                    @if (fieldHasError(''+item.formInfo?.formName, 'required')) {
+                        <p class="font-crimson font-medium text-base text-red-700 ml-2">Campo obligatorio</p>
+                    }
+                </div>
+    
+            </div>
+        }
+    </form>
+    <div class="w-full flex flex-row justify-end items-center gap-5">
+        <app-button class="w-[10rem]" 
+                    [name]="'Cancelar'"
+                    [color]="'pinkCustom'" 
+                    (selectButton)="cancelProject()"></app-button>
+
+        <app-button class="w-[10rem]" 
+                    [name]="'Registrar'" 
+                    [valid]="fgProject.valid"
+                    (selectButton)="createProject()"></app-button>
+    </div>
+</section>
+

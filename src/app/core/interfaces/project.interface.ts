@@ -15,6 +15,10 @@ export interface ProjectCreate {
     outstanding: boolean
 }
 
+export interface ProjectCreateResponse extends ProjectCreate {
+    id: number
+}
+
 export interface Project {
     id: number,
     name: string,

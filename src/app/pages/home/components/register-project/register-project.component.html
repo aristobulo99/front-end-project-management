@@ -1,0 +1,13 @@
+<section class="w-full flex flex-col gap-6">
+    <div class="w-[14.875rem] h-[1.875rem] flex flex-row justify-start items-center gap-[0.625rem]">
+        <app-icon class="w-6 h-6 cursor-pointer" [name]="'arrow-back'" [opacity]="true" (clickEvent)="backProjects()"></app-icon>
+
+        <p class="font-crimson font-extrabold text-base text-black text-opacity-80 leading-6">Crear proyecto</p>
+    </div>
+
+    <div class="w-[54.75rem] pl-[2.125rem]">
+        <app-register-project-form (cancelEvent)="backProjects()" 
+                                   (createEvent)="createProject($event)"></app-register-project-form>
+    </div>
+
+</section>
