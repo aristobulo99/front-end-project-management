@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { CardProjectComponent } from '../../../../shared/components/molecules/card-project/card-project.component';
 import { IconComponent } from '../../../../shared/components/atom/icon/icon.component';
 import { PatchFeature, Project, SectionProject } from '../../../../core/interfaces/project.interface';
@@ -11,6 +11,8 @@ import { getProjectsRequest, patchOutstandingProjectRequest, postFrequentProject
 import { selectPostFrequentProject, selectProjects, selectProjectsFeatured } from '../../../../store/selectors/project.selectors';
 import { LoadingService } from '../../../../core/services/loading/loading.service';
 import { Router } from '@angular/router';
+import { DialogService } from '../../../../core/services/dialog/dialog.service';
+import { RegisterProjectFormComponent } from '../../../../shared/components/organisms/register-project-form/register-project-form.component';
 
 @Component({
   selector: 'app-projects',
@@ -20,12 +22,15 @@ import { Router } from '@angular/router';
     IconComponent,
     NgFor,
     NgIf,
-    AsyncPipe
+    AsyncPipe,
+    RegisterProjectFormComponent
   ],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.scss'
 })
-export class ProjectsComponent implements OnInit, OnDestroy {
+export class ProjectsComponent implements OnInit, OnDestroy, AfterViewInit  {
+
+  @ViewChild('projectFomr') projectFormTemplate: TemplateRef<any> | undefined;
 
   public listProjects: SectionProject[] = [
     {
@@ -49,11 +54,17 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   constructor(
     private store: Store<AppState>,
     private loading: LoadingService,
-    private router: Router
+    private router: Router,
+    private dialogService: DialogService
   ){}
 
   ngOnInit(): void {
+    console.log(this.projectFormTemplate)
     this.startTheStore();
+  }
+
+  ngAfterViewInit(): void {
+    console.log(this.projectFormTemplate);
   }
 
   ngOnDestroy(): void {
@@ -100,7 +111,18 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }
 
   createProject(){
-    this.router.navigate(['/home/register-project'])
+    // this.router.navigate(['/home/register-project'])
+    this.dialogService.openDialog(
+      {
+        title:'Crear Proyecto',
+        width: '876px',
+        templete: this.projectFormTemplate
+      }
+    )
+  }
+
+  cancelProject(){
+    this.dialogService.closedAll();
   }
 
   

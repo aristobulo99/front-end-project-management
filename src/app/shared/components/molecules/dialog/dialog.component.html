@@ -1,0 +1,32 @@
+<section class="w-full h-auto p-1 items-center bg-gradient-to-r from-pinkCustom to-blueCustom">
+    <div class="w-full flex flex-col gap-3 bg-white p-6 border-4 border-transparent bg-clip-border rounded-[1.25rem]">
+        <h1 class="w-full font-crimson font-extrabold text-black text-opacity-80 text-center text-2xl leading-5">{{data.title}}</h1>
+    
+        @if (data.text) {
+            <p class="w-full font-crimson font-normal text-black text-opacity-80 text-center text-lg leading-5">{{data.text}}</p>
+        }
+
+        @if (templateRef) {
+            <ng-container *ngTemplateOutlet="templateRef"></ng-container>
+        }
+    
+        @if (data.flexDirectionButton) {
+            <div class="flex gap-5" 
+                [ngClass]="{
+                'flex-col': data.flexDirectionButton == 'col',
+                'flex-row': data.flexDirectionButton == 'row',
+                'flex-col-reverse': data.flexDirectionButton == 'col-reverse',
+                'flex-row-reverse': data.flexDirectionButton == 'row-reverse',}">
+    
+                @if (data.nameAcceptButton) {
+                    <app-button class="w-[10rem]" [name]="data.nameAcceptButton" ></app-button>
+                }
+    
+                @if (data.nameCancelButton) {
+                    <app-button class="w-[10rem]" [name]="data.nameCancelButton" [color]="'pinkCustom'"></app-button>
+                }
+        
+            </div>
+        }
+    </div>
+</section>
