@@ -1,5 +1,5 @@
-import { NgClass, NgIf } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
+import { Component, Input, TemplateRef } from '@angular/core';
 import { IconComponent } from '../icon/icon.component';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
@@ -10,7 +10,8 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
     NgIf, 
     NgClass,
     IconComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+
   ],
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss'
