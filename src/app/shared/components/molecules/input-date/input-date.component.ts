@@ -39,5 +39,12 @@ export class InputDateComponent {
   @Input() control: FormControl = new FormControl('');
   @Input() valid: boolean = true;
 
+  get styleDivInput(){
+    return {
+      'border-0 ': this.valid,
+      'border-2 ': !this.valid,
+    }
+  }
+
 
 }
