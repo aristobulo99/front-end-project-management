@@ -19,13 +19,7 @@ export interface ProjectCreateResponse extends ProjectCreate {
     id: number
 }
 
-export interface Project {
-    id: number,
-    name: string,
-    description: string,
-    startDate: Date,
-    endingDate: Date,
-    outstanding: boolean,
+export interface Project extends ProjectCreateResponse {
     projectEnable: boolean,
     featureProject: boolean
 }

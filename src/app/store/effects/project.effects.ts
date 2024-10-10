@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { ProjectService } from "../../core/services/project/project.service";
 import { ToastService } from "../../core/services/toastr/toast.service";
 import { catchError, exhaustMap, map, of } from "rxjs";
-import { getProjectsFailure, getProjectsRequest, getProjectsSuccess, patchOutstandingProjectRequest, patchOutstandingProjectSuccess, postFrequentProject, postFrequentProjectSuccess } from "../actions/project.actions";
+import { getProjectsFailure, getProjectsRequest, getProjectsSuccess, patchOutstandingProjectRequest, patchOutstandingProjectSuccess, postCreateProject, postCreateProjectSuccess, postFrequentProject, postFrequentProjectSuccess } from "../actions/project.actions";
 import { LoadingService } from "../../core/services/loading/loading.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { tap } from 'rxjs/operators';
@@ -19,6 +19,25 @@ export class ProjectEffects {
         private loadingService: LoadingService,
         private store: Store
     ){}
+
+    postCreateProject$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(postCreateProject),
+            exhaustMap(
+                (action) => this.projectService.postProject(action.project).pipe(
+                    map(data => postCreateProjectSuccess({projectCreated: data})),
+                    catchError(
+                        (e) => {
+                            let errorMessage: string = 'Se produjo un error inesperado.';
+                            this.toastService.showInfo(errorMessage);
+                            this.loadingService.activeLoading = false;
+                            return of(getProjectsFailure({ error: errorMessage }));
+                        }
+                    )
+                )
+            )
+        )
+    );
 
     
     getAllProjects$ = createEffect(

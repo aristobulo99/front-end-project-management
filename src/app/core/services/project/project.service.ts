@@ -17,10 +17,8 @@ export class ProjectService {
     return this.http.get<Project[]>(`${environment.apiUrl}/project/my-project`)
   }
 
-  postProject(data: ProjectCreate): Promise<ProjectCreateResponse>{
-    return lastValueFrom(
-      this.http.post<ProjectCreateResponse>(`${environment.apiUrl}/project`, data)
-    );
+  postProject(data: ProjectCreate){
+    return this.http.post<ProjectCreateResponse>(`${environment.apiUrl}/project`, data)
   }
 
   patchProject(id: number,data: ProjectCreate){

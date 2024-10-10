@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { PatchFeature, PatchProject, Project, ProjectCreate } from "../../core/interfaces/project.interface";
+import { PatchFeature, PatchProject, Project, ProjectCreate, ProjectCreateResponse } from "../../core/interfaces/project.interface";
 
 /*
 la acción es un mensaje que comunica a los reducers o efectos para que ejecuten una operación. Cuando despachas una acción:
@@ -44,6 +44,19 @@ la acción es un mensaje que comunica a los reducers o efectos para que ejecuten
         "[Project] Post Frequent Project Success",
         props<{ projectIds: string[] }>()
     );
+
+//Solicitud para crear un proyecto nuevo
+    // Esta acción se despacha cuando se confirma la creacion de proyecto
+    export const postCreateProject = createAction(
+        "[Project] Post project creation",
+        props<{ project: ProjectCreate }>()
+    )
+
+    // Esta acción se despacha cuando se confirma la creacion de proyecto
+    export const postCreateProjectSuccess = createAction(
+        "[Project] Post project creation success",
+        props<{projectCreated: ProjectCreateResponse}>()
+    )
 
 // Esta acción se despacha si ocurre un error durante la solicitud
 export const getProjectsFailure = createAction(

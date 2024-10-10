@@ -17,7 +17,7 @@
                                           (selectCard)="selectProject(project)"></app-card-project>
                     }
                     @if (item.title == 'TUS PROYECTOS') {
-                        <app-card-project [fieldCreation]="true" (selectCard)="createProject()"></app-card-project>
+                        <app-card-project [fieldCreation]="true" (selectCard)="projectFormDeploy()"></app-card-project>
                     }
                 </div>
             </section>
@@ -28,5 +28,7 @@
 </section>
 
 <ng-template #projectFomr>
-    <app-register-project-form class="mt-3" (cancelEvent)="cancelProject()"></app-register-project-form>
+    <app-register-project-form class="mt-3" 
+                               (cancelEvent)="cancelProject()" 
+                               (createEvent)="createProject($event)"></app-register-project-form>
 </ng-template>
