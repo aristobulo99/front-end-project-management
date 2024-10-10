@@ -1,0 +1,28 @@
+<table mat-table [dataSource]="data">
+    @for (key of displayedColumns; track $index) {
+        @switch (key) {
+            @case ('actions') {
+                <ng-container [matColumnDef]="key" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="styleTd(element['width'])">
+                        <div class="w-f h-f flex flex-row justify-center items-center gap-[0.625rem]">
+                            @for (item2 of element[key]; track $index) {
+                                <app-icon class="w-6 h-6 cursor-pointer" [matTooltip]="item2.tooltip" [name]="item2.icon"></app-icon>
+                            }
+    
+                        </div>
+                    </td>
+                </ng-container>
+            }
+            @default {
+                <ng-container [matColumnDef]="key">
+                    <th class="font-crimson !font-extrabold text-base text-black text-opacity-80"  mat-header-cell *matHeaderCellDef>{{key}}</th>
+                    <td class="font-crimson font-normal text-base text-black text-opacity-50" mat-cell *matCellDef="let element" [ngClass]="styleTd(element['width'])">{{element[key]}}</td>
+                </ng-container>
+            }
+        }
+    }
+
+    <tr class="!h-[2.625rem]" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr class="!h-[2.625rem]" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
