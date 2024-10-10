@@ -1,15 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { CardProjectComponent } from '../../../../shared/components/molecules/card-project/card-project.component';
 import { IconComponent } from '../../../../shared/components/atom/icon/icon.component';
-import { PatchFeature, Project, SectionProject } from '../../../../core/interfaces/project.interface';
-import { mockProject } from '../../../../core/mocks/project.mock';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { PatchFeature, Project, ProjectCreate, SectionProject } from '../../../../core/interfaces/project.interface';
+import { Subject, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../store/app.state';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
-import { getProjectsRequest, patchOutstandingProjectRequest, postFrequentProject, postFrequentProjectSuccess } from '../../../../store/actions/project.actions';
+import { getProjectsRequest, patchOutstandingProjectRequest, postCreateProject, postFrequentProject, postFrequentProjectSuccess } from '../../../../store/actions/project.actions';
 import { selectPostFrequentProject, selectProjects, selectProjectsFeatured } from '../../../../store/selectors/project.selectors';
 import { LoadingService } from '../../../../core/services/loading/loading.service';
+import { Router } from '@angular/router';
+import { DialogService } from '../../../../core/services/dialog/dialog.service';
+import { RegisterProjectFormComponent } from '../../../../shared/components/organisms/register-project-form/register-project-form.component';
+import { ProjectService } from '../../../../core/services/project/project.service';
 
 @Component({
   selector: 'app-projects',
@@ -19,12 +22,15 @@ import { LoadingService } from '../../../../core/services/loading/loading.servic
     IconComponent,
     NgFor,
     NgIf,
-    AsyncPipe
+    AsyncPipe,
+    RegisterProjectFormComponent
   ],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.scss'
 })
-export class ProjectsComponent implements OnInit, OnDestroy {
+export class ProjectsComponent implements OnInit, OnDestroy  {
+
+  @ViewChild('projectFomr') projectFormTemplate: TemplateRef<any> | undefined;
 
   public listProjects: SectionProject[] = [
     {
@@ -47,10 +53,12 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
   constructor(
     private store: Store<AppState>,
-    private loading: LoadingService
+    private loading: LoadingService,
+    private dialogService: DialogService,
   ){}
 
   ngOnInit(): void {
+    console.log(this.projectFormTemplate)
     this.startTheStore();
   }
 
@@ -61,7 +69,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
   startTheStore(){
     this.loading.activeLoading = true;
-    console.log(localStorage.getItem('frequent-project')?.split(','))
     this.store.dispatch(getProjectsRequest());
     this.store.dispatch(postFrequentProjectSuccess({projectIds: localStorage.getItem('frequent-project')?.split(',') || []}));
 
@@ -96,6 +103,28 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
   selectProject(project: Project){
     this.store.dispatch(postFrequentProject({projectId: `${project.id}`}));
+  }
+
+  projectFormDeploy(){
+    this.dialogService.openDialog(
+      {
+        title:'Crear Proyecto',
+        width: '876px',
+        templete: this.projectFormTemplate
+      }
+    )
+  }
+
+  createProject(data: ProjectCreate){
+    this.loading.activeLoading = true;
+    this.store.dispatch(postCreateProject({project: data}));
+    this.loading.activeLoading = false;
+    this.cancelProject();
+  }
+
+
+  cancelProject(){
+    this.dialogService.closedAll();
   }
 
   

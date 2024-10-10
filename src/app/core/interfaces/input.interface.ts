@@ -4,6 +4,7 @@ export interface InputControl{
     label?: string,
     icon?: string,
     placeholder?: string,
+    textAre?: boolean
     formInfo?: {
         formName: string,
         validatorRequered: boolean,

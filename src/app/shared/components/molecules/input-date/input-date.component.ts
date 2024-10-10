@@ -38,6 +38,7 @@ export class InputDateComponent {
   @Input() placeholder: string | 'DD/MM/YYYY' = 'DD/MM/YYYY';
   @Input() control: FormControl = new FormControl('');
   @Input() valid: boolean = true;
+  @Input() backgroundColor: 'light' | 'medio' = 'light';
 
   get styleDivInput(){
     return {

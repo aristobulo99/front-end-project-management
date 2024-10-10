@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
-import { PatchProject, Project, ProjectCreate } from '../../interfaces/project.interface';
-import { Observable } from 'rxjs';
+import { PatchProject, Project, ProjectCreate, ProjectCreateResponse } from '../../interfaces/project.interface';
+import { lastValueFrom, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class ProjectService {
   }
 
   postProject(data: ProjectCreate){
-    return this.http.post<ProjectCreate>(`${environment.apiUrl}/project`, data);
+    return this.http.post<ProjectCreateResponse>(`${environment.apiUrl}/project`, data)
   }
 
   patchProject(id: number,data: ProjectCreate){
