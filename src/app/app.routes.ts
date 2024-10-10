@@ -18,13 +18,13 @@ export const routes: Routes = [
         canActivate: [NonAuthGuard]
     },
     {
-        path: 'home',
+        path: 'project',
         loadChildren: () => import('./pages/home/home.routes').then(m => m.HomeRoutignModule),
         canActivate: [AuthGuard]
     },
     { 
         path: '', 
-        redirectTo: '/home', 
+        redirectTo: '/project', 
         pathMatch: 'full' },
     {
         path:'**',

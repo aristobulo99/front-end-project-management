@@ -9,6 +9,11 @@ export const selectProjects = createSelector(
     (state) => state.projects
 );
 
+export const selectProjectId = createSelector(
+    selectProjectsState,
+    (state) => state.selectedProject
+);
+
 export const selectProjectsFeatured = createSelector(
     selectProjectsState,
     (state) => state.projects.filter(project => project.featureProject === true)

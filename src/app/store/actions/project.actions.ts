@@ -19,6 +19,19 @@ la acción es un mensaje que comunica a los reducers o efectos para que ejecuten
         props<{ projects: Project[] }>()
     );
 
+//Solicitud de obtener un proyecto por id
+    // Accion para iniciar la obtención del elemento Project
+    export const getProjectsIdRequest = createAction(
+        "[Projects] Get Project Id Request",
+        props<{projectId: number}>()
+    );
+
+    // Esta acción se despacha cuando el proyecto se obtienen correctamente
+    export const getProjectsIdSuccess = createAction(
+        "[Projects] Get Project Id Success",
+        props<{ project: ProjectCreate }>()
+    );
+
 //Solicitud para actualizar el estado destacado
     // Accion para inicial la actualizacion del estado
     export const patchOutstandingProjectRequest = createAction(

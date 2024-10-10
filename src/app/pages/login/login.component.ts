@@ -40,7 +40,7 @@ export class LoginComponent {
       localStorage.setItem('access-token', loginResponse.token);
       this.authService.startTokenRefreshTimer();
       this.toastService.showSuccess('¡Bienvenido!');
-      this.router.navigate(['/home'])
+      this.router.navigate(['/project'])
     }catch(e: any){
       if(e instanceof HttpErrorResponse){
         this.handleHttpError(e.error);

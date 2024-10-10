@@ -15,7 +15,7 @@ export class NavigationService {
       select: true,
 
       route: {
-        path: '/home/project',
+        path: '/project',
         component: ProjectsComponent
       }
     }

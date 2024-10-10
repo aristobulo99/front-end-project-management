@@ -9,12 +9,26 @@ import { lastValueFrom, Observable } from 'rxjs';
 })
 export class ProjectService {
 
+  private _dataProject: Project | undefined = undefined;
+
   constructor(
     private http: HttpClient
   ) { }
 
+  get dataProject(){
+    return this._dataProject;
+  }
+
+  set dataProject(value: Project | undefined){
+    this._dataProject = value;
+  }
+
   getMyProjects(){
     return this.http.get<Project[]>(`${environment.apiUrl}/project/my-project`)
+  }
+
+  getProjectId(id: number){
+    return this.http.get<ProjectCreate>(`${environment.apiUrl}/project/${id}`);
   }
 
   postProject(data: ProjectCreate){
