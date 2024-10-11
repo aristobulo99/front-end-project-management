@@ -36,7 +36,7 @@ export class ProjectService {
   }
 
   patchProject(id: number,data: ProjectCreate){
-    return this.http.patch<ProjectCreate>(`${environment.apiUrl}/project/${id}`, data);
+    return this.http.patch<ProjectCreateResponse>(`${environment.apiUrl}/project/${id}`, data);
   }
 
   patchFeatureProject(id: number, feature: boolean){

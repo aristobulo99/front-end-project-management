@@ -39,11 +39,17 @@
                     [name]="'Cancelar'"
                     [color]="'pinkCustom'" 
                     (selectButton)="cancelProject()"></app-button>
-
-        <app-button class="w-[10rem]" 
-                    [name]="'Registrar'" 
-                    [valid]="fgProject.valid"
-                    (selectButton)="createProject()"></app-button>
+        @if (dataProject == undefined) {
+            <app-button class="w-[10rem]" 
+                        [name]="'Registrar'" 
+                        [valid]="fgProject.valid"
+                        (selectButton)="createProject()"></app-button>
+        }@else {
+            <app-button class="w-[10rem]" 
+                        [name]="'Guardar cambios'" 
+                        [valid]="isFormUnchanged && fgProject.valid"
+                        (selectButton)="editProject()"></app-button>
+        }
     </div>
 </section>
 

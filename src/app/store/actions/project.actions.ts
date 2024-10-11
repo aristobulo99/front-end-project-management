@@ -58,6 +58,19 @@ la acción es un mensaje que comunica a los reducers o efectos para que ejecuten
         props<{ projectIds: string[] }>()
     );
 
+//Solicitud para actualizar un proyecto
+    // Esta acción se despacha cuando se confirma la actualizacion del proyecto
+    export const patchDataProject = createAction(
+        "[Project] Patch project data",
+        props<{projectId: number, project: ProjectCreate }>()
+    )
+
+    // Esta acción se despacha cuando se confirma la actualizacion del proyecto
+    export const patchDataProjectSuccess = createAction(
+        "[Project] Patch project data success",
+        props<{projectCreated: ProjectCreateResponse}>()
+    )
+
 //Solicitud para crear un proyecto nuevo
     // Esta acción se despacha cuando se confirma la creacion de proyecto
     export const postCreateProject = createAction(

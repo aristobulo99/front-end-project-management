@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { ProjectState } from "../../core/interfaces/project-state.interface";
-import { getProjectsFailure, getProjectsIdSuccess, getProjectsRequest, getProjectsSuccess, patchOutstandingProjectRequest, patchOutstandingProjectSuccess, postCreateProject, postCreateProjectSuccess, postFrequentProjectSuccess } from "../actions/project.actions";
+import { getProjectsFailure, getProjectsIdSuccess, getProjectsRequest, getProjectsSuccess, patchDataProject, patchDataProjectSuccess, patchOutstandingProjectRequest, patchOutstandingProjectSuccess, postCreateProject, postCreateProjectSuccess, postFrequentProjectSuccess } from "../actions/project.actions";
 
 export const initialStateProject: ProjectState = {
     projects: [],
@@ -58,6 +58,17 @@ export const _projectsReducer = createReducer(
         projects: [{...projectCreated, featureProject: false, projectEnable: true}, ...state.projects],
         loading: false,
         success: true
+    })),
+    on(patchDataProject, (state) => ({
+        ...state,
+        loading: true,
+        success: false
+    })),
+    on(patchDataProjectSuccess, (state, {projectCreated}) => ({
+        ...state,
+        selectedProject: projectCreated,
+        loading: true,
+        success: false
     })),
     on(getProjectsFailure, (state, {error}) => ({
         ...state,
