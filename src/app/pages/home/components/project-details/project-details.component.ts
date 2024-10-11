@@ -11,6 +11,7 @@ import { ProjectCreate } from '../../../../core/interfaces/project.interface';
 import { AppState } from '../../../../store/app.state';
 import { RegisterProjectFormComponent } from '../../../../shared/components/organisms/register-project-form/register-project-form.component';
 import { DialogService } from '../../../../core/services/dialog/dialog.service';
+import { SprintComponent } from './components/sprint/sprint.component';
 
 @Component({
   selector: 'app-project-details',
@@ -18,7 +19,8 @@ import { DialogService } from '../../../../core/services/dialog/dialog.service';
   imports: [
     IconComponent,
     DateFormatPipe,
-    RegisterProjectFormComponent
+    RegisterProjectFormComponent,
+    SprintComponent
   ],
   templateUrl: './project-details.component.html',
   styleUrl: './project-details.component.scss'
@@ -29,6 +31,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy{
 
   public unsubscribe$: Subject<void> = new Subject<void>();
   public dataProject: ProjectCreate | undefined = undefined;
+  public projectId: number | undefined = undefined;
 
   constructor(
     private projectService: ProjectService,
@@ -51,6 +54,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy{
   initProjectId(){
     const projectId = this.route.snapshot.paramMap.get('id')!;
     if(projectId){
+      this.projectId = Number(projectId);
       this.store.dispatch(getProjectsIdRequest({projectId: Number(projectId)}));
 
       this.store.select(selectProjectId)

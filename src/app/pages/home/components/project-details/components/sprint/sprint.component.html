@@ -1,0 +1,11 @@
+<section class="w-full flex flex-col items-start">
+    <div class="w-full h-[1.875rem] flex flex-row justify-start items-center gap-4">
+        <p class="font-crimson font-thin text-gray-600 text-opacity-50">Sprint</p>
+
+        <app-icon [name]="'add-circle'" 
+                  [opacity]="true" 
+                  [matTooltip]="'Crear Sprint'"></app-icon>
+    </div>
+    <app-table [displayedColumns]="displayedColumns" [data]="data" (rowSelectEvent)="sprintSelection($event)"></app-table>
+
+</section>
