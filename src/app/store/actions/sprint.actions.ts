@@ -22,6 +22,15 @@ export const postSprintSuccess = createAction(
     props<{sprint: Sprint}>()
 );
 
+export const pacthSprintRequest = createAction(
+    "[Sprints] Pacth Sprint Request",
+    props<{sprintId: number, sprint: CreateSprint}>()
+);
+
+export const pacthSprintSuccess = createAction(
+    "[Sprints] Pacth Sprint Success",
+    props<{sprint: Sprint}>()
+);
 
 export const getSprintFailure = createAction(
     "[Sprint] Sprint Failure",

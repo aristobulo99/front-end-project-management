@@ -10,7 +10,10 @@
                         }">
                         <div class="w-f h-f flex flex-row justify-center items-center gap-[0.625rem]">
                             @for (item2 of element[key]; track $index) {
-                                <app-icon class="w-6 h-6 cursor-pointer" [matTooltip]="item2.tooltip" [name]="item2.icon"></app-icon>
+                                <app-icon class="w-6 h-6 cursor-pointer" 
+                                          [matTooltip]="item2.tooltip" 
+                                          [name]="item2.icon" 
+                                          (clickEvent)="actionSelectio(item2.icon, element)"></app-icon>
                             }
     
                         </div>

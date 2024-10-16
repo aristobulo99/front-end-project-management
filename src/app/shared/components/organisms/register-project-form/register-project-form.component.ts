@@ -8,6 +8,7 @@ import { FormControlPipe } from '../../../pipe/form-control/form-control.pipe';
 import { InputDateComponent } from '../../molecules/input-date/input-date.component';
 import { ToastService } from '../../../../core/services/toastr/toast.service';
 import { ProjectCreate } from '../../../../core/interfaces/project.interface';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-register-project-form',
@@ -19,7 +20,8 @@ import { ProjectCreate } from '../../../../core/interfaces/project.interface';
     InputDateComponent,
     TextAreaComponent,
     ButtonComponent,
-    FormControlPipe
+    FormControlPipe,
+    NgClass
   ],
   templateUrl: './register-project-form.component.html',
   styleUrl: './register-project-form.component.scss'
@@ -27,12 +29,8 @@ import { ProjectCreate } from '../../../../core/interfaces/project.interface';
 export class RegisterProjectFormComponent implements OnInit {
 
   @Input() dataProject: ProjectCreate | undefined = undefined;
-  @Output() createEvent: EventEmitter<ProjectCreate> = new EventEmitter();
-  @Output() editEvent: EventEmitter<ProjectCreate> = new EventEmitter();
-  @Output() cancelEvent: EventEmitter<void> = new EventEmitter(); 
-
-  public fgProject: FormGroup = new FormGroup({});
-  public formsInputs: InputControl[] = [
+  @Input() enableSprintForm: boolean = false;
+  @Input() formsInputs: InputControl[] = [
     {
       type: 'text',
       placeholder: 'Escriba nombre del proyecto',
@@ -67,6 +65,12 @@ export class RegisterProjectFormComponent implements OnInit {
       }
     },
   ]
+  @Output() createEvent: EventEmitter<ProjectCreate> = new EventEmitter();
+  @Output() editEvent: EventEmitter<ProjectCreate> = new EventEmitter();
+  @Output() cancelEvent: EventEmitter<void> = new EventEmitter(); 
+
+  public fgProject: FormGroup = new FormGroup({});
+  
   public isFormUnchanged: boolean = false;
 
   constructor(
@@ -84,7 +88,7 @@ export class RegisterProjectFormComponent implements OnInit {
   initProjectForm(){
     this.fgProject = this.fb.group({
       name: new FormControl<string>(this.dataProject ? this.dataProject.name: '', [Validators.required]),
-      description: new FormControl<string>(this.dataProject ? this.dataProject.description: ''),
+      description: new FormControl<string>(this.dataProject ? this.dataProject.description: '', this.enableSprintForm ? [Validators.required] : []),
       startDate: new FormControl<Date | string>(this.dataProject ? new Date(this.dataProject.startDate) : '', [Validators.required]),
       endingDate: new FormControl<Date | string>(this.dataProject ? new Date(this.dataProject.endingDate) : '', [Validators.required]),
     })

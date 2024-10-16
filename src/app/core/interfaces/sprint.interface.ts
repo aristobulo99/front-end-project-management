@@ -16,7 +16,7 @@ export interface CreateSprint {
     aim: string,
     startDate: Date,
     endDate: Date,
-    projectId: 0
+    projectId: number
 }
 
 export interface Sprint extends CreateSprint {

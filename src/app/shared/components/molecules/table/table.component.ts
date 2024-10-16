@@ -25,6 +25,7 @@ export class TableComponent implements OnInit {
   @Input() data: DataSource[] = [];
   @Input() displayedColumns: string[] = [];
   @Output() rowSelectEvent: EventEmitter<DataSource> = new EventEmitter();
+  @Output() actionsEvent: EventEmitter<{action: string, data: DataSource}> = new EventEmitter();
 
   ngOnInit(): void {
     
@@ -40,6 +41,10 @@ export class TableComponent implements OnInit {
 
   rowSelection(data: DataSource){
     this.rowSelectEvent.emit(data);
+  }
+
+  actionSelectio(action: string, data: DataSource){
+    this.actionsEvent.emit({action, data});
   }
 
 

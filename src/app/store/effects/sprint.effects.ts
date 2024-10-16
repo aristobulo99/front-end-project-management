@@ -4,7 +4,7 @@ import { SprintService } from "../../core/services/sprint/sprint.service";
 import { ToastService } from "../../core/services/toastr/toast.service";
 import { LoadingService } from "../../core/services/loading/loading.service";
 import { Store } from "@ngrx/store";
-import { getSprintFailure, getSprintRequest, getSprintSuccess, postSprintRequest, postSprintSuccess } from "../actions/sprint.actions";
+import { getSprintFailure, getSprintRequest, getSprintSuccess, pacthSprintRequest, pacthSprintSuccess, postSprintRequest, postSprintSuccess } from "../actions/sprint.actions";
 import {  catchError, exhaustMap, map, of } from "rxjs";
 
 
@@ -72,6 +72,39 @@ export class SprintEffects {
                         })
                     )
             )
+        )
+    )
+
+    patchDataSprint$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(pacthSprintRequest),
+            exhaustMap(
+                (action) => this.sprintService.patchSprint(action.sprintId, action.sprint)
+                    .pipe(
+                        map((result) => pacthSprintSuccess({sprint: result})),
+                        catchError(
+                            error => {
+                                let errorMessage: string;
+
+                            switch (error.error) {
+                                case 'No permissions to perform this action':
+                                    errorMessage = 'No hay permisos para realizar esta acción.';
+                                    break;
+                                case 'Sprint not found':
+                                    errorMessage = 'Sprint no encontrado.';
+                                    break;
+                                default:
+                                    errorMessage = 'Se produjo un error inesperado.';
+                            }
+
+                            this.toastService.showInfo(errorMessage);
+                            this.loadingService.activeLoading = false;
+                            return of(getSprintFailure({ error: errorMessage }));
+                            }
+                        )
+                    )
+            )
+
         )
     )
 }

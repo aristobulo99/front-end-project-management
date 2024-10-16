@@ -7,7 +7,7 @@
                         @case ('text') {
                             @if (item.textAre) {
                                 <app-text-area class="h-[12.8rem]" [backgroundColor]="'medio'"
-                                               [valid]="!item.formInfo?.validatorRequered" 
+                                               [valid]=" !enableSprintForm ? true : fieldValidation(''+item.formInfo?.formName)" 
                                                [placeholder]="item.placeholder"
                                                [control]="fgProject.controls[''+item.formInfo?.formName] | formControl"></app-text-area>
                             }@else {

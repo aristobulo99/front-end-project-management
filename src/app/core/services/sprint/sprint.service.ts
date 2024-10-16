@@ -36,4 +36,8 @@ export class SprintService {
   postSprint(data: CreateSprint){
     return this.http.post<Sprint>(`${environment.apiUrl}/api/sprint/create`, data);
   }
+
+  patchSprint(projectId: number, data: CreateSprint){
+    return this.http.patch<Sprint>(`${environment.apiUrl}/api/sprint/edit/${projectId}`, data);
+  }
 }
