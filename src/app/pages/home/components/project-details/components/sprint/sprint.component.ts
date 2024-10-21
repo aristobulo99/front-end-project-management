@@ -5,7 +5,7 @@ import { TableComponent } from '../../../../../../shared/components/molecules/ta
 import { DataSource } from '../../../../../../core/interfaces/table.interface';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../../../store/app.state';
-import { getSprintRequest, pacthSprintRequest, postSprintRequest } from '../../../../../../store/actions/sprint.actions';
+import { deleteSprintRequest, getSprintRequest, pacthSprintRequest, postSprintRequest } from '../../../../../../store/actions/sprint.actions';
 import { Subject, takeUntil } from 'rxjs';
 import { selectSprints } from '../../../../../../store/selectors/srpint.selectors';
 import { CreateSprint, Sprint, StatusSprint } from '../../../../../../core/interfaces/sprint.interface';
@@ -87,20 +87,41 @@ export class SprintComponent implements OnInit, OnDestroy {
     switch(actionSelection.action){
       case 'edit':
         this.editSprint = actionSelection.data;
-        this.sprintFormDeploy();
+        this.sprintFormDeploy('Editar Sprint');
         break;
       case 'delete':
-        console.log(actionSelection.action)
+        this.deleteSprint(actionSelection.data['id'] as number);
         break;
     }
   }
 
-  sprintFormDeploy(){
+  sprintFormDeploy(title: string = 'Crear Sprint'){
     this.dialogService.openDialog(
       {
-        title: 'Crear Sprint',
+        title: title,
         width: '54.75rem',
         templete: this.sprintFormTemplate
+      }
+    )
+  }
+
+  deleteSprint(sprintId: number){
+    const resp = this.dialogService.openDialog(
+      {
+        title:'Confirmar eliminación del Sprint',
+        text: '¿Estás seguro de que deseas eliminar este Sprint? Esta acción no se puede deshacer y todos los datos relacionados con el Sprint serán eliminados permanentemente.',
+        width: '25rem',
+        nameAcceptButton: 'Acceptar',
+        nameCancelButton: 'Cancelar',
+        flexDirectionButton: 'row'
+      }
+    )
+
+    resp.afterClosed().subscribe(
+      (result) => {
+        if (result?.action === 'accept') {
+          this.store.dispatch(deleteSprintRequest({sprintId}))
+        } 
       }
     )
   }

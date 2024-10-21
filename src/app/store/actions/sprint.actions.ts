@@ -32,6 +32,16 @@ export const pacthSprintSuccess = createAction(
     props<{sprint: Sprint}>()
 );
 
+export const deleteSprintRequest = createAction(
+    "[Sprint] Delete Sprint Request",
+    props<{sprintId: number}>()
+);
+
+export const deleteSprintSuccesus = createAction(
+    "[Sprint] Delete Sprint success",
+    props<{sprintId: number}>()
+);
+
 export const getSprintFailure = createAction(
     "[Sprint] Sprint Failure",
     props<{ error: string }>()

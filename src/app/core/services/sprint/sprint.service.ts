@@ -40,4 +40,8 @@ export class SprintService {
   patchSprint(projectId: number, data: CreateSprint){
     return this.http.patch<Sprint>(`${environment.apiUrl}/api/sprint/edit/${projectId}`, data);
   }
+
+  deleteSprintRequest(projectId: number){
+    return this.http.delete(`${environment.apiUrl}/api/sprint/delete/${projectId}`);
+  }
 }

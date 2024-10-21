@@ -4,7 +4,7 @@ import { SprintService } from "../../core/services/sprint/sprint.service";
 import { ToastService } from "../../core/services/toastr/toast.service";
 import { LoadingService } from "../../core/services/loading/loading.service";
 import { Store } from "@ngrx/store";
-import { getSprintFailure, getSprintRequest, getSprintSuccess, pacthSprintRequest, pacthSprintSuccess, postSprintRequest, postSprintSuccess } from "../actions/sprint.actions";
+import { deleteSprintRequest, deleteSprintSuccesus, getSprintFailure, getSprintRequest, getSprintSuccess, pacthSprintRequest, pacthSprintSuccess, postSprintRequest, postSprintSuccess } from "../actions/sprint.actions";
 import {  catchError, exhaustMap, map, of } from "rxjs";
 
 
@@ -106,5 +106,37 @@ export class SprintEffects {
             )
 
         )
-    )
+    );
+
+    deleteSprint$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(deleteSprintRequest),
+            exhaustMap(
+                (action) => this.sprintService.deleteSprintRequest(action.sprintId)
+                    .pipe(
+                        map(() => deleteSprintSuccesus({sprintId: action.sprintId})),
+                        catchError(
+                            error => {
+                                let errorMessage: string;
+
+                            switch (error.error) {
+                                case 'Sprint not found':
+                                    errorMessage = 'Sprint no encontrada';
+                                    break;
+                                case 'Control reserved for the admin':
+                                    errorMessage = 'Control reservado para el administrador.';
+                                    break;
+                                default:
+                                    errorMessage = 'Se produjo un error inesperado.';
+                            }
+
+                            this.toastService.showInfo(errorMessage);
+                            this.loadingService.activeLoading = false;
+                            return of(getSprintFailure({ error: errorMessage }));
+                            }
+                        )
+                    )
+            )
+        )
+    );
 }
