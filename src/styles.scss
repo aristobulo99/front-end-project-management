@@ -60,3 +60,13 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-mdc-dialog-surface {
   border-radius: 20px !important;
 }
+
+select {
+  -webkit-appearance: none; /* Para Safari y Chrome */
+  -moz-appearance: none; /* Para Firefox */
+  appearance: none; /* Estándar */
+  
+  /* Puedes agregar un fondo o borde personalizado */
+  background: none;
+  border: 1px solid #ccc;
+}
