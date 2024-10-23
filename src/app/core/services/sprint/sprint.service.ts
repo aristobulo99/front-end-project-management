@@ -25,6 +25,16 @@ export class SprintService {
     private http: HttpClient
   ) { }
 
+  get statusSprint(){
+    return this._statusSprint;
+  }
+
+  getStatusKeyByValue(value: string): StatusSprint | undefined {
+    const entries = Object.entries(this._statusSprint) as [StatusSprint, string][];
+    const foundEntry = entries.find(([key, val]) => val === value);
+    return foundEntry ? foundEntry[0] : undefined;
+  }
+
   getStatusSprint(key: StatusSprint): string{
     return this._statusSprint[key]
   }
@@ -33,12 +43,20 @@ export class SprintService {
     return this.http.get<Sprint[]>(`${environment.apiUrl}/api/sprint/all/${projectId}`);
   }
 
+  getSprintId(sprintId: number){
+    return this.http.get<Sprint>(`${environment.apiUrl}/api/sprint/get/${sprintId}`);
+  }
+
   postSprint(data: CreateSprint){
     return this.http.post<Sprint>(`${environment.apiUrl}/api/sprint/create`, data);
   }
 
   patchSprint(projectId: number, data: CreateSprint){
     return this.http.patch<Sprint>(`${environment.apiUrl}/api/sprint/edit/${projectId}`, data);
+  }
+
+  patchSprintStatus(sprintId: number, status: StatusSprint){
+    return this.http.patch<Sprint>(`${environment.apiUrl}/api/sprint/statusSprint/${sprintId}/${status}`, null);
   }
 
   deleteSprintRequest(projectId: number){

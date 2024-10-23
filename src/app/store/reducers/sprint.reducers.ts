@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { SprintState } from "../../core/interfaces/sprint-state.interface";
-import { deleteSprintRequest, deleteSprintSuccesus, getSprintRequest, getSprintSuccess, pacthSprintRequest, pacthSprintSuccess, postSprintRequest, postSprintSuccess } from "../actions/sprint.actions";
+import { deleteSprintRequest, deleteSprintSuccesus, getSprintIdRequest, getSprintIdSuccess, getSprintRequest, getSprintSuccess, pacthSprintRequest, pacthSprintStatusRequest, pacthSprintStatusSuccess, pacthSprintSuccess, postSprintRequest, postSprintSuccess } from "../actions/sprint.actions";
 
 export const initialStateSprint: SprintState = {
     sprints: [],
@@ -23,6 +23,17 @@ export const _sprintReducers = createReducer(
         loading: false,
         success: true
     })),
+    on(getSprintIdRequest, (state) => ({
+        ...state,
+        loading: true,
+        success: false
+    })),
+    on(getSprintIdSuccess, (state, {sprint}) => ({
+        ...state,
+        sprint: sprint,
+        loading: false,
+        success: true
+    })),
     on(postSprintRequest, (state) => ({
         ...state,
         loading: true,
@@ -42,6 +53,17 @@ export const _sprintReducers = createReducer(
     on(pacthSprintSuccess, (state, {sprint}) => ({
         ...state,
         sprints: state.sprints.map(sp => sp.id == sprint.id ? sprint : sp),
+        loading: false,
+        success: true
+    })),
+    on(pacthSprintStatusRequest, (state)=> ({
+        ...state,
+        loading: true,
+        success: false
+    })),
+    on(pacthSprintStatusSuccess, (state, {sprint}) => ({
+        ...state,
+        sprint: sprint,
         loading: false,
         success: true
     })),

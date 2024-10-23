@@ -32,21 +32,21 @@ export class SelectComponent {
 
   toggleDropdown() {
     this.dropdownOpen = !this.dropdownOpen;
-    if(!this.dropdownOpen)
+    if(!this.dropdownOpen){
       this.selectOption()
+    }
   }
 
   @HostListener('document:click', ['$event'])
   handleClickOutside(event: MouseEvent) {
-    const clickedInside = this.selectElement.nativeElement.contains(event.target);
+    const clickedInside = this.selectElement?.nativeElement.contains(event.target);
     if (!clickedInside && this.dropdownOpen) {
       this.dropdownOpen = false;
     }
   }
-
+  
   selectOption() {
     this.selectOptionEvent.emit();
-    console.log('fsdfsd');
   }
 
 }

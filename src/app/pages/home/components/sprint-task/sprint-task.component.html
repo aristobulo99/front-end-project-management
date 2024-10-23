@@ -1,0 +1,25 @@
+<section class="w-[56.75rem] flex flex-col gap-[1.375rem]">
+    <div class="w-full h-[1.875rem] flex flex-row justify-between items-center">
+        <div class="h-[1.875rem] flex flex-row justify-start items-center gap-[0.625rem]">
+            <app-icon class="w-6 h-6 cursor-pointer" [name]="'arrow-back'" [opacity]="true" (clickEvent)="back()"></app-icon>
+            <p class="font-crimson font-extrabold text-black text-base text-opacity-80 leading-[1.313rem]" >{{dataSprint?.name}}</p>
+            <div class="w-[11.125rem]">
+                <app-select [backgroundColor]="'medio'" 
+                            [size]="'small'" 
+                            [options]="stateOptions" 
+                            [control]="sprintState" (selectOptionEvent)="selectOption()"></app-select>
+            </div>
+        </div>
+    </div>
+
+    <div class="w-full flex flex-col gap-[1.375rem] pl-[2.125rem]">
+        @if (dataSprint?.aim) {
+            <div class="w-full flex flex-col font-crimson font-extrabold text-black text-base text-opacity-80 leading-[1.313rem]">
+                <p class="font-thin !text-gray-600 !text-opacity-50">Objetivo:</p>
+                <p>{{dataSprint?.aim}}</p>
+            </div>
+        }
+
+    </div>
+
+</section>

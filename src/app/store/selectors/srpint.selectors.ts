@@ -8,3 +8,8 @@ export const selectSprints = createSelector(
     selectSprintState,
     (state) => state.sprints
 )
+
+export const selectSprint = createSelector(
+    selectSprintState,
+    (state)  => state.sprint
+)

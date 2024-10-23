@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { CreateSprint, Sprint } from "../../core/interfaces/sprint.interface";
+import { CreateSprint, Sprint, StatusSprint } from "../../core/interfaces/sprint.interface";
 
 
 export const getSprintRequest = createAction(
@@ -10,6 +10,16 @@ export const getSprintRequest = createAction(
 export const getSprintSuccess = createAction(
     "[Sprints]  Get Sprint Success",
     props<{sprints: Sprint[]}>()
+);
+
+export const getSprintIdRequest = createAction(
+    "[Sprints] Get Sprint Id Request",
+    props<{sprintId: number}>()
+);
+
+export const getSprintIdSuccess = createAction(
+    "[Sprints] Get Sprint Id Success",
+    props<{sprint: Sprint}>()
 );
 
 export const postSprintRequest = createAction(
@@ -29,6 +39,16 @@ export const pacthSprintRequest = createAction(
 
 export const pacthSprintSuccess = createAction(
     "[Sprints] Pacth Sprint Success",
+    props<{sprint: Sprint}>()
+);
+
+export const pacthSprintStatusRequest = createAction(
+    "[Sprints] Pacth Sprint Status Request",
+    props<{sprintId: number, status: StatusSprint}>()
+);
+
+export const pacthSprintStatusSuccess = createAction(
+    "[Sprints] Pacth Sprint Status Success",
     props<{sprint: Sprint}>()
 );
 

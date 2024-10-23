@@ -4,7 +4,7 @@ import { SprintService } from "../../core/services/sprint/sprint.service";
 import { ToastService } from "../../core/services/toastr/toast.service";
 import { LoadingService } from "../../core/services/loading/loading.service";
 import { Store } from "@ngrx/store";
-import { deleteSprintRequest, deleteSprintSuccesus, getSprintFailure, getSprintRequest, getSprintSuccess, pacthSprintRequest, pacthSprintSuccess, postSprintRequest, postSprintSuccess } from "../actions/sprint.actions";
+import { deleteSprintRequest, deleteSprintSuccesus, getSprintFailure, getSprintIdRequest, getSprintIdSuccess, getSprintRequest, getSprintSuccess, pacthSprintRequest, pacthSprintStatusRequest, pacthSprintSuccess, postSprintRequest, postSprintSuccess } from "../actions/sprint.actions";
 import {  catchError, exhaustMap, map, of } from "rxjs";
 
 
@@ -75,11 +75,73 @@ export class SprintEffects {
         )
     )
 
+    getSprintId$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(getSprintIdRequest),
+            exhaustMap(
+                (action) => this.sprintService.getSprintId(action.sprintId)
+                    .pipe(
+                        map((result) => getSprintIdSuccess({sprint: result})),
+                        catchError(
+                            error => {
+                                let errorMessage: string;
+
+                            switch (error.error) {
+                                case 'Sprint not found':
+                                    errorMessage = 'Sprint no encontrado.';
+                                    break;
+                                default:
+                                    errorMessage = 'Se produjo un error inesperado.';
+                            }
+
+                            this.toastService.showInfo(errorMessage);
+                            this.loadingService.activeLoading = false;
+                            return of(getSprintFailure({ error: errorMessage }));
+                            }
+                        )
+                    )
+            )
+        )
+    )
+
     patchDataSprint$ = createEffect(
         () => this.actions$.pipe(
             ofType(pacthSprintRequest),
             exhaustMap(
                 (action) => this.sprintService.patchSprint(action.sprintId, action.sprint)
+                    .pipe(
+                        map((result) => pacthSprintSuccess({sprint: result})),
+                        catchError(
+                            error => {
+                                let errorMessage: string;
+
+                            switch (error.error) {
+                                case 'No permissions to perform this action':
+                                    errorMessage = 'No hay permisos para realizar esta acción.';
+                                    break;
+                                case 'Sprint not found':
+                                    errorMessage = 'Sprint no encontrado.';
+                                    break;
+                                default:
+                                    errorMessage = 'Se produjo un error inesperado.';
+                            }
+
+                            this.toastService.showInfo(errorMessage);
+                            this.loadingService.activeLoading = false;
+                            return of(getSprintFailure({ error: errorMessage }));
+                            }
+                        )
+                    )
+            )
+
+        )
+    );
+
+    patchDataSprintStatus$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(pacthSprintStatusRequest),
+            exhaustMap(
+                (action) => this.sprintService.patchSprintStatus(action.sprintId, action.status)
                     .pipe(
                         map((result) => pacthSprintSuccess({sprint: result})),
                         catchError(

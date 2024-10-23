@@ -26,7 +26,7 @@
             </div>
         }
 
-        <app-sprint [projectId]="projectId"></app-sprint>
+        <app-sprint [projectId]="projectId" (selectSprint)="selectSprint($event)"></app-sprint>
 
     </div>
 

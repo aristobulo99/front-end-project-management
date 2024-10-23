@@ -92,4 +92,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy{
     this.cancelEditProject();
   }
 
+  selectSprint(sprintId: number){
+    this.router.navigate(['/project/details', this.projectId, 'sprint', sprintId])
+  }
+
 }

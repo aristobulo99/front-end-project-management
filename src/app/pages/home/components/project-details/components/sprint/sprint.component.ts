@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
 import { IconComponent } from '../../../../../../shared/components/atom/icon/icon.component';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TableComponent } from '../../../../../../shared/components/molecules/table/table.component';
@@ -28,6 +28,7 @@ import { DialogService } from '../../../../../../core/services/dialog/dialog.ser
 export class SprintComponent implements OnInit, OnDestroy {
 
   @Input() projectId: number | undefined = undefined;
+  @Output() selectSprint: EventEmitter<number> = new EventEmitter();
   @ViewChild('sprintForm') sprintFormTemplate: TemplateRef<any> | undefined;
 
   public displayedColumns: string[] = ['Nombre', 'Fecha de inicio', 'Fecha de finalizacion', 'Estado', 'actions'];
@@ -80,7 +81,7 @@ export class SprintComponent implements OnInit, OnDestroy {
   }
 
   sprintSelection(sprint: DataSource){
-    console.log(sprint)
+    this.selectSprint.emit(sprint['id'] as number)
   }
 
   actionSprintSelection(actionSelection: {action: string, data: DataSource}){
