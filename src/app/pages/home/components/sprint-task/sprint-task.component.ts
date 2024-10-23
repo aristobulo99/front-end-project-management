@@ -10,13 +10,18 @@ import { selectSprint } from '../../../../store/selectors/srpint.selectors';
 import { SelectComponent } from '../../../../shared/components/molecules/select/select.component';
 import { FormControl } from '@angular/forms';
 import { SprintService } from '../../../../core/services/sprint/sprint.service';
+import { DragDropTaskComponent } from '../../../../shared/components/organisms/drag-drop-task/drag-drop-task.component';
+import { DragDropTask } from '../../../../core/interfaces/task.interface';
+import { getTaskBySprintIdRequest } from '../../../../store/actions/task.actions';
+import { selectTaskBlocked, selectTaskDone, selectTaskInProgress, selectTaskTodo } from '../../../../store/selectors/task.selectors';
 
 @Component({
   selector: 'app-sprint-task',
   standalone: true,
   imports: [
     IconComponent,
-    SelectComponent
+    SelectComponent,
+    DragDropTaskComponent
   ],
   templateUrl: './sprint-task.component.html',
   styleUrl: './sprint-task.component.scss'
@@ -29,6 +34,24 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
   public unsubscribe$: Subject<void> = new Subject<void>();
   public sprintState: FormControl = new FormControl('');
   public stateOptions: string[] = [];
+  public listDragDropTask: DragDropTask[] = [
+    {
+      titleStatus: 'Por hacer',
+      tasks: []
+    },
+    {
+      titleStatus: 'En curso',
+      tasks: []
+    },
+    {
+      titleStatus: 'Bloqueado',
+      tasks: []
+    },
+    {
+      titleStatus: 'Terminado',
+      tasks: []
+    }
+  ];
 
   constructor(
     private router: Router,
@@ -55,6 +78,7 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
       this.projectId = Number(projectId);
 
       this.store.dispatch(getSprintIdRequest({sprintId: this.sprintId}));
+      this.store.dispatch(getTaskBySprintIdRequest({sprintId: this.sprintId}))
 
       this.store.select(selectSprint)
         .pipe(takeUntil(this.unsubscribe$))
@@ -64,6 +88,22 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
             this.sprintState.setValue(this.sprintService.getStatusSprint(sprint?.statusSprint as StatusSprint))
           }
         )
+      
+      this.store.select(selectTaskTodo)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(task => this.listDragDropTask[0].tasks = task)
+
+      this.store.select(selectTaskInProgress)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(task => this.listDragDropTask[1].tasks = task)
+
+      this.store.select(selectTaskBlocked)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(task => this.listDragDropTask[2].tasks = task)
+
+      this.store.select(selectTaskDone)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(task => this.listDragDropTask[3].tasks = task)
     }
   }
 

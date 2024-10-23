@@ -1,0 +1,18 @@
+<section class="w-full flex flex-row gap-5" cdkDropListGroup>
+    @for (item of listDragDropTask; track $index) {
+        <div class="w-[17rem] min-h-[5.5rem] flex flex-col justify-between bg-[#F4F4F4] rounded-[0.625rem] shadow-xl p-[0.625rem]">
+            <div class="w-full flex flex-col gap-[0.625rem]">
+                <h2 class="font-crimson font-bold text-black text-opacity-80 text-base leading-[1.313rem]">{{item.titleStatus}}</h2>
+
+            </div>
+
+            <div class="w-full">
+                <div class="w-[7.5rem] flex flex-row gap-[0.188rem] cursor-pointer">
+                    <app-icon [name]="'add'" [opacity]="true"></app-icon>
+                    <p class="font-crimson font-bold text-black text-opacity-80 text-base leading-[1.313rem]">Añadir Tarea</p>
+                </div>
+            </div>
+
+        </div>
+    }
+</section>
