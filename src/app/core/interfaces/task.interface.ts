@@ -8,9 +8,9 @@ export enum Status {
 }
 
 export enum Priority {
-    HIGH,
-    MEDIUM ,
-    LOW,
+    HIGH = 'HIGH',
+    MEDIUM = 'MEDIUM' ,
+    LOW = 'LOW',
 }
 
 export interface CreateTask {
@@ -31,5 +31,11 @@ export interface Task extends CreateTask {
 
 export interface DragDropTask {
     titleStatus: string;
+    status: Status,
     tasks: Task[]
+}
+
+export interface TransferStatus {
+    taskId: number,
+    status: Status
 }

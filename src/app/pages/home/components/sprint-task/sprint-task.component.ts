@@ -11,8 +11,8 @@ import { SelectComponent } from '../../../../shared/components/molecules/select/
 import { FormControl } from '@angular/forms';
 import { SprintService } from '../../../../core/services/sprint/sprint.service';
 import { DragDropTaskComponent } from '../../../../shared/components/organisms/drag-drop-task/drag-drop-task.component';
-import { DragDropTask } from '../../../../core/interfaces/task.interface';
-import { getTaskBySprintIdRequest } from '../../../../store/actions/task.actions';
+import { DragDropTask, Status, TransferStatus } from '../../../../core/interfaces/task.interface';
+import { getTaskBySprintIdRequest, patchTaskStatusRequest } from '../../../../store/actions/task.actions';
 import { selectTaskBlocked, selectTaskDone, selectTaskInProgress, selectTaskTodo } from '../../../../store/selectors/task.selectors';
 
 @Component({
@@ -37,18 +37,22 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
   public listDragDropTask: DragDropTask[] = [
     {
       titleStatus: 'Por hacer',
+      status: Status.TO_DO,
       tasks: []
     },
     {
       titleStatus: 'En curso',
+      status: Status.IN_PROGRESS,
       tasks: []
     },
     {
       titleStatus: 'Bloqueado',
+      status: Status.BLOCKED,
       tasks: []
     },
     {
       titleStatus: 'Terminado',
+      status: Status.DONE,
       tasks: []
     }
   ];
@@ -91,19 +95,19 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
       
       this.store.select(selectTaskTodo)
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(task => this.listDragDropTask[0].tasks = task)
+        .subscribe(task => this.listDragDropTask[0].tasks = [...task])
 
       this.store.select(selectTaskInProgress)
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(task => this.listDragDropTask[1].tasks = task)
+        .subscribe(task => this.listDragDropTask[1].tasks = [...task])
 
       this.store.select(selectTaskBlocked)
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(task => this.listDragDropTask[2].tasks = task)
+        .subscribe(task => this.listDragDropTask[2].tasks = [...task])
 
       this.store.select(selectTaskDone)
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(task => this.listDragDropTask[3].tasks = task)
+        .subscribe(task => this.listDragDropTask[3].tasks = [...task])
     }
   }
 
@@ -116,6 +120,10 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
     if(status){
       this.store.dispatch(pacthSprintStatusRequest({sprintId: this.sprintId as number, status: status}))
     }
+  }
+
+  updateStatus(transfer: TransferStatus){
+    this.store.dispatch(patchTaskStatusRequest({transfer: transfer}));
   }
 
 }

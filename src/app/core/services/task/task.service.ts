@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Status, Task } from '../../interfaces/task.interface';
-import { HttpClient } from '@angular/common/http';
+import { CreateTask, Status, Task, TransferStatus } from '../../interfaces/task.interface';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 
 @Injectable({
@@ -31,6 +31,11 @@ export class TaskService {
 
   getTaskBySprintId(sprintId: number){
     return this.http.get<Task[]>(`${environment.apiUrl}/api/task/sprint/${sprintId}`)
+  }
+
+  patchTaskStatus(transfer: TransferStatus){
+    const params = new HttpParams().set('status', transfer.status);
+    return this.http.patch<Task>(`${environment.apiUrl}/api/task/status/${transfer.taskId}`, null, {params})
   }
 
 }

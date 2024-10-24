@@ -1,0 +1,10 @@
+<section class="w-full min-h-[4rem] flex flex-col items-start gap-[0.188rem] bg-white shadow-lg rounded-[0.625rem] p-[0.625rem]">
+    <div class="w-[3.938rem] h-[0.625rem] rounded-[0.625rem]" 
+         [ngClass]="{
+            'bg-[#FF0000]': priority == high,
+            'bg-[#F6FF00]': priority == medium,
+            'bg-[#00FF26]': priority == low,
+         }">
+    </div>
+    <h2 class="font-crimson font-medium text-black text-opacity-80 text-base leading-[1.313rem]">{{title}}</h2>
+</section>

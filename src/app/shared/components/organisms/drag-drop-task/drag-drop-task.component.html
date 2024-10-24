@@ -1,18 +1,144 @@
-<section class="w-full flex flex-row gap-5" cdkDropListGroup>
-    @for (item of listDragDropTask; track $index) {
+<!-- <section class="w-full flex flex-row gap-5" cdkDropListGroup>
+    @if (taksTodo) {
         <div class="w-[17rem] min-h-[5.5rem] flex flex-col justify-between bg-[#F4F4F4] rounded-[0.625rem] shadow-xl p-[0.625rem]">
             <div class="w-full flex flex-col gap-[0.625rem]">
-                <h2 class="font-crimson font-bold text-black text-opacity-80 text-base leading-[1.313rem]">{{item.titleStatus}}</h2>
-
+                <h2 class="font-crimson font-bold text-black text-opacity-80 text-base leading-[1.313rem]">{{taksTodo.titleStatus}}</h2>
+    
+                <div class="w-full min-h-[5.5rem] flex flex-col gap-[0.625rem]" 
+                     cdkDropList 
+                     [cdkDropListData]="taksTodo.tasks" 
+                     (cdkDropListDropped)="drop($event, taksTodo.status)">
+                     <div *ngFor="let task of taksTodo.tasks" cdkDrag>
+                        <app-card-task [title]="task.title" 
+                                       [priority]="task.priority"></app-card-task>
+                     </div>
+                </div>
+    
+    
             </div>
-
+    
             <div class="w-full">
                 <div class="w-[7.5rem] flex flex-row gap-[0.188rem] cursor-pointer">
                     <app-icon [name]="'add'" [opacity]="true"></app-icon>
                     <p class="font-crimson font-bold text-black text-opacity-80 text-base leading-[1.313rem]">Añadir Tarea</p>
                 </div>
             </div>
+    
+        </div>
+    }
 
+    @if (taksInProgress) {
+        <div class="w-[17rem] min-h-[5.5rem] flex flex-col justify-between bg-[#F4F4F4] rounded-[0.625rem] shadow-xl p-[0.625rem]">
+            <div class="w-full flex flex-col gap-[0.625rem]">
+                <h2 class="font-crimson font-bold text-black text-opacity-80 text-base leading-[1.313rem]">{{taksInProgress.titleStatus}}</h2>
+    
+                <div class="w-full min-h-[5.5rem] flex flex-col gap-[0.625rem]" 
+                     cdkDropList 
+                     [cdkDropListData]="taksInProgress.tasks" 
+                     (cdkDropListDropped)="drop($event, taksInProgress.status)">
+                     <div *ngFor="let task of taksInProgress.tasks" cdkDrag>
+                        <app-card-task [title]="task.title" 
+                                       [priority]="task.priority"></app-card-task>
+                     </div>
+                </div>
+    
+    
+            </div>
+    
+            <div class="w-full">
+                <div class="w-[7.5rem] flex flex-row gap-[0.188rem] cursor-pointer">
+                    <app-icon [name]="'add'" [opacity]="true"></app-icon>
+                    <p class="font-crimson font-bold text-black text-opacity-80 text-base leading-[1.313rem]">Añadir Tarea</p>
+                </div>
+            </div>
+    
+        </div>
+    }
+
+    @if (taksBlocked) {
+        <div class="w-[17rem] min-h-[5.5rem] flex flex-col justify-between bg-[#F4F4F4] rounded-[0.625rem] shadow-xl p-[0.625rem]">
+            <div class="w-full flex flex-col gap-[0.625rem]">
+                <h2 class="font-crimson font-bold text-black text-opacity-80 text-base leading-[1.313rem]">{{taksBlocked.titleStatus}}</h2>
+    
+                <div class="w-full min-h-[5.5rem] flex flex-col gap-[0.625rem]" 
+                     cdkDropList 
+                     [cdkDropListData]="taksBlocked.tasks" 
+                     (cdkDropListDropped)="drop($event, taksBlocked.status)">
+                     <div *ngFor="let task of taksBlocked.tasks" cdkDrag>
+                        <app-card-task [title]="task.title" 
+                                       [priority]="task.priority"></app-card-task>
+                     </div>
+                </div>
+    
+    
+            </div>
+    
+            <div class="w-full">
+                <div class="w-[7.5rem] flex flex-row gap-[0.188rem] cursor-pointer">
+                    <app-icon [name]="'add'" [opacity]="true"></app-icon>
+                    <p class="font-crimson font-bold text-black text-opacity-80 text-base leading-[1.313rem]">Añadir Tarea</p>
+                </div>
+            </div>
+    
+        </div>
+    }
+
+    @if (taksDone) {
+        <div class="w-[17rem] min-h-[5.5rem] flex flex-col justify-between bg-[#F4F4F4] rounded-[0.625rem] shadow-xl p-[0.625rem]">
+            <div class="w-full flex flex-col gap-[0.625rem]">
+                <h2 class="font-crimson font-bold text-black text-opacity-80 text-base leading-[1.313rem]">{{taksDone.titleStatus}}</h2>
+    
+                <div class="w-full min-h-[5.5rem] flex flex-col gap-[0.625rem]" 
+                     cdkDropList 
+                     [cdkDropListData]="taksDone.tasks" 
+                     (cdkDropListDropped)="drop($event, taksDone.status)">
+                     <div *ngFor="let task of taksDone.tasks" cdkDrag>
+                        <app-card-task [title]="task.title" 
+                                       [priority]="task.priority"></app-card-task>
+                     </div>
+                </div>
+    
+    
+            </div>
+    
+            <div class="w-full">
+                <div class="w-[7.5rem] flex flex-row gap-[0.188rem] cursor-pointer">
+                    <app-icon [name]="'add'" [opacity]="true"></app-icon>
+                    <p class="font-crimson font-bold text-black text-opacity-80 text-base leading-[1.313rem]">Añadir Tarea</p>
+                </div>
+            </div>
+    
+        </div>
+    }
+</section> -->
+
+
+<section class="w-full h-full flex flex-row gap-5" cdkDropListGroup>
+    @for (item of listDragDropTask; track $index) {
+        <div class="w-[17rem] h-fit flex flex-col justify-between bg-[#F4F4F4] rounded-[0.625rem] shadow-xl p-[0.625rem] overflow-auto">
+            <div class="w-full flex flex-col gap-[0.625rem]">
+                <h2 class="font-crimson font-bold text-black text-opacity-80 text-base leading-[1.313rem]">{{item.titleStatus}}</h2>
+    
+                <div class="w-full min-h-[0.811rem] flex flex-col gap-[0.625rem]" 
+                     cdkDropList
+                     [cdkDropListData]="item.tasks" 
+                     (cdkDropListDropped)="drop($event, item.status)">
+                     @for (task of item.tasks; track $index) {
+                        <div class="last:mb-2" cdkDrag [cdkDragData]="task">
+                            <app-card-task [title]="task.title" 
+                                           [priority]="task.priority"></app-card-task>
+                         </div>
+                     }
+                </div>
+            </div>
+    
+            <div class="w-full">
+                <div class="w-[7.5rem] flex flex-row gap-[0.188rem] cursor-pointer">
+                    <app-icon [name]="'add'" [opacity]="true"></app-icon>
+                    <p class="font-crimson font-bold text-black text-opacity-80 text-base leading-[1.313rem]">Añadir Tarea</p>
+                </div>
+            </div>
+    
         </div>
     }
 </section>
