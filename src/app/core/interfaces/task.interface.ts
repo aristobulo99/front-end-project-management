@@ -15,12 +15,12 @@ export enum Priority {
 
 export interface CreateTask {
     title: string,
-    description: string,
+    description?: string,
     priority: Priority,
     status: Status,
-    storyPoints: number,
-    initDate: Date,
-    endDate: Date,
+    storyPoints?: number,
+    initDate?: Date,
+    endDate?: Date,
     sprintId: number,
     assignedUser: number
 }

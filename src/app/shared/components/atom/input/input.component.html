@@ -6,7 +6,7 @@
                       'bg-white bg-opacity-50': backgroundColor == 'light',
                       'bg-black bg-opacity-[18%]': backgroundColor == 'medio'}">
          <app-icon *ngIf="icon != null" [name]="icon" [valid]="valid"></app-icon>
-         <input class="w-full outline-none bg-transparent text-white font-bold placeholder:font-crimson placeholder:font-medium placeholder:text-lg" 
+         <input class="w-full outline-none appearance-none bg-transparent text-white font-bold placeholder:font-crimson placeholder:font-medium placeholder:text-lg" 
                     [ngClass]="{'placeholder:text-white placeholder:opacity-70':valid, ' placeholder:text-red-700': !valid}"
                     [type]="type" 
                     [placeholder]="placeholder" 

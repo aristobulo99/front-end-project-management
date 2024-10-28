@@ -39,6 +39,11 @@ export const selectPostFrequentProject = createSelector(
     (state) => state.projects.filter(project => state.frequentProjectIds?.includes(`${project.id}`))
 );
 
+export const selectProjectUsers = createSelector(
+    selectProjectsState,
+    (state) => state.projectUsers
+)
+
 export const selectError = createSelector(
     selectProjectsState,
     (state) => state.error

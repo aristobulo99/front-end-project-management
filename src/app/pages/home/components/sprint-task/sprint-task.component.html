@@ -4,7 +4,7 @@
             <app-icon class="w-6 h-6 cursor-pointer" [name]="'arrow-back'" [opacity]="true" (clickEvent)="back()"></app-icon>
             <p class="font-crimson font-extrabold text-black text-base text-opacity-80 leading-[1.313rem]" >{{dataSprint?.name}}</p>
             <div class="w-[11.125rem]">
-                <app-select [backgroundColor]="'medio'" 
+                <app-select [backgroundColor]="'medio'" [valid]="true"
                             [size]="'small'" 
                             [options]="stateOptions" 
                             [control]="sprintState" (selectOptionEvent)="selectOption()"></app-select>
@@ -24,6 +24,14 @@
 
     <app-drag-drop-task class="h-full" 
                         [listDragDropTask]="listDragDropTask" 
-                        (transferStatusEvent)="updateStatus($event)"></app-drag-drop-task>
+                        (transferStatusEvent)="updateStatus($event)" 
+                        (taskStatusEvent)="deployTaskForm($event)"></app-drag-drop-task>
 
 </section>
+
+<ng-template #taskForm>
+    <app-task-form [taskStatus]="taskStatus" 
+                   [taskSPrintId]="sprintId" 
+                   [projectUsers]="listProjectUsers" (createEvent)="createTaskDispatch($event)"
+                   (cancelEvent)="cancelTask()"></app-task-form>
+</ng-template>

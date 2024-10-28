@@ -1,23 +1,36 @@
 <section class="w-full flex flex-col justify-start gap-2]">
     <label *ngIf="label != null">{{label}}</label>
-    <div class="flex flex-row-reverse items-center" >
+    <div class="flex flex-row-reverse items-center rounded-[1.25rem]" [ngClass]="{
+                                                                'bg-white bg-opacity-50': backgroundColor == 'light',
+                                                                'bg-black bg-opacity-[18%]': backgroundColor == 'medio'}">
         <div class="absolute mr-3 z-10">
             <div class="w-full flex flex-col justify-center items-end">
                 <app-icon class="w-6 h-6" [ngClass]="{'rotate-180': dropdownOpen}" [name]="'arrow-down'" [valid]="valid"></app-icon>
             </div>
         </div>
-        <select #selectElement class="w-full px-4 rounded-[1.25rem] gap-5 border-red-700 outline-none text-white font-bold placeholder:font-crimson placeholder:font-medium placeholder:text-lg z-50" 
-                [ngClass]="{'border-0 placeholder:text-white placeholder:opacity-70': valid,
+        <select #selectElement class="w-full px-4 rounded-[1.25rem] gap-5 border-red-700 outline-none text-white text-lg font-crimson z-50" 
+                [ngClass]="{
+                      'font-bold': control.value != '',
+                      'font-medium': control.value == '',
+                      'border-0 placeholder:text-white placeholder:opacity-70': valid,
                       'border-2 placeholder:text-red-700': !valid,
-                      'bg-white bg-opacity-50': backgroundColor == 'light',
-                      'bg-black bg-opacity-[18%]': backgroundColor == 'medio',
                       'h-[2.875rem] py-3': size == 'big',
                       'h-[1.688rem]': size == 'small'}"
                 [formControl]="control"
                 (click)="toggleDropdown()">
-            @for (option of options; track $index) {
-                <option class="font-crimson font-bold text-lg text-black text-opacity-50" 
-                        [value]="option">{{option}}</option>
+            @if (placeholder) {
+                <option class="font-crimson font-bold text-lg text-black text-opacity-50" value="" disabled selected>{{placeholder}}</option>
+            }
+            @if (optionsKey.length > 0) {
+                @for (option of optionsKey; track $index) {
+                    <option class="font-crimson font-bold text-lg text-black text-opacity-50" 
+                            [value]="option.value">{{option.label}}</option>
+                }
+            }@else {
+                @for (option of options; track $index) {
+                    <option class="font-crimson font-bold text-lg text-black text-opacity-50" 
+                            [value]="option">{{option}}</option>
+                }
             }
         </select>
             

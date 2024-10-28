@@ -133,7 +133,7 @@
             </div>
     
             <div class="w-full">
-                <div class="w-[7.5rem] flex flex-row gap-[0.188rem] cursor-pointer">
+                <div class="w-[7.5rem] flex flex-row gap-[0.188rem] cursor-pointer" (click)="createTaskByStatus(item.status)">
                     <app-icon [name]="'add'" [opacity]="true"></app-icon>
                     <p class="font-crimson font-bold text-black text-opacity-80 text-base leading-[1.313rem]">Añadir Tarea</p>
                 </div>

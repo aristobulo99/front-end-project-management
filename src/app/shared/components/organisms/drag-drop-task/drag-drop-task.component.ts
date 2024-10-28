@@ -30,6 +30,7 @@ export class DragDropTaskComponent {
 
   @Input() listDragDropTask: DragDropTask[] = [];
   @Output() transferStatusEvent: EventEmitter<TransferStatus> = new EventEmitter();
+  @Output() taskStatusEvent: EventEmitter<Status> = new EventEmitter();
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -56,12 +57,8 @@ export class DragDropTaskComponent {
       this.cdr.detectChanges();
     }
   }
-}
 
-export interface TestAux{
-  title: string,
-  list: {
-    name: string,
-    email: string
-  }[]
+  createTaskByStatus(status: Status){
+    this.taskStatusEvent.emit(status);
+  }
 }

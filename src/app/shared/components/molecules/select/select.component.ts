@@ -18,7 +18,9 @@ import { IconComponent } from '../../atom/icon/icon.component';
 export class SelectComponent {
 
   @Input() options: string[] | number[] = [];
+  @Input() optionsKey: OptionsKey[] = []
   @Input() label!: string | undefined;
+  @Input() placeholder: string | undefined;
   @Input() control: FormControl = new FormControl('');
   @Input() valid: boolean = true;
   @Input() backgroundColor: 'light' | 'medio' = 'light';
@@ -49,4 +51,13 @@ export class SelectComponent {
     this.selectOptionEvent.emit();
   }
 
+  isOptionsKeyArray(): boolean {
+    return typeof this.options[0] === 'object' && 'key' in (this.options[0] as OptionsKey);
+  }
+
+}
+
+export interface OptionsKey {
+  label: string,
+  value: string
 }

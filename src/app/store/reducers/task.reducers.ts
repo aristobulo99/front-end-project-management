@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { TaskState } from "../../core/interfaces/task-state.interface";
-import { getTaskBySprintIdRequest, getTaskBySprintIdSuccess, patchTaskStatusFailure, patchTaskStatusRequest, patchTaskStatusSuccess } from "../actions/task.actions";
+import { getTaskBySprintIdRequest, getTaskBySprintIdSuccess, patchTaskStatusFailure, patchTaskStatusRequest, patchTaskStatusSuccess, postTaskRequest, postTaskSuccess } from "../actions/task.actions";
 import { Status } from "../../core/interfaces/task.interface";
 
 export const initialStateTask: TaskState = {
@@ -26,6 +26,20 @@ export const _taskReducers = createReducer(
         taskInProgress: tasks.filter(tt =>  tt.status == Status.IN_PROGRESS),
         taskBlocked: tasks.filter(tt =>  tt.status == Status.BLOCKED),
         taskDone: tasks.filter(tt =>  tt.status == Status.DONE),
+        loading: true,
+        success: false
+    })),
+    on(postTaskRequest, (state) => ({
+        ...state,
+        loading: true,
+        success: false
+    })),
+    on(postTaskSuccess, (state, {task}) => ({
+        ...state,
+        taskTodo: task.status === Status.TO_DO ? [...state.taskTodo, task] : [...state.taskTodo],
+        taskInProgress: task.status === Status.IN_PROGRESS ? [...state.taskInProgress, task] : [...state.taskInProgress],
+        taskBlocked: task.status === Status.BLOCKED ? [...state.taskBlocked, task] : [...state.taskBlocked],
+        taskDone: task.status === Status.DONE ? [...state.taskDone, task] : [...state.taskDone],
         loading: true,
         success: false
     })),

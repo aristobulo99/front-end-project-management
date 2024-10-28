@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { ProjectService } from "../../core/services/project/project.service";
 import { ToastService } from "../../core/services/toastr/toast.service";
 import { catchError, exhaustMap, map, of } from "rxjs";
-import { getProjectsFailure, getProjectsIdRequest, getProjectsIdSuccess, getProjectsRequest, getProjectsSuccess, patchDataProject, patchDataProjectSuccess, patchOutstandingProjectRequest, patchOutstandingProjectSuccess, postCreateProject, postCreateProjectSuccess, postFrequentProject, postFrequentProjectSuccess } from "../actions/project.actions";
+import { getProjectsFailure, getProjectsIdRequest, getProjectsIdSuccess, getProjectsRequest, getProjectsSuccess, getProjectUsersRequest, getProjectUsersSuccess, patchDataProject, patchDataProjectSuccess, patchOutstandingProjectRequest, patchOutstandingProjectSuccess, postCreateProject, postCreateProjectSuccess, postFrequentProject, postFrequentProjectSuccess } from "../actions/project.actions";
 import { LoadingService } from "../../core/services/loading/loading.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { tap } from 'rxjs/operators';
@@ -94,6 +94,35 @@ export class ProjectEffects {
                             return of(getProjectsFailure({ error: errorMessage }));
                         }
                     )
+                )
+            )
+        )
+    )
+
+    getProjectUsers$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(getProjectUsersRequest),
+            exhaustMap(
+                (action) => this.projectService.getProjectUsers(action.projectId).pipe(
+                    map(result => getProjectUsersSuccess({projectUsers: result})),
+                    catchError(
+                        (error) => {
+                            let errorMessage: string;
+
+                            switch (error.error) {
+                                case 'Project not found':
+                                    errorMessage = 'El projecto no fue encontrado.';
+                                    break;
+                                default:
+                                    errorMessage = 'Se produjo un error inesperado.';
+                            }
+
+                            this.toastService.showInfo(errorMessage);
+                            this.loadingService.activeLoading = false;
+                            return of(getProjectsFailure({ error: errorMessage }));
+                        }
+                    )
+                    
                 )
             )
         )
