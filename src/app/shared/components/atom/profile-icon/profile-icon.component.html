@@ -1,5 +1,9 @@
 @if(nameUser){
-    <section class="w-[1.875rem] h-[1.875rem] flex flex-row justify-center items-center border-2 border-white rounded-full bg-yellowCustom hover:ring-8 cursor-pointer">
-        <h1 class="font-crimson font-extrabold text-black text-lg leading-6">{{getNameIcon()}}</h1>
+    <section class="w-[1.875rem] h-[1.875rem] flex flex-row justify-center items-center border-2 rounded-full" 
+             [ngClass]="{
+                'border-white bg-yellowCustom hover:ring-8 cursor-pointer':color == 'yellow',
+                'border-black bg-white':color == 'none'
+             }">
+        <h1 class="font-crimson font-extrabold text-black text-base leading-6">{{getNameIcon()}}</h1>
     </section>
 }

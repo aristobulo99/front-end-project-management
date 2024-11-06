@@ -25,7 +25,8 @@
     <app-drag-drop-task class="h-full" 
                         [listDragDropTask]="listDragDropTask" 
                         (transferStatusEvent)="updateStatus($event)" 
-                        (taskStatusEvent)="deployTaskForm($event)"></app-drag-drop-task>
+                        (taskStatusEvent)="deployTaskForm($event)" 
+                        (detailedTask)="selectTask($event)"></app-drag-drop-task>
 
 </section>
 
@@ -34,4 +35,10 @@
                    [taskSPrintId]="sprintId" 
                    [projectUsers]="listProjectUsers" (createEvent)="createTaskDispatch($event)"
                    (cancelEvent)="cancelTask()"></app-task-form>
+</ng-template>
+
+<ng-template #detailedTask>
+    <app-detailed-task [detailedTask]="detailTask" 
+                       [user]="userTask" 
+                       (transferStatusEvent)="updateStatus($event)"></app-detailed-task>
 </ng-template>

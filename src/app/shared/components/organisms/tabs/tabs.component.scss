@@ -1,4 +1,8 @@
 ::ng-deep .mat-mdc-tab .mdc-tab-indicator__content--underline {
-    border-bottom: 1px solid #000000;
+    border-bottom: 0px solid #000000;
     border-color: #000000 !important;
   }
+
+::ng-deep .mat-mdc-tab{
+  height: 1.875rem !important;
+}

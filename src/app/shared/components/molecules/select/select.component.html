@@ -1,34 +1,54 @@
-<section class="w-full flex flex-col justify-start gap-2]">
+<section class="w-full flex flex-col justify-start gap-2">
     <label *ngIf="label != null">{{label}}</label>
-    <div class="flex flex-row-reverse items-center rounded-[1.25rem]" [ngClass]="{
+    <div class="flex flex-row-reverse items-center" [ngClass]="{
                                                                 'bg-white bg-opacity-50': backgroundColor == 'light',
-                                                                'bg-black bg-opacity-[18%]': backgroundColor == 'medio'}">
+                                                                'bg-black bg-opacity-[18%]': backgroundColor == 'medio',
+                                                                'bg-transparent': backgroundColor == 'none',
+                                                                'rounded-[1.25rem]': size == 'big',
+                                                                'rounded-[0.625rem]': size == 'small'}">
         <div class="absolute mr-3 z-10">
             <div class="w-full flex flex-col justify-center items-end">
-                <app-icon class="w-6 h-6" [ngClass]="{'rotate-180': dropdownOpen}" [name]="'arrow-down'" [valid]="valid"></app-icon>
+                <app-icon class="w-6 h-6" [ngClass]="{'rotate-180': dropdownOpen}" [name]="backgroundColor == 'none' ? 'arrow-down-black' :'arrow-down'" [valid]="valid"></app-icon>
             </div>
         </div>
-        <select #selectElement class="w-full px-4 rounded-[1.25rem] gap-5 border-red-700 outline-none text-white text-lg font-crimson z-50" 
+        <select #selectElement class="w-full gap-5  border-red-700 outline-none font-crimson z-50" 
                 [ngClass]="{
                       'font-bold': control.value != '',
                       'font-medium': control.value == '',
-                      'border-0 placeholder:text-white placeholder:opacity-70': valid,
+                      'text-white placeholder:text-white placeholder:opacity-70': backgroundColor != 'none',
+                      'text-black placeholder:text-black': backgroundColor == 'none',
+                      'border-0': valid,
                       'border-2 placeholder:text-red-700': !valid,
-                      'h-[2.875rem] py-3': size == 'big',
-                      'h-[1.688rem]': size == 'small'}"
+                      'h-[2.875rem] py-3 rounded-[1.25rem]': size == 'big',
+                      'h-[1.688rem] rounded-[0.625rem]': size == 'small',
+                      'px-4 text-lg': size != 'x-small',
+                      'h-[1.688rem] p-0 text-sm rounded-[0.625rem]': size == 'x-small',}"
                 [formControl]="control"
                 (click)="toggleDropdown()">
             @if (placeholder) {
-                <option class="font-crimson font-bold text-lg text-black text-opacity-50" value="" disabled selected>{{placeholder}}</option>
+                <option class="font-crimson font-bold text-black text-opacity-50" 
+                        [ngClass]="{
+                            'text-lg': size != 'x-small',
+                            'text-sm': size == 'x-small',
+                        }"
+                        value="" disabled selected>{{placeholder}}</option>
             }
             @if (optionsKey.length > 0) {
                 @for (option of optionsKey; track $index) {
-                    <option class="font-crimson font-bold text-lg text-black text-opacity-50" 
+                    <option class="font-crimson font-bold text-black text-opacity-50" 
+                            [ngClass]="{
+                                'text-lg': size != 'x-small',
+                                'text-sm': size == 'x-small',
+                            }"
                             [value]="option.value">{{option.label}}</option>
                 }
             }@else {
                 @for (option of options; track $index) {
-                    <option class="font-crimson font-bold text-lg text-black text-opacity-50" 
+                    <option class="font-crimson font-bold text-black text-opacity-50" 
+                            [ngClass]="{
+                                'text-lg': size != 'x-small',
+                                'text-sm': size == 'x-small',
+                            }"
                             [value]="option">{{option}}</option>
                 }
             }

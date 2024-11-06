@@ -21,6 +21,9 @@ export class DateFormatPipe implements PipeTransform {
     const month = ('0' + (date.getMonth() + 1)).slice(-2);
     const year = date.getFullYear();
 
+    const hour = date.getHours();
+    const minutes = date.getMinutes()
+
     switch (format) {
       case 'DD-MM-YYYY':
         return `${day}-${month}-${year}`;
@@ -30,6 +33,8 @@ export class DateFormatPipe implements PipeTransform {
         return `${year}-${month}-${day}`;
       case 'DD/MM/YYYY':
         return `${day}/${month}/${year}`;
+      case 'DD/MM/YYYY, HH:MM':
+        return `${day}/${month}/${year}, ${hour}:${minutes}`;
       default:
         return `${day}-${month}-${year}`;
     }

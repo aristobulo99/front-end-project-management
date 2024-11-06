@@ -39,3 +39,29 @@ export interface TransferStatus {
     taskId: number,
     status: Status
 }
+
+export interface StatusHistory{
+    id: number,
+    taskId: number,
+    previousState: Status,
+    newStatus: Status,
+    dateChange: Date,
+    responsibleUser: number
+}
+
+export interface Comments {
+    id: number,
+    taskId: number,
+    userAuthor: number,
+    content: string,
+    creationDate: Date,
+    etag: string
+}
+
+export interface DetailedTask extends Task {
+    creatingDate: Date,
+    updateDate: Date,
+    statusHistory: StatusHistory[],
+    comments: Comments[]
+
+}

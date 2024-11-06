@@ -31,6 +31,7 @@ export class DragDropTaskComponent {
   @Input() listDragDropTask: DragDropTask[] = [];
   @Output() transferStatusEvent: EventEmitter<TransferStatus> = new EventEmitter();
   @Output() taskStatusEvent: EventEmitter<Status> = new EventEmitter();
+  @Output() detailedTask: EventEmitter<number> = new EventEmitter();
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -60,5 +61,9 @@ export class DragDropTaskComponent {
 
   createTaskByStatus(status: Status){
     this.taskStatusEvent.emit(status);
+  }
+
+  selectDetailedTask(taksId: number){
+    this.detailedTask.emit(taksId);
   }
 }

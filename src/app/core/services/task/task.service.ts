@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { CreateTask, Priority, Status, Task, TransferStatus } from '../../interfaces/task.interface';
+import { CreateTask, DetailedTask, Priority, Status, Task, TransferStatus } from '../../interfaces/task.interface';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +48,12 @@ export class TaskService {
 
   getTaskBySprintId(sprintId: number){
     return this.http.get<Task[]>(`${environment.apiUrl}/api/task/sprint/${sprintId}`)
+  }
+
+  getTaskByTaskId(taskId: number){
+    return lastValueFrom(
+      this.http.get<DetailedTask>(`${environment.apiUrl}/api/task/${taskId}`)
+    )
   }
 
   postTask(data: CreateTask){

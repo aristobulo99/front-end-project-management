@@ -23,8 +23,8 @@ export class SelectComponent {
   @Input() placeholder: string | undefined;
   @Input() control: FormControl = new FormControl('');
   @Input() valid: boolean = true;
-  @Input() backgroundColor: 'light' | 'medio' = 'light';
-  @Input() size: 'small' | 'big' = 'big';
+  @Input() backgroundColor: 'light' | 'medio' | 'none' = 'light';
+  @Input() size: 'x-small' | 'small' | 'big' = 'big';
 
   @Output() selectOptionEvent: EventEmitter<void> = new EventEmitter();
 

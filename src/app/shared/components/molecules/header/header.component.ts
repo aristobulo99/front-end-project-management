@@ -30,6 +30,7 @@ export class HeaderComponent implements OnInit{
 
   async getUserData(){
     this.userData = await this.userService.getUser();
+    this.userService.userData = this.userData;
   }
 
   selectMenu(){

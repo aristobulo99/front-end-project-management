@@ -3,9 +3,9 @@
         <mat-tab>
             <ng-template mat-tab-label>
                 @if (item.icon) {
-                    <app-icon [name]="item.icon"></app-icon>
+                    <app-icon class="mr-[0.625rem]" [name]="item.icon" [opacity]="true"></app-icon>
                 }
-                {{item.label}}
+                <p class="font-crimson font-bold text-base text-black text-opacity-80">{{item.label}}</p>
             </ng-template>
             <ng-container *ngTemplateOutlet="item.template"></ng-container>
         </mat-tab>

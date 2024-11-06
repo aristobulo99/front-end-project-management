@@ -124,7 +124,7 @@
                      [cdkDropListData]="item.tasks" 
                      (cdkDropListDropped)="drop($event, item.status)">
                      @for (task of item.tasks; track $index) {
-                        <div class="last:mb-2" cdkDrag [cdkDragData]="task">
+                        <div class="last:mb-2" cdkDrag [cdkDragData]="task" (click)="selectDetailedTask(task.id)">
                             <app-card-task [title]="task.title" 
                                            [priority]="task.priority"></app-card-task>
                          </div>

@@ -11,7 +11,7 @@ import { SelectComponent } from '../../../../shared/components/molecules/select/
 import { FormControl } from '@angular/forms';
 import { SprintService } from '../../../../core/services/sprint/sprint.service';
 import { DragDropTaskComponent } from '../../../../shared/components/organisms/drag-drop-task/drag-drop-task.component';
-import { CreateTask, DragDropTask, Status, TransferStatus } from '../../../../core/interfaces/task.interface';
+import { CreateTask, DetailedTask, DragDropTask, Status, TransferStatus } from '../../../../core/interfaces/task.interface';
 import { getTaskBySprintIdRequest, patchTaskStatusRequest, postTaskRequest } from '../../../../store/actions/task.actions';
 import { selectTaskBlocked, selectTaskDone, selectTaskInProgress, selectTaskTodo } from '../../../../store/selectors/task.selectors';
 import { TaskFormComponent } from '../../../../shared/components/organisms/task-form/task-form.component';
@@ -19,6 +19,10 @@ import { DialogService } from '../../../../core/services/dialog/dialog.service';
 import { getProjectUsersRequest } from '../../../../store/actions/project.actions';
 import { selectProjectUsers } from '../../../../store/selectors/project.selectors';
 import { ProjectUsers } from '../../../../core/interfaces/project.interface';
+import { DetailedTaskComponent } from '../detailed-task/detailed-task.component';
+import { TaskService } from '../../../../core/services/task/task.service';
+import { LoadingService } from '../../../../core/services/loading/loading.service';
+import { UserService } from '../../../../core/services/user/user.service';
 
 @Component({
   selector: 'app-sprint-task',
@@ -27,7 +31,8 @@ import { ProjectUsers } from '../../../../core/interfaces/project.interface';
     IconComponent,
     SelectComponent,
     DragDropTaskComponent,
-    TaskFormComponent
+    TaskFormComponent,
+    DetailedTaskComponent
   ],
   templateUrl: './sprint-task.component.html',
   styleUrl: './sprint-task.component.scss'
@@ -35,6 +40,7 @@ import { ProjectUsers } from '../../../../core/interfaces/project.interface';
 export class SprintTaskComponent implements OnInit, OnDestroy{
 
   @ViewChild('taskForm') taskFormTemplate: TemplateRef<any> | undefined;
+  @ViewChild('detailedTask') detailedTaskTemplate: TemplateRef<any> | undefined;
 
   public sprintId: number | undefined = undefined;
   public projectId: number | undefined = undefined;
@@ -66,13 +72,18 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
   ];
   public taskStatus: Status | undefined = undefined;
   public listProjectUsers: ProjectUsers[] = [];
+  public detailTask!: DetailedTask;
+  public userTask!: ProjectUsers;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private store: Store<AppState>,
     private sprintService: SprintService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private taskService: TaskService,
+    private loadigService: LoadingService,
+    private userService: UserService
   ){}
 
   ngOnInit(): void {
@@ -160,6 +171,27 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
   createTaskDispatch(data: CreateTask){
     this.store.dispatch(postTaskRequest({taskData: data}));
     this.cancelTask();
+  }
+
+  async selectTask(taskId: number){
+    try{
+      this.loadigService.activeLoading = true;
+      this.userService.projectUsers = this.listProjectUsers;
+      this.detailTask = await this.taskService.getTaskByTaskId(taskId);
+      this.userTask = this.listProjectUsers.find(user => user.id == this.detailTask.assignedUser) as ProjectUsers;
+      this.dialogService.openDialog(
+        {
+          title: '',
+          width: '50.9rem',
+          templete: this.detailedTaskTemplate
+        }
+      )
+
+    }catch(error){
+      console.error(error);
+    }
+    this.loadigService.activeLoading = false;
+
   }
 
 }
