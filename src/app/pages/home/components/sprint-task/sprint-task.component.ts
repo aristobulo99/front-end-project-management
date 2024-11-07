@@ -11,9 +11,9 @@ import { SelectComponent } from '../../../../shared/components/molecules/select/
 import { FormControl } from '@angular/forms';
 import { SprintService } from '../../../../core/services/sprint/sprint.service';
 import { DragDropTaskComponent } from '../../../../shared/components/organisms/drag-drop-task/drag-drop-task.component';
-import { CreateTask, DetailedTask, DragDropTask, Status, TransferStatus } from '../../../../core/interfaces/task.interface';
-import { getTaskBySprintIdRequest, patchTaskStatusRequest, postTaskRequest } from '../../../../store/actions/task.actions';
-import { selectTaskBlocked, selectTaskDone, selectTaskInProgress, selectTaskTodo } from '../../../../store/selectors/task.selectors';
+import { Comments, CreateTask, DetailedTask, DragDropTask, Status, TransferStatus } from '../../../../core/interfaces/task.interface';
+import { getTaskBySprintIdRequest, initializeDetailedTask, patchTaskStatusRequest, postTaskCommentRequest, postTaskRequest } from '../../../../store/actions/task.actions';
+import { selectDetailTask, selectTaskBlocked, selectTaskDone, selectTaskInProgress, selectTaskTodo } from '../../../../store/selectors/task.selectors';
 import { TaskFormComponent } from '../../../../shared/components/organisms/task-form/task-form.component';
 import { DialogService } from '../../../../core/services/dialog/dialog.service';
 import { getProjectUsersRequest } from '../../../../store/actions/project.actions';
@@ -23,6 +23,8 @@ import { DetailedTaskComponent } from '../detailed-task/detailed-task.component'
 import { TaskService } from '../../../../core/services/task/task.service';
 import { LoadingService } from '../../../../core/services/loading/loading.service';
 import { UserService } from '../../../../core/services/user/user.service';
+import { CommentCreate } from '../../../../core/interfaces/comment.interface';
+import { initialStateTask } from '../../../../store/reducers/task.reducers';
 
 @Component({
   selector: 'app-sprint-task',
@@ -135,6 +137,11 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
       this.store.select(selectProjectUsers)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(projectUsers => this.listProjectUsers = [...projectUsers])
+
+      this.store.select(selectDetailTask)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(task => this.detailTask = {...task as DetailedTask})
+
     }
   }
 
@@ -151,6 +158,10 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
 
   updateStatus(transfer: TransferStatus){
     this.store.dispatch(patchTaskStatusRequest({transfer: transfer}));
+  }
+
+  getCommentTask(comment: CommentCreate){
+    this.store.dispatch(postTaskCommentRequest({commentData: comment}));
   }
 
   deployTaskForm(status: Status){
@@ -177,7 +188,8 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
     try{
       this.loadigService.activeLoading = true;
       this.userService.projectUsers = this.listProjectUsers;
-      this.detailTask = await this.taskService.getTaskByTaskId(taskId);
+      this.detailTask = await this.taskService.getTaskByTaskIdAsyn(taskId);
+      this.store.dispatch(initializeDetailedTask({ detailedTask: this.detailTask }));
       this.userTask = this.listProjectUsers.find(user => user.id == this.detailTask.assignedUser) as ProjectUsers;
       this.dialogService.openDialog(
         {

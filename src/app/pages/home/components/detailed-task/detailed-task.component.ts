@@ -12,6 +12,8 @@ import { NgClass } from '@angular/common';
 import { DateFormatPipe } from '../../../../shared/pipe/date-format/date-format.pipe';
 import { DescriptionActivityComponent } from '../../../../shared/components/molecules/description-activity/description-activity.component';
 import { Tabs, TabsComponent } from '../../../../shared/components/organisms/tabs/tabs.component';
+import { CommentsComponent } from '../../../../shared/components/organisms/comments/comments.component';
+import { CommentCreate } from '../../../../core/interfaces/comment.interface';
 
 @Component({
   selector: 'app-detailed-task',
@@ -23,7 +25,8 @@ import { Tabs, TabsComponent } from '../../../../shared/components/organisms/tab
     NgClass,
     DateFormatPipe,
     TabsComponent,
-    DescriptionActivityComponent
+    DescriptionActivityComponent,
+    CommentsComponent
   ],
   templateUrl: './detailed-task.component.html',
   styleUrl: './detailed-task.component.scss'
@@ -36,6 +39,7 @@ export class DetailedTaskComponent implements OnInit, AfterViewInit {
   @Input() detailedTask!: DetailedTask;
   @Input() user!: ProjectUsers;
   @Output() transferStatusEvent: EventEmitter<TransferStatus> = new EventEmitter();
+  @Output() commentEvent: EventEmitter<CommentCreate> = new EventEmitter();
 
   public optionsStatus: string[] = [];
   public statusControl: FormControl = new FormControl('');
@@ -80,6 +84,10 @@ export class DetailedTaskComponent implements OnInit, AfterViewInit {
         status: this.taskService.getStatusKeyByValue(this.statusControl.value) as Status
       }
     )
+  }
+
+  confoirmComment(comm: CommentCreate){
+    this.commentEvent.emit(comm);
   }
 
   getPriority(priority: Priority): string {

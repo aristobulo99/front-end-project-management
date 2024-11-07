@@ -51,9 +51,11 @@ export class TaskService {
   }
 
   getTaskByTaskId(taskId: number){
-    return lastValueFrom(
-      this.http.get<DetailedTask>(`${environment.apiUrl}/api/task/${taskId}`)
-    )
+    return this.http.get<DetailedTask>(`${environment.apiUrl}/api/task/${taskId}`)
+  }
+
+  async getTaskByTaskIdAsyn(taskId: number){
+    return await lastValueFrom(this.http.get<DetailedTask>(`${environment.apiUrl}/api/task/${taskId}`))
   }
 
   postTask(data: CreateTask){
@@ -62,7 +64,7 @@ export class TaskService {
 
   patchTaskStatus(transfer: TransferStatus){
     const params = new HttpParams().set('status', transfer.status);
-    return this.http.patch<Task>(`${environment.apiUrl}/api/task/status/${transfer.taskId}`, null, {params})
+    return this.http.patch<DetailedTask>(`${environment.apiUrl}/api/task/status/${transfer.taskId}`, null, {params})
   }
 
 }

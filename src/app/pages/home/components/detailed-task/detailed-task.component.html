@@ -41,13 +41,15 @@
             </div>
         </div>
 
-        <div class="w-[8.75rem] h-full flex flex-col justify-between">
-            <p class="font-crimson font-semibold text-xs text-black text-opacity-80">Puntos de historia</p>
-
-            <div class="w-full h-8 px-[0.625rem] flex flex-row justify-start items-center" >
-                <p class="font-crimson font-semibold text-sm text-black text-opacity-50">{{detailedTask.storyPoints}}</p>
+        @if (detailedTask.storyPoints) {
+            <div class="w-[8.75rem] h-full flex flex-col justify-between">
+                <p class="font-crimson font-semibold text-xs text-black text-opacity-80">Puntos de historia</p>
+    
+                <div class="w-full h-8 px-[0.625rem] flex flex-row justify-start items-center" >
+                    <p class="font-crimson font-semibold text-sm text-black text-opacity-50">{{detailedTask.storyPoints}}</p>
+                </div>
             </div>
-        </div>
+        }
 
         @if (detailedTask.initDate) {
             <div class="w-[8.75rem] h-full flex flex-col justify-between">
@@ -101,5 +103,8 @@
 </ng-template>
 
 <ng-template #comment>
-    <h1>Comentarios</h1>
+    <div class="h-[17.5rem] flex flex-col gap-[0.625rem] mt-4 overflow-x-auto">
+        <app-comments [comments]="detailedTask.comments" [taskId]="detailedTask.id"
+                      (commentEvent)="confoirmComment($event)"></app-comments>
+    </div>
 </ng-template>

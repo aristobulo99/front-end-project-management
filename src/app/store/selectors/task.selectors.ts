@@ -1,5 +1,6 @@
 import { createSelector } from "@ngrx/store";
 import { AppState } from "../app.state";
+import { Comments } from "../../core/interfaces/task.interface";
 
 
 export const selectTaskState = (state: AppState) => state.tasks;
@@ -22,4 +23,9 @@ export const selectTaskBlocked = createSelector(
 export const selectTaskDone = createSelector(
     selectTaskState,
     (state) => state.taskDone
+);
+
+export const selectDetailTask = createSelector(
+    selectTaskState,
+    (state) => state.detailedTask
 );

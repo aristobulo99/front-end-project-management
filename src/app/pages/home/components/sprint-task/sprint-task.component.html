@@ -40,5 +40,6 @@
 <ng-template #detailedTask>
     <app-detailed-task [detailedTask]="detailTask" 
                        [user]="userTask" 
-                       (transferStatusEvent)="updateStatus($event)"></app-detailed-task>
+                       (transferStatusEvent)="updateStatus($event)" 
+                       (commentEvent)="getCommentTask($event)"></app-detailed-task>
 </ng-template>

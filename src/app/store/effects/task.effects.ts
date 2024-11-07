@@ -3,8 +3,9 @@ import { TaskService } from "../../core/services/task/task.service";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { ToastService } from "../../core/services/toastr/toast.service";
 import { LoadingService } from "../../core/services/loading/loading.service";
-import { getTaskBySprintIdRequest, getTaskBySprintIdSuccess, patchTaskStatusFailure, patchTaskStatusRequest, patchTaskStatusSuccess, postTaskRequest, postTaskSuccess, TaskFailure } from "../actions/task.actions";
+import { getTaskByIdRequest, getTaskByIdSuccess, getTaskBySprintIdRequest, getTaskBySprintIdSuccess, patchTaskStatusFailure, patchTaskStatusRequest, patchTaskStatusSuccess, postTaskCommentRequest, postTaskCommentSuccess, postTaskRequest, postTaskSuccess, TaskFailure } from "../actions/task.actions";
 import { catchError, exhaustMap, map, of } from "rxjs";
+import { CommentService } from "../../core/services/comment/comment.service";
 
 @Injectable()
 export class TaskEffects {
@@ -14,6 +15,7 @@ export class TaskEffects {
         private taskService: TaskService,
         private toastService: ToastService,
         private loadingService: LoadingService,
+        private commentService: CommentService
     ){}
 
     getTaskBySprintId$ = createEffect(
@@ -39,6 +41,41 @@ export class TaskEffects {
                             return of(TaskFailure({error: errorMessage}))
                         })
                     )
+            )
+        )
+    )
+
+    getTaskById$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(getTaskByIdRequest),
+            exhaustMap(
+                (action) => this.taskService.getTaskByTaskId(action.taskId).pipe(
+                    map(result => getTaskByIdSuccess({detailedTask: result})),
+                    catchError(error => {
+                        let errorMessage: string;
+
+                        switch (error.error) {
+                            case 'Task not found':
+                                errorMessage = 'Tarea no encontrada.';
+                                break;
+                            case 'Sprint not found':
+                                errorMessage = 'Sprint no encontrada.';
+                                break;
+                            case 'No permissions to perform this action':
+                                errorMessage = 'No hay permisos para realizar esta acción.';
+                                break;
+                            case 'User not related to the project':
+                                errorMessage = 'Usuario no relacionado con el proyecto.';
+                                break;
+                            default:
+                                errorMessage = 'Se produjo un error inesperado.';
+                        }
+
+                        this.toastService.showInfo(errorMessage);
+                        this.loadingService.activeLoading = false;
+                        return of(TaskFailure({error: errorMessage}))
+                    })
+                )
             )
         )
     )
@@ -78,12 +115,38 @@ export class TaskEffects {
         )
     )
 
+    postTaskComment$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(postTaskCommentRequest),
+            exhaustMap(
+                (action) => this.commentService.postComment(action.commentData).pipe(
+                    map(result => postTaskCommentSuccess({comment: result})),
+                    catchError(error => {
+                        let errorMessage: string;
+
+                        switch (error.error) {
+                            case 'The user or task is not related to the projec':
+                                errorMessage = 'El usuario o la tarea no están relacionados con el proyecto.';
+                                break;
+                            default:
+                                errorMessage = 'Se produjo un error inesperado.';
+                        }
+
+                        this.toastService.showInfo(errorMessage);
+                        this.loadingService.activeLoading = false;
+                        return of(TaskFailure({error: errorMessage}))
+                    })
+                )
+            )
+        )
+    )
+
     patchTaskStatus$ = createEffect(
         () => this.actions$.pipe(
             ofType(patchTaskStatusRequest),
             exhaustMap(
                 (action) => this.taskService.patchTaskStatus(action.transfer).pipe(
-                    map(result => patchTaskStatusSuccess({task: {...result, id: action.transfer.taskId}})),
+                    map(result => patchTaskStatusSuccess({task: result})),
                     catchError(error => {
                         let errorMessage: string;
                         switch (error.error) {
