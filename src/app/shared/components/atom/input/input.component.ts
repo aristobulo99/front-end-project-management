@@ -17,13 +17,14 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
   styleUrl: './input.component.scss'
 })
 export class InputComponent {
-  @Input() type: 'text' | 'number' | 'date' |'email' | 'password' = 'text';
+  @Input() type: 'text' | 'number' | 'date' |'email' | 'password' | 'select' | 'text-area' = 'text';
   @Input() label!: string | undefined;
   @Input() icon!: string | undefined;
   @Input() placeholder!: string | undefined;
   @Input() control: FormControl = new FormControl('');
   @Input() valid: boolean = true;
   @Input() backgroundColor: 'light' | 'medio' = 'light'
+  @Input() size: 'big' | 'small' = 'big';
 
   get styleDivInput(){
     return {

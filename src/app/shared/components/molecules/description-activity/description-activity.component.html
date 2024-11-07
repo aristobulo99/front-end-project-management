@@ -1,0 +1,33 @@
+<section class="w-full h-[2.313rem] flex flex-row gap-[0.625rem]">
+    @if (projectUser) {
+        <app-profile-icon [color]="'none'" 
+                          [nameUser]="projectUser.name"></app-profile-icon>
+    }
+    
+    <div class="w-full flex flex-col">
+        @if (comments) {
+            <p class="flex flex-row gap-1 font-crimson font-medium text-sm text-black text-opacity-50">
+                <span class="!font-bold !text-opacity-80">{{projectUser?.name}}</span>
+                <span>{{comments.creationDate | dateFormat:'DD/MM/YYYY, HH:MM'}}</span>
+            </p>
+            <p class="font-crimson font-medium text-sm text-black text-opacity-50 text-wrap">{{comments.content}}</p>
+        }@else {
+            @if (statusHistory.previousState != statusHistory.newStatus) {
+                <p class="flex flex-row gap-1 font-crimson font-medium text-sm text-black text-opacity-50">
+                    <span class="!font-bold !text-opacity-80">{{projectUser?.name}}</span>
+                    <span>ha movido esta tarea de</span>
+                    <span>{{getStatus(statusHistory.previousState)}}</span>
+                    <span>a</span>
+                    <span>{{getStatus(statusHistory.newStatus)}}</span>
+                </p>
+            }@else {
+                <p class="flex flex-row gap-1 font-crimson font-medium text-sm text-black text-opacity-50">
+                    <span class="!font-bold !text-opacity-80">{{projectUser?.name}}</span>
+                    <span>ha añadido esta tarea a</span>
+                    <span>{{getStatus(statusHistory.previousState)}}</span>
+                </p>
+            }
+            <p class="font-crimson font-medium text-sm text-black text-opacity-50">{{statusHistory.dateChange | dateFormat:'DD/MM/YYYY, HH:MM'}}</p>
+        }
+    </div>
+</section>

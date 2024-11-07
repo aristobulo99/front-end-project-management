@@ -12,7 +12,8 @@ export class ButtonComponent {
 
   @Input() name!: string;
   @Input() valid: boolean = true;
-  @Input() color: 'blueCustom' | 'pinkCustom' = 'blueCustom'
+  @Input() color: 'blueCustom' | 'pinkCustom' = 'blueCustom';
+  @Input() size: 'big' | 'small' = 'big';
   @Output() selectButton: EventEmitter<void> = new EventEmitter();
 
   clickButton() {

@@ -1,6 +1,8 @@
 <section class="w-full h-auto p-1 items-center bg-gradient-to-r from-pinkCustom to-blueCustom">
-    <div class="w-full flex flex-col gap-3 bg-white p-6 border-4 border-transparent bg-clip-border rounded-[1.25rem]">
-        <h1 class="w-full font-crimson font-extrabold text-black text-opacity-80 text-center text-2xl leading-5">{{data.title}}</h1>
+    <div class="w-full flex flex-col gap-8 bg-white p-6 border-4 border-transparent bg-clip-border rounded-[1.25rem]">
+        @if (data.title != '') {
+            <h1 class="w-full font-crimson font-extrabold text-black text-opacity-80 text-center text-2xl leading-5">{{data.title}}</h1>
+        }
     
         @if (data.text) {
             <p class="w-full font-crimson font-normal text-black text-opacity-80 text-center text-lg leading-5">{{data.text}}</p>
@@ -11,7 +13,7 @@
         }
     
         @if (data.flexDirectionButton) {
-            <div class="flex gap-5" 
+            <div class="flex gap-5 justify-center items-center" 
                 [ngClass]="{
                 'flex-col': data.flexDirectionButton == 'col',
                 'flex-row': data.flexDirectionButton == 'row',
@@ -19,11 +21,11 @@
                 'flex-row-reverse': data.flexDirectionButton == 'row-reverse',}">
     
                 @if (data.nameAcceptButton) {
-                    <app-button class="w-[10rem]" [name]="data.nameAcceptButton" ></app-button>
+                    <app-button class="w-[10rem]" [name]="data.nameAcceptButton" (selectButton)="acceptButton()"></app-button>
                 }
     
                 @if (data.nameCancelButton) {
-                    <app-button class="w-[10rem]" [name]="data.nameCancelButton" [color]="'pinkCustom'"></app-button>
+                    <app-button class="w-[10rem]" [name]="data.nameCancelButton" [color]="'pinkCustom'" (selectButton)="cancelButton()"></app-button>
                 }
         
             </div>

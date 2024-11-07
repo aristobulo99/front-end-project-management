@@ -9,7 +9,7 @@ import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { getProjectsRequest, patchOutstandingProjectRequest, postCreateProject, postFrequentProject, postFrequentProjectSuccess } from '../../../../store/actions/project.actions';
 import { selectPostFrequentProject, selectProjects, selectProjectsFeatured } from '../../../../store/selectors/project.selectors';
 import { LoadingService } from '../../../../core/services/loading/loading.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { DialogService } from '../../../../core/services/dialog/dialog.service';
 import { RegisterProjectFormComponent } from '../../../../shared/components/organisms/register-project-form/register-project-form.component';
 import { ProjectService } from '../../../../core/services/project/project.service';
@@ -55,10 +55,10 @@ export class ProjectsComponent implements OnInit, OnDestroy  {
     private store: Store<AppState>,
     private loading: LoadingService,
     private dialogService: DialogService,
+    private router: Router
   ){}
 
   ngOnInit(): void {
-    console.log(this.projectFormTemplate)
     this.startTheStore();
   }
 
@@ -103,6 +103,7 @@ export class ProjectsComponent implements OnInit, OnDestroy  {
 
   selectProject(project: Project){
     this.store.dispatch(postFrequentProject({projectId: `${project.id}`}));
+    this.router.navigate(['/project/details', project.id])
   }
 
   projectFormDeploy(){

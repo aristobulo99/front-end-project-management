@@ -1,10 +1,13 @@
+import { OptionsKey } from "../../shared/components/molecules/select/select.component";
 
 export interface InputControl{
-    type: 'text' | 'number' | 'date' |'email' | 'password',
+    type: 'text' | 'number' | 'date' |'email' | 'password' | 'select' | 'text-area',
     label?: string,
     icon?: string,
     placeholder?: string,
-    textAre?: boolean
+    textAre?: boolean,
+    options?: string[],
+    optionsKey?: OptionsKey[],
     formInfo?: {
         formName: string,
         validatorRequered: boolean,

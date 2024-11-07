@@ -1,0 +1,25 @@
+<section class="w-full flex flex-col">
+    <div class="w-full flex flex-row items-center gap-[0.625rem]">
+        <app-profile-icon [color]="'none'" [nameUser]="getUserData()"></app-profile-icon>
+
+        <app-input class="w-[25rem]" type="text" 
+                   [control]="commentControl"  
+                   [size]="'small'"
+                   [placeholder]="'Escriba un comentario...'" 
+                   [backgroundColor]="'medio'"></app-input>
+
+        @if (validateContent()) {
+            <app-button class="w-[10rem]" 
+                        [name]="'Comentar'" 
+                        [size]="'small'" 
+                        (selectButton)="confirmComment()"></app-button>
+        }
+    </div>
+
+    <div class="w-full mt-4 flex flex-col gap-[0.625rem]">
+        @for (item of comments; track $index) {
+            <app-description-activity [comments]="item"></app-description-activity>
+        }
+    </div>
+    
+</section>

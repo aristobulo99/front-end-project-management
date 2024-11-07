@@ -1,0 +1,45 @@
+<section class="w-full h-full flex flex-col gap-[1.375rem]">
+    <div class="w-full h-[1.875rem] flex flex-row justify-between items-center">
+        <div class="h-[1.875rem] flex flex-row justify-start items-center gap-[0.625rem]">
+            <app-icon class="w-6 h-6 cursor-pointer" [name]="'arrow-back'" [opacity]="true" (clickEvent)="back()"></app-icon>
+            <p class="font-crimson font-extrabold text-black text-base text-opacity-80 leading-[1.313rem]" >{{dataSprint?.name}}</p>
+            <div class="w-[11.125rem]">
+                <app-select [backgroundColor]="'medio'" [valid]="true"
+                            [size]="'small'" 
+                            [options]="stateOptions" 
+                            [control]="sprintState" (selectOptionEvent)="selectOption()"></app-select>
+            </div>
+        </div>
+    </div>
+
+    <div class="w-full flex flex-col gap-[1.375rem] pl-[2.125rem]">
+        @if (dataSprint?.aim) {
+            <div class="w-full flex flex-col font-crimson font-extrabold text-black text-base text-opacity-80 leading-[1.313rem]">
+                <p class="font-thin !text-gray-600 !text-opacity-50">Objetivo:</p>
+                <p>{{dataSprint?.aim}}</p>
+            </div>
+        }
+
+    </div>
+
+    <app-drag-drop-task class="h-full" 
+                        [listDragDropTask]="listDragDropTask" 
+                        (transferStatusEvent)="updateStatus($event)" 
+                        (taskStatusEvent)="deployTaskForm($event)" 
+                        (detailedTask)="selectTask($event)"></app-drag-drop-task>
+
+</section>
+
+<ng-template #taskForm>
+    <app-task-form [taskStatus]="taskStatus" 
+                   [taskSPrintId]="sprintId" 
+                   [projectUsers]="listProjectUsers" (createEvent)="createTaskDispatch($event)"
+                   (cancelEvent)="cancelTask()"></app-task-form>
+</ng-template>
+
+<ng-template #detailedTask>
+    <app-detailed-task [detailedTask]="detailTask" 
+                       [user]="userTask" 
+                       (transferStatusEvent)="updateStatus($event)" 
+                       (commentEvent)="getCommentTask($event)"></app-detailed-task>
+</ng-template>

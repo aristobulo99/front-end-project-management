@@ -22,9 +22,17 @@ export class DialogComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    public dialogRef: DialogRef
+    public dialogRef: MatDialogRef<DialogComponent>
   ){
     this.templateRef = data.templete;
+  }
+
+  acceptButton(){
+    this.dialogRef.close({ action: 'accept' });
+  }
+
+  cancelButton(){
+    this.dialogRef.close({ action: 'cancel' });
   }
 
 }

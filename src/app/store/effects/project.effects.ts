@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { ProjectService } from "../../core/services/project/project.service";
 import { ToastService } from "../../core/services/toastr/toast.service";
 import { catchError, exhaustMap, map, of } from "rxjs";
-import { getProjectsFailure, getProjectsRequest, getProjectsSuccess, patchOutstandingProjectRequest, patchOutstandingProjectSuccess, postCreateProject, postCreateProjectSuccess, postFrequentProject, postFrequentProjectSuccess } from "../actions/project.actions";
+import { getProjectsFailure, getProjectsIdRequest, getProjectsIdSuccess, getProjectsRequest, getProjectsSuccess, getProjectUsersRequest, getProjectUsersSuccess, patchDataProject, patchDataProjectSuccess, patchOutstandingProjectRequest, patchOutstandingProjectSuccess, postCreateProject, postCreateProjectSuccess, postFrequentProject, postFrequentProjectSuccess } from "../actions/project.actions";
 import { LoadingService } from "../../core/services/loading/loading.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { tap } from 'rxjs/operators';
@@ -71,6 +71,63 @@ export class ProjectEffects {
         )
     );
 
+    getProjectId$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(getProjectsIdRequest),
+            exhaustMap(
+                (action) => this.projectService.getProjectId(action.projectId).pipe(
+                    map(result => getProjectsIdSuccess({project: result})),
+                    catchError(
+                        (error) => {
+                            let errorMessage: string;
+
+                            switch (error.error) {
+                                case 'Project not found':
+                                    errorMessage = 'El projecto no fue encontrado.';
+                                    break;
+                                default:
+                                    errorMessage = 'Se produjo un error inesperado.';
+                            }
+
+                            this.toastService.showInfo(errorMessage);
+                            this.loadingService.activeLoading = false;
+                            return of(getProjectsFailure({ error: errorMessage }));
+                        }
+                    )
+                )
+            )
+        )
+    )
+
+    getProjectUsers$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(getProjectUsersRequest),
+            exhaustMap(
+                (action) => this.projectService.getProjectUsers(action.projectId).pipe(
+                    map(result => getProjectUsersSuccess({projectUsers: result})),
+                    catchError(
+                        (error) => {
+                            let errorMessage: string;
+
+                            switch (error.error) {
+                                case 'Project not found':
+                                    errorMessage = 'El projecto no fue encontrado.';
+                                    break;
+                                default:
+                                    errorMessage = 'Se produjo un error inesperado.';
+                            }
+
+                            this.toastService.showInfo(errorMessage);
+                            this.loadingService.activeLoading = false;
+                            return of(getProjectsFailure({ error: errorMessage }));
+                        }
+                    )
+                    
+                )
+            )
+        )
+    )
+
     patchOutstanding$ = createEffect(
         () => this.actions$.pipe(
             ofType(patchOutstandingProjectRequest),
@@ -98,6 +155,35 @@ export class ProjectEffects {
             )
         )
     );
+
+    patchDataProject$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(patchDataProject),
+            exhaustMap(
+                (action) => this.projectService.patchProject(action.projectId, action.project)
+                    .pipe(
+                        map((project) => patchDataProjectSuccess({projectCreated: project})),
+                        catchError(
+                            (e) => {
+                                let errorMessage: string;
+
+                                switch (e.error) {
+                                    case 'User not related to the project':
+                                        errorMessage = 'Usuario no relacionado con el proyecto';
+                                        break;
+                                    default:
+                                        errorMessage = 'Se produjo un error inesperado.';
+                                }
+                                this.toastService.showInfo(errorMessage);
+                        
+                                this.loadingService.activeLoading = false;
+                                return of(getProjectsFailure({ error: errorMessage }));
+                            }
+                        )
+                    )
+            )
+        )
+    )
 
     postFrequentProject$ = createEffect(
         () => this.actions$.pipe(

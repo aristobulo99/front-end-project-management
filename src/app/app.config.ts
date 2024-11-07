@@ -13,6 +13,8 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { ROOT_REDUCERS } from './store/app.state';
 import { ProjectEffects } from './store/effects/project.effects';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { SprintEffects } from './store/effects/sprint.effects';
+import { TaskEffects } from './store/effects/task.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,7 +25,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptorsFromDi()),
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     provideStore(ROOT_REDUCERS),
-    provideEffects(ProjectEffects),
+    provideEffects(ProjectEffects, SprintEffects, TaskEffects),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }), provideAnimationsAsync()
 ]
 };

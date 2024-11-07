@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputComponent } from '../../atom/input/input.component';
 import { TextAreaComponent } from '../../atom/text-area/text-area.component';
@@ -8,6 +8,7 @@ import { FormControlPipe } from '../../../pipe/form-control/form-control.pipe';
 import { InputDateComponent } from '../../molecules/input-date/input-date.component';
 import { ToastService } from '../../../../core/services/toastr/toast.service';
 import { ProjectCreate } from '../../../../core/interfaces/project.interface';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-register-project-form',
@@ -19,18 +20,17 @@ import { ProjectCreate } from '../../../../core/interfaces/project.interface';
     InputDateComponent,
     TextAreaComponent,
     ButtonComponent,
-    FormControlPipe
+    FormControlPipe,
+    NgClass
   ],
   templateUrl: './register-project-form.component.html',
   styleUrl: './register-project-form.component.scss'
 })
 export class RegisterProjectFormComponent implements OnInit {
 
-  @Output() createEvent: EventEmitter<ProjectCreate> = new EventEmitter();
-  @Output() cancelEvent: EventEmitter<void> = new EventEmitter(); 
-
-  public fgProject: FormGroup = new FormGroup({});
-  public formsInputs: InputControl[] = [
+  @Input() dataProject: ProjectCreate | undefined = undefined;
+  @Input() enableSprintForm: boolean = false;
+  @Input() formsInputs: InputControl[] = [
     {
       type: 'text',
       placeholder: 'Escriba nombre del proyecto',
@@ -65,6 +65,13 @@ export class RegisterProjectFormComponent implements OnInit {
       }
     },
   ]
+  @Output() createEvent: EventEmitter<ProjectCreate> = new EventEmitter();
+  @Output() editEvent: EventEmitter<ProjectCreate> = new EventEmitter();
+  @Output() cancelEvent: EventEmitter<void> = new EventEmitter(); 
+
+  public fgProject: FormGroup = new FormGroup({});
+  
+  public isFormUnchanged: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -73,22 +80,24 @@ export class RegisterProjectFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.initProjectForm();
-    this.changesThroughoutTheForm()
+    this.changesThroughoutTheForm();
+    if (this.dataProject !== undefined)
+      this.changesInTheEdition();
   }
 
   initProjectForm(){
     this.fgProject = this.fb.group({
-      name: new FormControl<string>('', [Validators.required]),
-      description: new FormControl<string>(''),
-      startDate: new FormControl<Date | string>('', [Validators.required]),
-      endingDate: new FormControl<Date | string>('', [Validators.required]),
+      name: new FormControl<string>(this.dataProject ? this.dataProject.name: '', [Validators.required]),
+      description: new FormControl<string>(this.dataProject ? this.dataProject.description: '', this.enableSprintForm ? [Validators.required] : []),
+      startDate: new FormControl<Date | string>(this.dataProject ? new Date(this.dataProject.startDate) : '', [Validators.required]),
+      endingDate: new FormControl<Date | string>(this.dataProject ? new Date(this.dataProject.endingDate) : '', [Validators.required]),
     })
   }
 
   changesThroughoutTheForm(){
     this.fgProject.valueChanges.subscribe(
       (value) => {
-        if(value.startDate && value.endingDate){
+        if(!!value.startDate && !!value.endingDate){
           if(value.startDate > value.endingDate){
             this.toastService.showInfo(
               'La fecha de inicio debe ser inferior a la fecha de finalización', '', {timeOut: 10000}
@@ -98,6 +107,21 @@ export class RegisterProjectFormComponent implements OnInit {
               startDate: ''
             }, { emitEvent: false });
           }
+        }
+      }
+    )
+  }
+
+  changesInTheEdition(){
+    this.fgProject.valueChanges.subscribe(
+      (value) => {
+        if (this.dataProject !== undefined){
+          const hasChanges = this.dataProject.name !== value.name ||
+                          this.dataProject.description.trim() !== value.description.trim() ||
+                          new Date(this.dataProject.startDate).toString() !== value.startDate.toString() ||
+                          new Date(this.dataProject.endingDate).toString() !== value.endingDate.toString();
+
+          this.isFormUnchanged = hasChanges; 
         }
       }
     )
@@ -115,14 +139,23 @@ export class RegisterProjectFormComponent implements OnInit {
     this.cancelEvent.emit();
   }
 
-  createProject(){
-    const data: ProjectCreate = {
+  getProjectCreate():ProjectCreate{
+    return {
       name: this.fgProject.get('name')?.value,
       description: this.fgProject.get('description')?.value,
       startDate: this.fgProject.get('startDate')?.value,
       endingDate: this.fgProject.get('endingDate')?.value,
       outstanding: true,
     }
+  }
+
+  createProject(){
+    const data: ProjectCreate = this.getProjectCreate();
     this.createEvent.emit(data);
+  }
+
+  editProject(){
+    const data: ProjectCreate = this.getProjectCreate();
+    this.editEvent.emit(data);
   }
 }

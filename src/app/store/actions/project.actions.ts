@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { PatchFeature, PatchProject, Project, ProjectCreate, ProjectCreateResponse } from "../../core/interfaces/project.interface";
+import { PatchFeature, PatchProject, Project, ProjectCreate, ProjectCreateResponse, ProjectUsers } from "../../core/interfaces/project.interface";
 
 /*
 la acción es un mensaje que comunica a los reducers o efectos para que ejecuten una operación. Cuando despachas una acción:
@@ -17,6 +17,29 @@ la acción es un mensaje que comunica a los reducers o efectos para que ejecuten
     export const getProjectsSuccess = createAction(
         "[Projects] Get Projects Success",
         props<{ projects: Project[] }>()
+    );
+
+//Solicitud de obtener un proyecto por id
+    // Accion para iniciar la obtención del elemento Project
+    export const getProjectsIdRequest = createAction(
+        "[Projects] Get Project Id Request",
+        props<{projectId: number}>()
+    );
+
+    // Esta acción se despacha cuando el proyecto se obtienen correctamente
+    export const getProjectsIdSuccess = createAction(
+        "[Projects] Get Project Id Success",
+        props<{ project: ProjectCreate }>()
+    );
+
+    export const getProjectUsersRequest = createAction(
+        "[Projects] Get Project Users Request",
+        props<{projectId: number}>()
+    );
+
+    export const getProjectUsersSuccess = createAction(
+        "[Projects] Get Project Users Success",
+        props<{projectUsers: ProjectUsers[]}>()
     );
 
 //Solicitud para actualizar el estado destacado
@@ -44,6 +67,19 @@ la acción es un mensaje que comunica a los reducers o efectos para que ejecuten
         "[Project] Post Frequent Project Success",
         props<{ projectIds: string[] }>()
     );
+
+//Solicitud para actualizar un proyecto
+    // Esta acción se despacha cuando se confirma la actualizacion del proyecto
+    export const patchDataProject = createAction(
+        "[Project] Patch project data",
+        props<{projectId: number, project: ProjectCreate }>()
+    )
+
+    // Esta acción se despacha cuando se confirma la actualizacion del proyecto
+    export const patchDataProjectSuccess = createAction(
+        "[Project] Patch project data success",
+        props<{projectCreated: ProjectCreateResponse}>()
+    )
 
 //Solicitud para crear un proyecto nuevo
     // Esta acción se despacha cuando se confirma la creacion de proyecto

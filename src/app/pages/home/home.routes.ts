@@ -2,6 +2,8 @@ import { RouterModule, Routes } from "@angular/router";
 import { HomeComponent } from "./home.component";
 import { ProjectsComponent } from "./components/projects/projects.component";
 import { NgModule } from "@angular/core";
+import { ProjectDetailsComponent } from "./components/project-details/project-details.component";
+import { SprintTaskComponent } from "./components/sprint-task/sprint-task.component";
 
 
 const routes: Routes = [
@@ -9,8 +11,10 @@ const routes: Routes = [
       path: '', 
       component: HomeComponent, 
       children: [
-        { path: 'project', component: ProjectsComponent },
-        { path: '', redirectTo: 'project', pathMatch: 'full' },
+        { path: '', component: ProjectsComponent },
+        { path: 'details/:id', component: ProjectDetailsComponent },
+        { path: 'details/:id/sprint/:sprintId', component: SprintTaskComponent },
+        { path: '', redirectTo: '', pathMatch: 'full' },
       ] 
     }
 ];

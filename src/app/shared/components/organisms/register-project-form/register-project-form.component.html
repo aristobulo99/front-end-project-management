@@ -7,7 +7,7 @@
                         @case ('text') {
                             @if (item.textAre) {
                                 <app-text-area class="h-[12.8rem]" [backgroundColor]="'medio'"
-                                               [valid]="!item.formInfo?.validatorRequered" 
+                                               [valid]=" !enableSprintForm ? true : fieldValidation(''+item.formInfo?.formName)" 
                                                [placeholder]="item.placeholder"
                                                [control]="fgProject.controls[''+item.formInfo?.formName] | formControl"></app-text-area>
                             }@else {
@@ -39,11 +39,17 @@
                     [name]="'Cancelar'"
                     [color]="'pinkCustom'" 
                     (selectButton)="cancelProject()"></app-button>
-
-        <app-button class="w-[10rem]" 
-                    [name]="'Registrar'" 
-                    [valid]="fgProject.valid"
-                    (selectButton)="createProject()"></app-button>
+        @if (dataProject == undefined) {
+            <app-button class="w-[10rem]" 
+                        [name]="'Registrar'" 
+                        [valid]="fgProject.valid"
+                        (selectButton)="createProject()"></app-button>
+        }@else {
+            <app-button class="w-[10rem]" 
+                        [name]="'Guardar cambios'" 
+                        [valid]="isFormUnchanged && fgProject.valid"
+                        (selectButton)="editProject()"></app-button>
+        }
     </div>
 </section>
 

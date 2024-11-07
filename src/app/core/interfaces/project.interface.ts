@@ -43,3 +43,9 @@ export interface PatchProject {
     roleProject: RoleProject,
     feature_project: boolean
 }
+
+export interface ProjectUsers {
+    id: number, 
+    name: string,
+    email: string
+}

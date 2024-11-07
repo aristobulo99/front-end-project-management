@@ -5,4 +5,6 @@ export interface User {
     password: string
 }
 
-export interface UserCreate extends Omit<User, 'password'>{}
+export interface UserCreate extends Omit<User, 'password'>{
+    id: number
+}
