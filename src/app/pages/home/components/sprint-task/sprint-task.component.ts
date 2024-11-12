@@ -24,7 +24,7 @@ import { TaskService } from '../../../../core/services/task/task.service';
 import { LoadingService } from '../../../../core/services/loading/loading.service';
 import { UserService } from '../../../../core/services/user/user.service';
 import { CommentCreate } from '../../../../core/interfaces/comment.interface';
-import { initialStateTask } from '../../../../store/reducers/task.reducers';
+import { TaskWebSocketService } from '../../../../core/services/task/task-web-socket.service';
 
 @Component({
   selector: 'app-sprint-task',
@@ -85,12 +85,16 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
     private dialogService: DialogService,
     private taskService: TaskService,
     private loadigService: LoadingService,
-    private userService: UserService
+    private userService: UserService,
+    private taskSocket: TaskWebSocketService
   ){}
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    this.loadigService.activeLoading = true;
     this.stateOptions = Object.values(this.sprintService.statusSprint)
-    this.initSprintId();
+    await this.initSprintId();
+
+    this.loadigService.activeLoading = false;
   }
 
   ngOnDestroy(): void {
@@ -98,16 +102,19 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
     this.unsubscribe$.complete();
   }
 
-  initSprintId(){
+  async initSprintId(){
     const sprintId = this.route.snapshot.paramMap.get('sprintId')!
     const projectId = this.route.snapshot.paramMap.get('id')!
     if(sprintId && projectId){
       this.sprintId = Number(sprintId);
       this.projectId = Number(projectId);
 
+      
       this.store.dispatch(getSprintIdRequest({sprintId: this.sprintId}));
       this.store.dispatch(getTaskBySprintIdRequest({sprintId: this.sprintId}));
       this.store.dispatch(getProjectUsersRequest({projectId: this.projectId}));
+      
+      await this.taskSocket.getTaskByProject(this.sprintId);
 
       this.store.select(selectSprint)
         .pipe(takeUntil(this.unsubscribe$))

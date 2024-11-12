@@ -6,6 +6,7 @@ import { LoadingService } from "../../core/services/loading/loading.service";
 import { getTaskByIdRequest, getTaskByIdSuccess, getTaskBySprintIdRequest, getTaskBySprintIdSuccess, patchTaskStatusFailure, patchTaskStatusRequest, patchTaskStatusSuccess, postTaskCommentRequest, postTaskCommentSuccess, postTaskRequest, postTaskSuccess, TaskFailure } from "../actions/task.actions";
 import { catchError, exhaustMap, map, of } from "rxjs";
 import { CommentService } from "../../core/services/comment/comment.service";
+import { TaskWebSocketService } from "../../core/services/task/task-web-socket.service";
 
 @Injectable()
 export class TaskEffects {
@@ -14,6 +15,7 @@ export class TaskEffects {
         private actions$: Actions,
         private taskService: TaskService,
         private toastService: ToastService,
+        private taskWebSocket: TaskWebSocketService,
         private loadingService: LoadingService,
         private commentService: CommentService
     ){}
@@ -22,7 +24,7 @@ export class TaskEffects {
         () => this.actions$.pipe(
             ofType(getTaskBySprintIdRequest),
             exhaustMap(
-                (action) => this.taskService.getTaskBySprintId(action.sprintId)
+                (action) => this.taskWebSocket.onTasksBySprint()
                     .pipe(
                         map((result => getTaskBySprintIdSuccess({tasks: result}))),
                         catchError(error => {
