@@ -5,7 +5,7 @@ import { Sprint, StatusSprint } from '../../../../core/interfaces/sprint.interfa
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../store/app.state';
 import { getSprintIdRequest, pacthSprintStatusRequest } from '../../../../store/actions/sprint.actions';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Observable, Subject, Subscription, takeUntil } from 'rxjs';
 import { selectSprint } from '../../../../store/selectors/srpint.selectors';
 import { SelectComponent } from '../../../../shared/components/molecules/select/select.component';
 import { FormControl } from '@angular/forms';
@@ -48,6 +48,7 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
   public projectId: number | undefined = undefined;
   public dataSprint: Sprint | undefined = undefined;
   public unsubscribe$: Subject<void> = new Subject<void>();
+  public unsubscribeTask$: Subscription = new Subscription();
   public sprintState: FormControl = new FormControl('');
   public stateOptions: string[] = [];
   public listDragDropTask: DragDropTask[] = [
@@ -83,7 +84,6 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
     private store: Store<AppState>,
     private sprintService: SprintService,
     private dialogService: DialogService,
-    private taskService: TaskService,
     private loadigService: LoadingService,
     private userService: UserService,
     private taskSocket: TaskWebSocketService
@@ -145,10 +145,22 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(projectUsers => this.listProjectUsers = [...projectUsers])
 
-      this.store.select(selectDetailTask)
+      
+      this.taskSocket.onTaskById()
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(task => this.detailTask = {...task as DetailedTask})
-
+        .subscribe(
+          detailedTask => {
+            this.detailTask = {
+              ...detailedTask, 
+              creatingDate: new Date(detailedTask.creatingDate),
+              initDate: detailedTask?.initDate ? new Date(detailedTask?.initDate) : undefined,
+              endDate: detailedTask?.endDate ? new Date(detailedTask?.endDate) : undefined,
+              updateDate: new Date(detailedTask.updateDate),
+              statusHistory: [...detailedTask.statusHistory.map(sh => ({...sh, dateChange: new Date(sh.dateChange)}))],
+              comments: detailedTask.comments.map(cm => ({...cm, creationDate: new Date(cm.creationDate)}))
+            };
+          }
+        );
     }
   }
 
@@ -194,22 +206,34 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
   async selectTask(taskId: number){
     try{
       this.loadigService.activeLoading = true;
-      this.userService.projectUsers = this.listProjectUsers;
-      this.detailTask = await this.taskService.getTaskByTaskIdAsyn(taskId);
-      this.store.dispatch(initializeDetailedTask({ detailedTask: this.detailTask }));
-      this.userTask = this.listProjectUsers.find(user => user.id == this.detailTask.assignedUser) as ProjectUsers;
-      this.dialogService.openDialog(
-        {
-          title: '',
-          width: '50.9rem',
-          templete: this.detailedTaskTemplate
+      this.taskSocket.getTaskById(taskId);
+      await new Promise(
+        (resolve, reject) => {
+          setTimeout(
+            () => {
+              this.userService.projectUsers = this.listProjectUsers;
+              this.store.dispatch(initializeDetailedTask({ detailedTask: this.detailTask }));
+              this.userTask = this.listProjectUsers.find(user => user.id == this.detailTask.assignedUser) as ProjectUsers;
+              this.dialogService.openDialog(
+                {
+                  title: '',
+                  width: '50.9rem',
+                  templete: this.detailedTaskTemplate
+                }
+              )
+    
+              this.unsubscribeTask$.unsubscribe();
+              reject()
+            },100
+          )
         }
       )
 
     }catch(error){
       console.error(error);
+    }finally {
+      this.loadigService.activeLoading = false;
     }
-    this.loadigService.activeLoading = false;
 
   }
 

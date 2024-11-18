@@ -4,7 +4,7 @@ import { environment } from '../../../../environments/environment';
 import { StompConfig, StompService } from '@stomp/ng2-stompjs';
 import { Client } from '@stomp/stompjs';
 import { Observable } from 'rxjs';
-import { Task } from '../../interfaces/task.interface';
+import { DetailedTask, Task } from '../../interfaces/task.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +21,14 @@ export class TaskWebSocketService {
       this.socket.on('tasksBySprint', (tasks) => {
         observer.next(tasks);
       });
+    });
+  }
+
+  onTaskById(): Observable<DetailedTask>{
+    return new Observable(observer  => {
+      this.socket.on('taskById', (detailedTask) => {
+        observer.next(detailedTask)
+      })
     });
   }
 
@@ -44,6 +52,10 @@ export class TaskWebSocketService {
         });
       }
     });
+  }
+
+  getTaskById(taskId: number) {
+    this.socket.emit('getTaskById', taskId);
   }
 
 
