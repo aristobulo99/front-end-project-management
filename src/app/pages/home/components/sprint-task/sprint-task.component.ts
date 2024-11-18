@@ -223,8 +223,8 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
               )
     
               this.unsubscribeTask$.unsubscribe();
-              reject()
-            },100
+              resolve('');
+            },500
           )
         }
       )
