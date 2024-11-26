@@ -16,8 +16,6 @@ import { getTaskBySprintIdRequest, initializeDetailedTask, patchTaskStatusReques
 import { selectDetailTask, selectTaskBlocked, selectTaskDone, selectTaskInProgress, selectTaskTodo } from '../../../../store/selectors/task.selectors';
 import { TaskFormComponent } from '../../../../shared/components/organisms/task-form/task-form.component';
 import { DialogService } from '../../../../core/services/dialog/dialog.service';
-import { getProjectUsersRequest } from '../../../../store/actions/project.actions';
-import { selectProjectUsers } from '../../../../store/selectors/project.selectors';
 import { ProjectUsers } from '../../../../core/interfaces/project.interface';
 import { DetailedTaskComponent } from '../detailed-task/detailed-task.component';
 import { TaskService } from '../../../../core/services/task/task.service';
@@ -25,6 +23,7 @@ import { LoadingService } from '../../../../core/services/loading/loading.servic
 import { UserService } from '../../../../core/services/user/user.service';
 import { CommentCreate } from '../../../../core/interfaces/comment.interface';
 import { TaskWebSocketService } from '../../../../core/services/task/task-web-socket.service';
+import { ProjectService } from '../../../../core/services/project/project.service';
 
 @Component({
   selector: 'app-sprint-task',
@@ -86,11 +85,13 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
     private dialogService: DialogService,
     private loadigService: LoadingService,
     private userService: UserService,
-    private taskSocket: TaskWebSocketService
+    private taskSocket: TaskWebSocketService,
+    private projectService: ProjectService
   ){}
 
   async ngOnInit() {
     this.loadigService.activeLoading = true;
+    this.listProjectUsers = [...this.projectService.projectUsers];
     this.stateOptions = Object.values(this.sprintService.statusSprint)
     await this.initSprintId();
 
@@ -112,7 +113,6 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
       
       this.store.dispatch(getSprintIdRequest({sprintId: this.sprintId}));
       this.store.dispatch(getTaskBySprintIdRequest({sprintId: this.sprintId}));
-      this.store.dispatch(getProjectUsersRequest({projectId: this.projectId}));
       
       await this.taskSocket.getTaskByProject(this.sprintId);
 
@@ -140,10 +140,6 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
       this.store.select(selectTaskDone)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(task => this.listDragDropTask[3].tasks = [...task])
-
-      this.store.select(selectProjectUsers)
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(projectUsers => this.listProjectUsers = [...projectUsers])
 
       
       this.taskSocket.onTaskById()

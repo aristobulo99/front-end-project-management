@@ -20,9 +20,7 @@ import { ProjectService } from '../../../../core/services/project/project.servic
   imports: [
     CardProjectComponent,
     IconComponent,
-    NgFor,
     NgIf,
-    AsyncPipe,
     RegisterProjectFormComponent
   ],
   templateUrl: './projects.component.html',

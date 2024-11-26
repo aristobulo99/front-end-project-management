@@ -14,7 +14,23 @@
 
         </div>
 
-        <app-profile-icon [nameUser]="userData ? userData.name : undefined"></app-profile-icon>
+        <div class="flex flex-row gap-[1.25em]">
+            @if (myRole()) {
+                <app-button class="w-[6.375rem]" 
+                            [color]="'pinkCustom'" 
+                            [name]="'Shared'" 
+                            [size]="'small'" 
+                            (selectButton)="selectShare()"></app-button>
+            }
+                
+
+            <app-profile-icon [nameUser]="userData ? userData.name : undefined"></app-profile-icon>
+        </div>
+
     </div>
 
 </section>
+
+<ng-template #sharedForm>
+    <app-project-user-management></app-project-user-management>
+</ng-template>

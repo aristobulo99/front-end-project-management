@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ProjectRole } from '../../interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -6,6 +7,7 @@ import { Injectable } from '@angular/core';
 export class HeaderService {
 
   private _sidebarDeployment: boolean = true;
+  private _projectRole: ProjectRole | undefined = undefined;
 
   constructor() { }
 
@@ -15,5 +17,13 @@ export class HeaderService {
 
   get sidebarDeployment() {
     return this._sidebarDeployment;
+  }
+
+  set projectRole(value: ProjectRole | undefined){
+    this._projectRole = value;
+  }
+
+  get projectRole(){
+    return this._projectRole;
   }
 }

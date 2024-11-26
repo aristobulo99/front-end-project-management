@@ -1,0 +1,56 @@
+<section class="w-[33.5rem] flex flex-col gap-5">
+    <div class="w-full flex flex-col gap-6">
+        <h1 class="font-crimson font-bold text-xl text-black text-opacity-80">Compartir Proyecto</h1>
+
+        <form class="w-full flex flex-col gap-5" [formGroup]="sharedForm">
+            <div class="flex flex-row justify-between">
+                @for (formInput of formInputs; track $index) {
+                    <div class="w-[16.125rem]">
+                        @switch (formInput.type) {
+                            @case ('text') {
+                                <app-input [type]="'email'" 
+                                           [placeholder]="formInput.placeholder" 
+                                           [backgroundColor]="'medio'" 
+                                           [control]="sharedForm.controls[formInput.formInfo?.formName+''] | formControl" 
+                                           [valid]="fieldValidation(formInput.formInfo?.formName+'')"></app-input>
+                            }
+                            @case ('select') {
+                                @if (formInput.options) {
+                                    <app-select [options]="formInput.options" 
+                                                    [size]="'big'" 
+                                                    [valid]="fieldValidation(''+formInput.formInfo?.formName)"
+                                                    [control]="sharedForm.controls[formInput.formInfo?.formName+''] | formControl" 
+                                                    [backgroundColor]="'medio'"></app-select>
+                                }
+                            }
+                        }
+                        @if (fieldHasError(''+formInput.formInfo?.formName, 'required')) {
+                            <p class="font-crimson font-medium text-base text-red-700 ml-2">Campo obligatorio</p>
+                        }
+                        @if (fieldHasError(''+formInput.formInfo?.formName, 'email')) {
+                            <p class="font-crimson font-medium text-base text-red-700 ml-2">Correo no valido</p>
+                        }
+                    </div>
+                }
+            </div>
+            <div class="w-full flex flex-col items-end">
+                <app-button class="w-40" [name]="'Compartir'" 
+                            [valid]="sharedForm.valid" ></app-button>
+
+            </div>
+        </form>
+    </div>
+
+    <div class="w-full flex flex-col gap-4">
+        <h2 class="font-crimson font-bold text-base text-black text-opacity-80"></h2>
+
+        <div class="w-full flex flex-col gap-[0.625rem]">
+            @for (projectUser of projectUsers; track $index) {
+                <app-user-details [projectUser]="projectUser"></app-user-details>
+            }
+        </div>
+
+    </div>
+
+</section>
+

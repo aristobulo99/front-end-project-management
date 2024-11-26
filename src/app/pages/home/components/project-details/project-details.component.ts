@@ -4,14 +4,16 @@ import { IconComponent } from '../../../../shared/components/atom/icon/icon.comp
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { DateFormatPipe } from '../../../../shared/pipe/date-format/date-format.pipe';
 import { Store } from '@ngrx/store';
-import { getProjectsIdRequest, patchDataProject } from '../../../../store/actions/project.actions';
-import { selectProjectId } from '../../../../store/selectors/project.selectors';
+import { getProjectsIdRequest, getProjectUsersRequest, patchDataProject } from '../../../../store/actions/project.actions';
+import { selectProjectId, selectProjectUsers } from '../../../../store/selectors/project.selectors';
 import { Subject, takeUntil } from 'rxjs';
 import { ProjectCreate } from '../../../../core/interfaces/project.interface';
 import { AppState } from '../../../../store/app.state';
 import { RegisterProjectFormComponent } from '../../../../shared/components/organisms/register-project-form/register-project-form.component';
 import { DialogService } from '../../../../core/services/dialog/dialog.service';
 import { SprintComponent } from './components/sprint/sprint.component';
+import { ProjectUserService } from '../../../../core/services/project-user/project-user.service';
+import { HeaderService } from '../../../../core/services/header/header.service';
 
 @Component({
   selector: 'app-project-details',
@@ -51,7 +53,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy{
     this.unsubscribe$.complete();
   }
 
-  initProjectId(){
+  async initProjectId(){
     const projectId = this.route.snapshot.paramMap.get('id')!;
     if(projectId){
       this.projectId = Number(projectId);
@@ -63,8 +65,6 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy{
           this.dataProject = project;
         })
     }
-    
-
   }
 
   back(){

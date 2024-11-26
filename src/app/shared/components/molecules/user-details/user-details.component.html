@@ -1,0 +1,13 @@
+<section class="w-full h-[2.313rem] flex flex-row justify-start items-center gap-[0.625rem] group">
+    <app-profile-icon [color]="'none'" [nameUser]="projectUser.name"></app-profile-icon>
+
+    <div class="w-full flex flex-col justify-start">
+        <h1 class="font-crimson font-semibold text-sm text-black text-opacity-80">{{projectUser.name}} @if (getUserRole()?.id == projectUser.id) {(tú)}</h1>
+        <p class="font-crimson font-medium text-sm text-black text-opacity-80">{{projectUser.email}} <span>&bull;</span> {{getRole(projectUser.roleProject)}}</p>
+    </div>
+
+    <div class="flex flex-row gap-[0.625rem] transform -translate-x-1/2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-in-out">
+        <app-icon class="w-6 h-6 cursor-pointer" [name]="'edit'"></app-icon>
+        <app-icon class="w-6 h-6 cursor-pointer" [name]="'person-remove'"></app-icon>
+    </div>
+</section>
