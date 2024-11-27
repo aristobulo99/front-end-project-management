@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { ProjectState } from "../../core/interfaces/project-state.interface";
-import { getProjectsFailure, getProjectsIdSuccess, getProjectsRequest, getProjectsSuccess, getProjectUsersRequest, getProjectUsersSuccess, patchDataProject, patchDataProjectSuccess, patchOutstandingProjectRequest, patchOutstandingProjectSuccess, postCreateProject, postCreateProjectSuccess, postFrequentProjectSuccess } from "../actions/project.actions";
+import { getProjectsFailure, getProjectsIdSuccess, getProjectsRequest, getProjectsSuccess, getProjectUsersRequest, getProjectUsersSuccess, patchDataProject, patchDataProjectSuccess, patchOutstandingProjectRequest, patchOutstandingProjectSuccess, postCreateProject, postCreateProjectSuccess, postFrequentProjectSuccess, postShareProjectRequest, postShareProjectSuccess } from "../actions/project.actions";
 
 export const initialStateProject: ProjectState = {
     projects: [],
@@ -38,6 +38,17 @@ export const _projectsReducer = createReducer(
     on(getProjectUsersSuccess, (state,  {projectUsers}) => ({
         ...state,
         projectUsers,
+        loading: false,
+        success: true
+    })),
+    on(postShareProjectRequest, (state) => ({
+        ...state,
+        loading: true,
+        success: false,
+    })),
+    on(postShareProjectSuccess, (state,  {projectUser}) => ({
+        ...state,
+        projectUsers: state.projectUsers.find(pu => pu.id === projectUser.id) ? state.projectUsers.map(pu => pu.id === projectUser.id ? projectUser : pu) : [...state.projectUsers, projectUser],
         loading: false,
         success: true
     })),

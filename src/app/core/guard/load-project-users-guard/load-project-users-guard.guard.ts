@@ -39,12 +39,14 @@ export interface CanComponentDeactivate {
       const projectId = route.paramMap.get('id');
 
       if(projectId){
+        this.projectService.projectId = Number(projectId);
         this.store.dispatch(getProjectUsersRequest({projectId: Number(projectId)}));
         this.headerService.projectRole = await this.projectUserService.getProjectRole( Number(projectId) );
   
         this.store.select(selectProjectUsers)
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe(projectUsers => {
+            console.log('Se ejecuta?????')
             this.projectService.projectUsers = [...projectUsers]
           })
       }

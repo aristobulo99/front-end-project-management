@@ -5,9 +5,12 @@ import { UserService } from '../../../../core/services/user/user.service';
 import { ProjectRole, UserCreate } from '../../../../core/interfaces/user.interface';
 import { HeaderService } from '../../../../core/services/header/header.service';
 import { ButtonComponent } from '../../atom/button/button.component';
-import { RoleProject } from '../../../../core/interfaces/project.interface';
+import { RoleProject, shareProject } from '../../../../core/interfaces/project.interface';
 import { ProjectUserManagementComponent } from '../../template/project-user-management/project-user-management.component';
 import { DialogService } from '../../../../core/services/dialog/dialog.service';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../store/app.state';
+import { postShareProjectRequest } from '../../../../store/actions/project.actions';
 
 @Component({
   selector: 'app-header',
@@ -31,7 +34,8 @@ export class HeaderComponent implements OnInit{
   constructor(
     private userService: UserService,
     private headerService: HeaderService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private store: Store<AppState>,
   ){}
 
   ngOnInit(): void {
@@ -61,6 +65,10 @@ export class HeaderComponent implements OnInit{
         templete: this.sharedTemplate
       }
     )
+  }
+
+  shareProject(share: shareProject){
+    this.store.dispatch(postShareProjectRequest({shared: share}))
   }
 
 

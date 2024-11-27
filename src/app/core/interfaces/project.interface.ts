@@ -51,3 +51,9 @@ export interface ProjectUsers {
     projectEnable: boolean,
     roleProject: RoleProject
 }
+
+export interface shareProject {
+    idProject: number,
+    email: string,
+    roleProject: RoleProject
+}

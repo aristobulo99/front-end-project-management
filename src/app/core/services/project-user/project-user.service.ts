@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ProjectRole } from '../../interfaces/user.interface';
-import { RoleProject } from '../../interfaces/project.interface';
+import { ProjectUsers, RoleProject, shareProject } from '../../interfaces/project.interface';
 
 import {utility} from '../../../shared/utils/getKeyByValue/getKeyByValue';
 
@@ -37,5 +37,9 @@ export class ProjectUserService extends utility {
     return lastValueFrom(
       this.http.get<ProjectRole>(`${environment.apiUrl}/share-project/project-role/${projectId}`)
     )
+  }
+
+  postShareProject(share: shareProject){
+    return this.http.post<ProjectUsers>(`${environment.apiUrl}/share-project`, share);
   }
 }

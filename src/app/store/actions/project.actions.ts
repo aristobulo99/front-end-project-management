@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { PatchFeature, PatchProject, Project, ProjectCreate, ProjectCreateResponse, ProjectUsers } from "../../core/interfaces/project.interface";
+import { PatchFeature, PatchProject, Project, ProjectCreate, ProjectCreateResponse, ProjectUsers, shareProject } from "../../core/interfaces/project.interface";
 
 /*
 la acción es un mensaje que comunica a los reducers o efectos para que ejecuten una operación. Cuando despachas una acción:
@@ -40,6 +40,16 @@ la acción es un mensaje que comunica a los reducers o efectos para que ejecuten
     export const getProjectUsersSuccess = createAction(
         "[Projects] Get Project Users Success",
         props<{projectUsers: ProjectUsers[]}>()
+    );
+
+    export const postShareProjectRequest  = createAction(
+        "[Project] post Share Project Request", 
+        props<{shared: shareProject}>()
+    );
+
+    export const postShareProjectSuccess  = createAction(
+        "[Project] post Share Project Success", 
+        props<{projectUser: ProjectUsers}>()
     );
 
 //Solicitud para actualizar el estado destacado

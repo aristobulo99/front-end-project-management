@@ -9,6 +9,7 @@ import { lastValueFrom, Observable } from 'rxjs';
 })
 export class ProjectService {
 
+  private _projectId: number | undefined;
   private _dataProject: Project | undefined = undefined;
   private _projectUsers: ProjectUsers[] = [];
 
@@ -30,6 +31,14 @@ export class ProjectService {
 
   set projectUsers(value: ProjectUsers[]){
     this._projectUsers = value;
+  }
+
+  get projectId(){
+    return this._projectId;
+  }
+
+  set projectId(value: number | undefined){
+    this._projectId = value;
   }
 
   getMyProjects(){

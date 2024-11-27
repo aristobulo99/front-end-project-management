@@ -32,5 +32,5 @@
 </section>
 
 <ng-template #sharedForm>
-    <app-project-user-management></app-project-user-management>
+    <app-project-user-management (sharedProjectEvent)="shareProject($event)"></app-project-user-management>
 </ng-template>
