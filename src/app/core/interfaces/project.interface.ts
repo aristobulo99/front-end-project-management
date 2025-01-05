@@ -1,10 +1,10 @@
 import { Observable } from "rxjs"
 
 export enum RoleProject {
-    DEVELOPER,
-    SCRUM_MASTER,
-    PROJECT_OWNER,
-    PROJECT_ADMIN
+    DEVELOPER = 'DEVELOPER',
+    SCRUM_MASTER = 'SCRUM_MASTER',
+    PROJECT_OWNER = 'PROJECT_OWNER',
+    PROJECT_ADMIN = 'PROJECT_ADMIN'
 }
 
 export interface ProjectCreate {
@@ -47,5 +47,13 @@ export interface PatchProject {
 export interface ProjectUsers {
     id: number, 
     name: string,
-    email: string
+    email: string,
+    projectEnable: boolean,
+    roleProject: RoleProject
+}
+
+export interface shareProject {
+    idProject: number,
+    email: string,
+    roleProject: RoleProject
 }

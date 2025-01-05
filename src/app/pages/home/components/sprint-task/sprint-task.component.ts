@@ -5,7 +5,7 @@ import { Sprint, StatusSprint } from '../../../../core/interfaces/sprint.interfa
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../store/app.state';
 import { getSprintIdRequest, pacthSprintStatusRequest } from '../../../../store/actions/sprint.actions';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Observable, Subject, Subscription, takeUntil } from 'rxjs';
 import { selectSprint } from '../../../../store/selectors/srpint.selectors';
 import { SelectComponent } from '../../../../shared/components/molecules/select/select.component';
 import { FormControl } from '@angular/forms';
@@ -16,15 +16,14 @@ import { getTaskBySprintIdRequest, initializeDetailedTask, patchTaskStatusReques
 import { selectDetailTask, selectTaskBlocked, selectTaskDone, selectTaskInProgress, selectTaskTodo } from '../../../../store/selectors/task.selectors';
 import { TaskFormComponent } from '../../../../shared/components/organisms/task-form/task-form.component';
 import { DialogService } from '../../../../core/services/dialog/dialog.service';
-import { getProjectUsersRequest } from '../../../../store/actions/project.actions';
-import { selectProjectUsers } from '../../../../store/selectors/project.selectors';
 import { ProjectUsers } from '../../../../core/interfaces/project.interface';
 import { DetailedTaskComponent } from '../detailed-task/detailed-task.component';
 import { TaskService } from '../../../../core/services/task/task.service';
 import { LoadingService } from '../../../../core/services/loading/loading.service';
 import { UserService } from '../../../../core/services/user/user.service';
 import { CommentCreate } from '../../../../core/interfaces/comment.interface';
-import { initialStateTask } from '../../../../store/reducers/task.reducers';
+import { TaskWebSocketService } from '../../../../core/services/task/task-web-socket.service';
+import { ProjectService } from '../../../../core/services/project/project.service';
 
 @Component({
   selector: 'app-sprint-task',
@@ -48,6 +47,7 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
   public projectId: number | undefined = undefined;
   public dataSprint: Sprint | undefined = undefined;
   public unsubscribe$: Subject<void> = new Subject<void>();
+  public unsubscribeTask$: Subscription = new Subscription();
   public sprintState: FormControl = new FormControl('');
   public stateOptions: string[] = [];
   public listDragDropTask: DragDropTask[] = [
@@ -83,14 +83,19 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
     private store: Store<AppState>,
     private sprintService: SprintService,
     private dialogService: DialogService,
-    private taskService: TaskService,
     private loadigService: LoadingService,
-    private userService: UserService
+    private userService: UserService,
+    private taskSocket: TaskWebSocketService,
+    private projectService: ProjectService
   ){}
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    this.loadigService.activeLoading = true;
+    this.listProjectUsers = [...this.projectService.projectUsers];
     this.stateOptions = Object.values(this.sprintService.statusSprint)
-    this.initSprintId();
+    await this.initSprintId();
+
+    this.loadigService.activeLoading = false;
   }
 
   ngOnDestroy(): void {
@@ -98,16 +103,18 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
     this.unsubscribe$.complete();
   }
 
-  initSprintId(){
+  async initSprintId(){
     const sprintId = this.route.snapshot.paramMap.get('sprintId')!
     const projectId = this.route.snapshot.paramMap.get('id')!
     if(sprintId && projectId){
       this.sprintId = Number(sprintId);
       this.projectId = Number(projectId);
 
+      
       this.store.dispatch(getSprintIdRequest({sprintId: this.sprintId}));
       this.store.dispatch(getTaskBySprintIdRequest({sprintId: this.sprintId}));
-      this.store.dispatch(getProjectUsersRequest({projectId: this.projectId}));
+      
+      await this.taskSocket.getTaskByProject(this.sprintId);
 
       this.store.select(selectSprint)
         .pipe(takeUntil(this.unsubscribe$))
@@ -134,14 +141,22 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(task => this.listDragDropTask[3].tasks = [...task])
 
-      this.store.select(selectProjectUsers)
+      
+      this.taskSocket.onTaskById()
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(projectUsers => this.listProjectUsers = [...projectUsers])
-
-      this.store.select(selectDetailTask)
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(task => this.detailTask = {...task as DetailedTask})
-
+        .subscribe(
+          detailedTask => {
+            this.detailTask = {
+              ...detailedTask, 
+              creatingDate: new Date(detailedTask.creatingDate),
+              initDate: detailedTask?.initDate ? new Date(detailedTask?.initDate) : undefined,
+              endDate: detailedTask?.endDate ? new Date(detailedTask?.endDate) : undefined,
+              updateDate: new Date(detailedTask.updateDate),
+              statusHistory: [...detailedTask.statusHistory.map(sh => ({...sh, dateChange: new Date(sh.dateChange)}))],
+              comments: detailedTask.comments.map(cm => ({...cm, creationDate: new Date(cm.creationDate)}))
+            };
+          }
+        );
     }
   }
 
@@ -187,22 +202,34 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
   async selectTask(taskId: number){
     try{
       this.loadigService.activeLoading = true;
-      this.userService.projectUsers = this.listProjectUsers;
-      this.detailTask = await this.taskService.getTaskByTaskIdAsyn(taskId);
-      this.store.dispatch(initializeDetailedTask({ detailedTask: this.detailTask }));
-      this.userTask = this.listProjectUsers.find(user => user.id == this.detailTask.assignedUser) as ProjectUsers;
-      this.dialogService.openDialog(
-        {
-          title: '',
-          width: '50.9rem',
-          templete: this.detailedTaskTemplate
+      this.taskSocket.getTaskById(taskId);
+      await new Promise(
+        (resolve, reject) => {
+          setTimeout(
+            () => {
+              this.userService.projectUsers = this.listProjectUsers;
+              this.store.dispatch(initializeDetailedTask({ detailedTask: this.detailTask }));
+              this.userTask = this.listProjectUsers.find(user => user.id == this.detailTask.assignedUser) as ProjectUsers;
+              this.dialogService.openDialog(
+                {
+                  title: '',
+                  width: '50.9rem',
+                  templete: this.detailedTaskTemplate
+                }
+              )
+    
+              this.unsubscribeTask$.unsubscribe();
+              resolve('');
+            },500
+          )
         }
       )
 
     }catch(error){
       console.error(error);
+    }finally {
+      this.loadigService.activeLoading = false;
     }
-    this.loadigService.activeLoading = false;
 
   }
 

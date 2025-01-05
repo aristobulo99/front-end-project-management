@@ -1,0 +1,28 @@
+<section class="w-full h-[2.313rem] flex flex-row justify-start items-center gap-[0.625rem] group">
+    <app-profile-icon [color]="'none'" [nameUser]="projectUser.name"></app-profile-icon>
+
+    <div class="w-full flex flex-col justify-start">
+        <h1 class="font-crimson font-semibold text-sm text-black text-opacity-80">{{projectUser.name}} @if (getUserRole()?.id == projectUser.id) {(tú)}</h1>
+        <p class="font-crimson font-medium text-sm text-black text-opacity-80">{{projectUser.email}} <span>&bull;</span> {{getRole(projectUser.roleProject)}}</p>
+    </div>
+
+    @if(activeEdition){
+        <div class="flex flex-row gap-[0.625rem]">
+            <app-select class="w-[10rem]" [options]="options" 
+                        [size]="'small'" 
+                        [valid]="fieldValidation('role')"
+                        [control]="roleForm.controls['role'] | formControl" 
+                        [backgroundColor]="'medio'"></app-select>
+
+            <app-icon class="w-6 h-6 cursor-pointer" [matTooltip]="'Confirmar'" [name]="'check'" (clickEvent)="confirmEdition()"></app-icon>
+            <app-icon class="w-6 h-6 cursor-pointer" [matTooltip]="'Cancelar'" [name]="'close'" (clickEvent)="closeEdition()"></app-icon>
+
+        </div>
+
+    }@else{
+        <div class="flex flex-row gap-[0.625rem] transform -translate-x-1/2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-in-out">
+            <app-icon class="w-6 h-6 cursor-pointer" [matTooltip]="'Editar Rol'" [name]="'edit'" (clickEvent)="editUSer()"></app-icon>
+            <app-icon class="w-6 h-6 cursor-pointer" [matTooltip]="'Eliminar Participación'" [name]="'person-remove'" (clickEvent)="deleteUser(projectUser.id)"></app-icon>
+        </div>
+    }
+</section>

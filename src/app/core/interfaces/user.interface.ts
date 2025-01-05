@@ -1,3 +1,4 @@
+import { RoleProject } from "./project.interface"
 
 export interface User {
     name: string,
@@ -7,4 +8,8 @@ export interface User {
 
 export interface UserCreate extends Omit<User, 'password'>{
     id: number
+}
+
+export interface ProjectRole extends Omit<UserCreate, 'password' | 'name' |'email'> {
+    roleProject: RoleProject
 }

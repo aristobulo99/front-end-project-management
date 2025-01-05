@@ -9,7 +9,9 @@ import { lastValueFrom, Observable } from 'rxjs';
 })
 export class ProjectService {
 
+  private _projectId: number | undefined;
   private _dataProject: Project | undefined = undefined;
+  private _projectUsers: ProjectUsers[] = [];
 
   constructor(
     private http: HttpClient
@@ -21,6 +23,22 @@ export class ProjectService {
 
   set dataProject(value: Project | undefined){
     this._dataProject = value;
+  }
+
+  get projectUsers(){
+    return this._projectUsers;
+  }
+
+  set projectUsers(value: ProjectUsers[]){
+    this._projectUsers = value;
+  }
+
+  get projectId(){
+    return this._projectId;
+  }
+
+  set projectId(value: number | undefined){
+    this._projectId = value;
   }
 
   getMyProjects(){

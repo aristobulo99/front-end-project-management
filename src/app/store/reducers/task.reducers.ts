@@ -51,10 +51,6 @@ export const _taskReducers = createReducer(
     })),
     on(postTaskSuccess, (state, {task}) => ({
         ...state,
-        taskTodo: task.status === Status.TO_DO ? [...state.taskTodo, task] : [...state.taskTodo],
-        taskInProgress: task.status === Status.IN_PROGRESS ? [...state.taskInProgress, task] : [...state.taskInProgress],
-        taskBlocked: task.status === Status.BLOCKED ? [...state.taskBlocked, task] : [...state.taskBlocked],
-        taskDone: task.status === Status.DONE ? [...state.taskDone, task] : [...state.taskDone],
         loading: true,
         success: false
     })),
@@ -66,8 +62,8 @@ export const _taskReducers = createReducer(
     on(postTaskCommentSuccess, (state, {comment}) => ({
         ...state,
         detailedTask: state.detailedTask ? {...state.detailedTask, comments: [{...comment}, ...state.detailedTask.comments]} : state.detailedTask,
-        loading: true,
-        success: false
+        loading: false,
+        success: true
     })),
     on(patchTaskStatusRequest, (state) => ({
         ...state,
@@ -76,13 +72,9 @@ export const _taskReducers = createReducer(
     })),
     on(patchTaskStatusSuccess, (state, {task}) => ({
         ...state,
-        taskTodo: task.status === Status.TO_DO ? [...state.taskTodo, task] : state.taskTodo.filter(ta => ta.id !== task.id),
-        taskInProgress: task.status === Status.IN_PROGRESS ? [...state.taskInProgress, task] : state.taskInProgress.filter(ta => ta.id !== task.id),
-        taskBlocked: task.status === Status.BLOCKED ? [...state.taskBlocked, task] : state.taskBlocked.filter(ta => ta.id !== task.id),
-        taskDone: task.status === Status.DONE ? [...state.taskDone, task] : state.taskDone.filter(ta => ta.id !== task.id),
         detailedTask: task,
-        loading: true,
-        success: false
+        loading: false,
+        success: true
     })),
     on(patchTaskStatusFailure, (state) => ({
         ...state,

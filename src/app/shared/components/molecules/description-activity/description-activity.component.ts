@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ProfileIconComponent } from '../../atom/profile-icon/profile-icon.component';
 import { Comments, Status, StatusHistory } from '../../../../core/interfaces/task.interface';
 import { UserService } from '../../../../core/services/user/user.service';
@@ -16,7 +16,7 @@ import { TaskService } from '../../../../core/services/task/task.service';
   templateUrl: './description-activity.component.html',
   styleUrl: './description-activity.component.scss'
 })
-export class DescriptionActivityComponent implements OnInit {
+export class DescriptionActivityComponent implements OnChanges {
   
   @Input() statusHistory!: StatusHistory;
   @Input() comments: Comments | undefined;
@@ -28,7 +28,7 @@ export class DescriptionActivityComponent implements OnInit {
     private taskService: TaskService
   ){}
 
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
     this.projectUser = this.getProjectUSer();
   }
 

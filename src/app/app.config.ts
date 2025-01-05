@@ -15,6 +15,9 @@ import { ProjectEffects } from './store/effects/project.effects';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { SprintEffects } from './store/effects/sprint.effects';
 import { TaskEffects } from './store/effects/task.effects';
+import { TaskWebSocketService } from './core/services/task/task-web-socket.service';
+import { SocketIoModule } from 'ngx-socket-io';
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -26,6 +29,6 @@ export const appConfig: ApplicationConfig = {
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     provideStore(ROOT_REDUCERS),
     provideEffects(ProjectEffects, SprintEffects, TaskEffects),
-    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }), provideAnimationsAsync()
-]
+    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }), provideAnimationsAsync(),
+  ]
 };

@@ -11,7 +11,7 @@
                 <app-icon class="w-6 h-6" [ngClass]="{'rotate-180': dropdownOpen}" [name]="backgroundColor == 'none' ? 'arrow-down-black' :'arrow-down'" [valid]="valid"></app-icon>
             </div>
         </div>
-        <select #selectElement class="w-full gap-5  border-red-700 outline-none font-crimson z-50" 
+        <select #selectElement class="w-full gap-5  border-red-700 outline-none font-crimson z-50 truncate" 
                 [ngClass]="{
                       'font-bold': control.value != '',
                       'font-medium': control.value == '',
@@ -21,7 +21,7 @@
                       'border-2 placeholder:text-red-700': !valid,
                       'h-[2.875rem] py-3 rounded-[1.25rem]': size == 'big',
                       'h-[1.688rem] rounded-[0.625rem]': size == 'small',
-                      'px-4 text-lg': size != 'x-small',
+                      'pr-7 pl-4 text-lg': size != 'x-small',
                       'h-[1.688rem] p-0 text-sm rounded-[0.625rem]': size == 'x-small',}"
                 [formControl]="control"
                 (click)="toggleDropdown()">

@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
-import { DetailedTask, Priority, Status, TransferStatus } from '../../../../core/interfaces/task.interface';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { DetailedTask, Priority, Status, StatusHistory, TransferStatus } from '../../../../core/interfaces/task.interface';
 import { IconComponent } from '../../../../shared/components/atom/icon/icon.component';
 import { ProfileIconComponent } from '../../../../shared/components/atom/profile-icon/profile-icon.component';
 import { ProjectUsers } from '../../../../core/interfaces/project.interface';
@@ -31,7 +31,7 @@ import { CommentCreate } from '../../../../core/interfaces/comment.interface';
   templateUrl: './detailed-task.component.html',
   styleUrl: './detailed-task.component.scss'
 })
-export class DetailedTaskComponent implements OnInit, AfterViewInit {
+export class DetailedTaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   @ViewChild('activity') activity!: TemplateRef<any>;
   @ViewChild('comment') comment!: TemplateRef<any>;
@@ -44,7 +44,7 @@ export class DetailedTaskComponent implements OnInit, AfterViewInit {
   public optionsStatus: string[] = [];
   public statusControl: FormControl = new FormControl('');
   public assignedUser: boolean = true;
-  public tabs: Tabs[] = []
+  public tabs: Tabs[] = [];
 
   high: Priority = Priority.HIGH;
   medium: Priority = Priority.MEDIUM;
@@ -56,9 +56,14 @@ export class DetailedTaskComponent implements OnInit, AfterViewInit {
     private userService: UserService
   ){}
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['detailedTask']){
+      this.statusControl.setValue(this.taskService.status[this.detailedTask.status]);
+    }
+  }
+
   ngOnInit(): void {
     this.optionsStatus = Object.values(this.taskService.status);
-    this.statusControl.setValue(this.taskService.status[this.detailedTask.status]);
     this.assignedUser = this.userService.userData.id === this.detailedTask.assignedUser
   }
 
@@ -78,12 +83,16 @@ export class DetailedTaskComponent implements OnInit, AfterViewInit {
   }
 
   transferStatus(){
-    this.transferStatusEvent.emit(
-      {
-        taskId: this.detailedTask.id,
-        status: this.taskService.getStatusKeyByValue(this.statusControl.value) as Status
-      }
-    )
+    const status: Status = this.taskService.getStatusKeyByValue(this.statusControl.value) as Status
+    if(status != this.detailedTask.status){
+      this.transferStatusEvent.emit(
+        {
+          taskId: this.detailedTask.id,
+          status: status
+        }
+      )
+    }
+    
   }
 
   confoirmComment(comm: CommentCreate){
