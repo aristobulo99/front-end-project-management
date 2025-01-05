@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ProfileIconComponent } from '../../atom/profile-icon/profile-icon.component';
 import { ProjectUsers, RoleProject } from '../../../../core/interfaces/project.interface';
 import { ProjectUserService } from '../../../../core/services/project-user/project-user.service';
@@ -19,6 +19,8 @@ import { IconComponent } from '../../atom/icon/icon.component';
 export class UserDetailsComponent {
 
   @Input() projectUser!: ProjectUsers;
+  @Output() eventDeleteUser: EventEmitter<number> = new EventEmitter();
+  @Output() eventEditUser: EventEmitter<string> = new EventEmitter();
 
   constructor(
     private projectUserService: ProjectUserService,
@@ -32,5 +34,14 @@ export class UserDetailsComponent {
   getUserRole(): ProjectRole | undefined{
     return this.headerService.projectRole
   }
+
+  editUSer(email: string){
+    this.eventEditUser.emit(email);
+  }
+
+  deleteUser(id: number){
+    this.eventDeleteUser.emit(id);
+  }
+
 
 }

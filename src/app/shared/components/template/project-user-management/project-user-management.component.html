@@ -46,7 +46,9 @@
 
         <div class="w-full flex flex-col gap-[0.625rem]">
             @for (projectUser of getProjectUsers(); track $index) {
-                <app-user-details [projectUser]="projectUser"></app-user-details>
+                <app-user-details [projectUser]="projectUser" 
+                                  (eventEditUser)="ediSharedProjectUser($event)" 
+                                  (eventDeleteUser)="deleteUserProject($event)"></app-user-details>
             }
         </div>
 

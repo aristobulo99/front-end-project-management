@@ -84,8 +84,6 @@ export class ProjectUserManagementComponent implements OnInit {
   }
 
   shareProject(){
-  
-    console.log(this.projectService.projectId)
     if(this.projectService.projectId){
       const share: shareProject = {
         idProject: this.projectService.projectId,
@@ -94,6 +92,14 @@ export class ProjectUserManagementComponent implements OnInit {
       }
       this.sharedProjectEvent.emit(share);
     }
+  }
+
+  ediSharedProjectUser(email: string){
+    console.log('Edite el rol del usuario',email);
+  }
+
+  deleteUserProject(id: number){
+    console.log('Se elimina el usuario del proyecto',id);
   }
 
 
