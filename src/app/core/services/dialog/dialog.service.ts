@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { lastValueFrom } from 'rxjs';
+import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { DialogComponent } from '../../../shared/components/molecules/dialog/dialog.component';
 import { DialogData } from '../../interfaces/dialog.interface';
 
@@ -13,11 +13,13 @@ export class DialogService {
     private dialog: MatDialog
   ) { }
 
-  openDialog(data: DialogData): MatDialogRef<DialogComponent>{
-    return this.dialog.open(DialogComponent, {
+  openDialog(data: DialogData): Promise<{ action: string }>{
+    const dialogRef = this.dialog.open(DialogComponent, {
       minWidth: data.width,
       data
     });
+
+    return firstValueFrom(dialogRef.afterClosed());
   }
 
   closedAll(){

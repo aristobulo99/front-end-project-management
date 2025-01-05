@@ -106,8 +106,8 @@ export class SprintComponent implements OnInit, OnDestroy {
     )
   }
 
-  deleteSprint(sprintId: number){
-    const resp = this.dialogService.openDialog(
+  async deleteSprint(sprintId: number){
+    const resp = await this.dialogService.openDialog(
       {
         title:'Confirmar eliminación del Sprint',
         text: '¿Estás seguro de que deseas eliminar este Sprint? Esta acción no se puede deshacer y todos los datos relacionados con el Sprint serán eliminados permanentemente.',
@@ -118,13 +118,9 @@ export class SprintComponent implements OnInit, OnDestroy {
       }
     )
 
-    resp.afterClosed().subscribe(
-      (result) => {
-        if (result?.action === 'accept') {
-          this.store.dispatch(deleteSprintRequest({sprintId}))
-        } 
-      }
-    )
+    if (resp.action === 'accept') {
+      this.store.dispatch(deleteSprintRequest({sprintId}))
+    } 
   }
 
   cancelSprint(){

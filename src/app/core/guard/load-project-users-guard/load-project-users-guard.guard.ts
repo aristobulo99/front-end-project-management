@@ -30,7 +30,6 @@ export interface CanComponentDeactivate {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-    console.log("Se ejecuta?")
   }
 
   async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean>{
@@ -46,7 +45,6 @@ export interface CanComponentDeactivate {
         this.store.select(selectProjectUsers)
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe(projectUsers => {
-            console.log('Se ejecuta?????')
             this.projectService.projectUsers = [...projectUsers]
           })
       }

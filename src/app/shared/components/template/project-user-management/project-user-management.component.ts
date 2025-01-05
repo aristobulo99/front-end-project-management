@@ -10,6 +10,7 @@ import { UserDetailsComponent } from '../../molecules/user-details/user-details.
 import { ProjectService } from '../../../../core/services/project/project.service';
 import { ProjectUsers, RoleProject, shareProject } from '../../../../core/interfaces/project.interface';
 import { ActivatedRoute } from '@angular/router';
+import { DialogService } from '../../../../core/services/dialog/dialog.service';
 
 @Component({
   selector: 'app-project-user-management',
@@ -54,6 +55,7 @@ export class ProjectUserManagementComponent implements OnInit {
     private fb: FormBuilder,
     private projectUserService: ProjectUserService,
     private projectService: ProjectService,
+    private dialogService: DialogService,
   ){}
 
   ngOnInit(): void {
@@ -98,8 +100,23 @@ export class ProjectUserManagementComponent implements OnInit {
     console.log('Edite el rol del usuario',email);
   }
 
-  deleteUserProject(id: number){
-    console.log('Se elimina el usuario del proyecto',id);
+  async deleteUserProject(id: number, name: string){
+    try{
+      const resp = await this.dialogService.openDialog(
+        {
+          title: 'Eliminar Participación del Usuario',
+          text: `¿Estás seguro de que deseas eliminar a ${name} del proyecto Esta acción no eliminará su participación histórica ni afectará otros datos asociados al proyecto. Podrás volver a agregar a este usuario en el futuro si es necesario.`,
+          width: '25rem',
+          nameAcceptButton: 'Acceptar',
+          nameCancelButton: 'Cancelar',
+          flexDirectionButton: 'row'
+        }
+      );
+      console.log(resp.action)
+    }catch(error){
+      console.log(error)
+    }
+    
   }
 
 
