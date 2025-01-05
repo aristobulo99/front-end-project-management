@@ -11,6 +11,7 @@ import { ProjectService } from '../../../../core/services/project/project.servic
 import { ProjectUsers, RoleProject, shareProject } from '../../../../core/interfaces/project.interface';
 import { ActivatedRoute } from '@angular/router';
 import { DialogService } from '../../../../core/services/dialog/dialog.service';
+import { DeleteSahredProject, EditDataRoleProject, EditRoleProject } from '../../../../core/interfaces/sharedProject.interface';
 
 @Component({
   selector: 'app-project-user-management',
@@ -29,6 +30,8 @@ import { DialogService } from '../../../../core/services/dialog/dialog.service';
 export class ProjectUserManagementComponent implements OnInit {
 
   @Output() sharedProjectEvent: EventEmitter<shareProject> = new EventEmitter();
+  @Output() deletesharedProjectEvent: EventEmitter<DeleteSahredProject> = new EventEmitter();
+  @Output() editsharedProjectEvent: EventEmitter<EditRoleProject> = new EventEmitter();
 
   public sharedForm: FormGroup = new FormGroup({});
   public formInputs: InputControl[] = [
@@ -96,8 +99,13 @@ export class ProjectUserManagementComponent implements OnInit {
     }
   }
 
-  ediSharedProjectUser(email: string){
-    console.log('Edite el rol del usuario',email);
+  ediSharedProjectUser(dataEdit: EditDataRoleProject){
+    this.editsharedProjectEvent.emit(
+      {
+        idProject: this.projectService.projectId as number,
+        ...dataEdit
+      }
+    )
   }
 
   async deleteUserProject(id: number, name: string){
@@ -112,7 +120,9 @@ export class ProjectUserManagementComponent implements OnInit {
           flexDirectionButton: 'row'
         }
       );
-      console.log(resp.action)
+      if(resp.action === 'accept'){
+        this.deletesharedProjectEvent.emit({projectId: this.projectService.projectId as number, userId: id});
+      }
     }catch(error){
       console.log(error)
     }

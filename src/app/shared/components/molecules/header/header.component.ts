@@ -10,7 +10,8 @@ import { ProjectUserManagementComponent } from '../../template/project-user-mana
 import { DialogService } from '../../../../core/services/dialog/dialog.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../store/app.state';
-import { postShareProjectRequest } from '../../../../store/actions/project.actions';
+import { deleteShareProjectRequest, editShareProjectRequest, postShareProjectRequest } from '../../../../store/actions/project.actions';
+import { DeleteSahredProject, EditRoleProject } from '../../../../core/interfaces/sharedProject.interface';
 
 @Component({
   selector: 'app-header',
@@ -68,7 +69,15 @@ export class HeaderComponent implements OnInit{
   }
 
   shareProject(share: shareProject){
-    this.store.dispatch(postShareProjectRequest({shared: share}))
+    this.store.dispatch(postShareProjectRequest({shared: share}));
+  }
+
+  deleteProjectUser(data: DeleteSahredProject){
+    this.store.dispatch(deleteShareProjectRequest({deleteShared: data}));
+  }
+
+  editProjectUser(data: EditRoleProject){
+    this.store.dispatch(editShareProjectRequest({editShared: data}));
   }
 
 

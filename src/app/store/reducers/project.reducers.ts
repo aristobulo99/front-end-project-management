@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { ProjectState } from "../../core/interfaces/project-state.interface";
-import { getProjectsFailure, getProjectsIdSuccess, getProjectsRequest, getProjectsSuccess, getProjectUsersRequest, getProjectUsersSuccess, patchDataProject, patchDataProjectSuccess, patchOutstandingProjectRequest, patchOutstandingProjectSuccess, postCreateProject, postCreateProjectSuccess, postFrequentProjectSuccess, postShareProjectRequest, postShareProjectSuccess } from "../actions/project.actions";
+import { deleteShareProjectRequest, deleteShareProjectSuccess, editShareProjectRequest, editShareProjectSuccess, getProjectsFailure, getProjectsIdSuccess, getProjectsRequest, getProjectsSuccess, getProjectUsersRequest, getProjectUsersSuccess, patchDataProject, patchDataProjectSuccess, patchOutstandingProjectRequest, patchOutstandingProjectSuccess, postCreateProject, postCreateProjectSuccess, postFrequentProjectSuccess, postShareProjectRequest, postShareProjectSuccess } from "../actions/project.actions";
 
 export const initialStateProject: ProjectState = {
     projects: [],
@@ -49,6 +49,28 @@ export const _projectsReducer = createReducer(
     on(postShareProjectSuccess, (state,  {projectUser}) => ({
         ...state,
         projectUsers: state.projectUsers.find(pu => pu.id === projectUser.id) ? state.projectUsers.map(pu => pu.id === projectUser.id ? projectUser : pu) : [...state.projectUsers, projectUser],
+        loading: false,
+        success: true
+    })),
+    on(deleteShareProjectRequest, (state) => ({
+        ...state,
+        loading: true,
+        success: false,
+    })),
+    on(deleteShareProjectSuccess, (state,  {userId}) => ({
+        ...state,
+        projectUsers: state.projectUsers.map(pu => pu.id === userId ? {...pu, projectEnable: false} : pu),
+        loading: false,
+        success: true
+    })),
+    on(editShareProjectRequest, (state) => ({
+        ...state,
+        loading: true,
+        success: false,
+    })),
+    on(editShareProjectSuccess, (state,  {edition}) => ({
+        ...state,
+        projectUsers: state.projectUsers.map(pu => pu.email === edition.email ? {...pu, roleProject: edition.roleProject} : pu),
         loading: false,
         success: true
     })),

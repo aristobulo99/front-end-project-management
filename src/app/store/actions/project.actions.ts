@@ -1,5 +1,6 @@
 import { createAction, props } from "@ngrx/store";
 import { PatchFeature, PatchProject, Project, ProjectCreate, ProjectCreateResponse, ProjectUsers, shareProject } from "../../core/interfaces/project.interface";
+import { DeleteSahredProject, EditDataRoleProject, EditRoleProject } from "../../core/interfaces/sharedProject.interface";
 
 /*
 la acción es un mensaje que comunica a los reducers o efectos para que ejecuten una operación. Cuando despachas una acción:
@@ -50,6 +51,26 @@ la acción es un mensaje que comunica a los reducers o efectos para que ejecuten
     export const postShareProjectSuccess  = createAction(
         "[Project] post Share Project Success", 
         props<{projectUser: ProjectUsers}>()
+    );
+
+    export const deleteShareProjectRequest  = createAction(
+        "[Project] delete Share Project Request", 
+        props<{deleteShared: DeleteSahredProject}>()
+    );
+
+    export const deleteShareProjectSuccess  = createAction(
+        "[Project] delete Share Project Success", 
+        props<{userId: number}>()
+    );
+
+    export const editShareProjectRequest  = createAction(
+        "[Project] edit Share Project Request", 
+        props<{editShared: EditRoleProject}>()
+    );
+
+    export const editShareProjectSuccess  = createAction(
+        "[Project] edit Share Project Success", 
+        props<{edition: EditDataRoleProject}>()
     );
 
 //Solicitud para actualizar el estado destacado
