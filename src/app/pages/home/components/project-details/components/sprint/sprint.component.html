@@ -7,7 +7,7 @@
                   [matTooltip]="'Crear Sprint'" 
                   (clickEvent)="sprintFormDeploy()"></app-icon>
     </div>
-    <app-table [displayedColumns]="displayedColumns" 
+    <app-table class="w-full" [displayedColumns]="displayedColumns" 
                [data]="data" 
                (rowSelectEvent)="sprintSelection($event)" 
                (actionsEvent)="actionSprintSelection($event)"></app-table>

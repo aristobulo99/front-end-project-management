@@ -24,6 +24,7 @@ import { UserService } from '../../../../core/services/user/user.service';
 import { CommentCreate } from '../../../../core/interfaces/comment.interface';
 import { TaskWebSocketService } from '../../../../core/services/task/task-web-socket.service';
 import { ProjectService } from '../../../../core/services/project/project.service';
+import { DateFormatPipe } from '../../../../shared/pipe/date-format/date-format.pipe';
 
 @Component({
   selector: 'app-sprint-task',
@@ -33,7 +34,8 @@ import { ProjectService } from '../../../../core/services/project/project.servic
     SelectComponent,
     DragDropTaskComponent,
     TaskFormComponent,
-    DetailedTaskComponent
+    DetailedTaskComponent,
+    DateFormatPipe
   ],
   templateUrl: './sprint-task.component.html',
   styleUrl: './sprint-task.component.scss'
