@@ -58,10 +58,17 @@
                     [name]="'Cancelar'"
                     [color]="'pinkCustom'" 
                     (selectButton)="cancelProject()"></app-button>
-        <app-button class="w-[10rem]" 
-                    [name]="'Registrar'" 
-                    [valid]="fgTask.valid" 
-                    (selectButton)="createTask()"></app-button>
+        @if (!editingStatus) {
+            <app-button class="w-[10rem]" 
+                        [name]="'Registrar'" 
+                        [valid]="fgTask.valid" 
+                        (selectButton)="createTask()"></app-button>
+        }@else {
+            <app-button class="w-[10rem]" 
+                        [name]="'Guardar'" 
+                        [valid]="fgTask.valid && changesEditingForm" 
+                        (selectButton)="createTask()"></app-button>
+        }
     </div>
 
 </section>

@@ -13,6 +13,12 @@
     </div>
 
     <div class="w-full flex flex-col gap-[1.375rem] pl-[2.125rem]">
+        <div class="flex flex-row gap-6 font-crimson font-extrabold text-black text-base text-opacity-80 leading-[1.313rem]">
+
+            <p><span class="font-thin !text-gray-600 !text-opacity-50">Fecha de inicio: </span> {{dataSprint?.startDate | dateFormat:'DD/MM/YYYY'}}</p>
+
+            <p><span class="font-thin !text-gray-600 !text-opacity-50">Fecha de finalización: </span> {{dataSprint?.endDate| dateFormat:'DD/MM/YYYY'}}</p>
+        </div>
         @if (dataSprint?.aim) {
             <div class="w-full flex flex-col font-crimson font-extrabold text-black text-base text-opacity-80 leading-[1.313rem]">
                 <p class="font-thin !text-gray-600 !text-opacity-50">Objetivo:</p>
@@ -22,7 +28,7 @@
 
     </div>
 
-    <app-drag-drop-task class="h-full" 
+    <app-drag-drop-task class="h-full pl-[2.125rem] overflow-hidden" 
                         [listDragDropTask]="listDragDropTask" 
                         (transferStatusEvent)="updateStatus($event)" 
                         (taskStatusEvent)="deployTaskForm($event)" 
@@ -33,7 +39,11 @@
 <ng-template #taskForm>
     <app-task-form [taskStatus]="taskStatus" 
                    [taskSPrintId]="sprintId" 
-                   [projectUsers]="listProjectUsers" (createEvent)="createTaskDispatch($event)"
+                   [projectUsers]="listProjectUsers" 
+                   [detailTask]="dataTask"
+                   [editingStatus]="editingStatus"
+                   (createEvent)="createTaskDispatch($event)"
+                   (editEvent)="editTaskDispatch($event)"
                    (cancelEvent)="cancelTask()"></app-task-form>
 </ng-template>
 
@@ -41,5 +51,6 @@
     <app-detailed-task [detailedTask]="detailTask" 
                        [user]="userTask" 
                        (transferStatusEvent)="updateStatus($event)" 
-                       (commentEvent)="getCommentTask($event)"></app-detailed-task>
+                       (commentEvent)="getCommentTask($event)" 
+                       (editionTaskEvent)="deployEditionTask($event)"></app-detailed-task>
 </ng-template>

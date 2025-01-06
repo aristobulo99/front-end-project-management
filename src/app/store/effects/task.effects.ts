@@ -3,7 +3,7 @@ import { TaskService } from "../../core/services/task/task.service";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { ToastService } from "../../core/services/toastr/toast.service";
 import { LoadingService } from "../../core/services/loading/loading.service";
-import { getTaskByIdRequest, getTaskByIdSuccess, getTaskBySprintIdRequest, getTaskBySprintIdSuccess, patchTaskStatusFailure, patchTaskStatusRequest, patchTaskStatusSuccess, postTaskCommentRequest, postTaskCommentSuccess, postTaskRequest, postTaskSuccess, TaskFailure } from "../actions/task.actions";
+import { getTaskByIdRequest, getTaskByIdSuccess, getTaskBySprintIdRequest, getTaskBySprintIdSuccess, patchTaskRequest, patchTaskStatusFailure, patchTaskStatusRequest, patchTaskStatusSuccess, patchTaskSuccess, postTaskCommentRequest, postTaskCommentSuccess, postTaskRequest, postTaskSuccess, TaskFailure } from "../actions/task.actions";
 import { catchError, exhaustMap, map, of } from "rxjs";
 import { CommentService } from "../../core/services/comment/comment.service";
 import { TaskWebSocketService } from "../../core/services/task/task-web-socket.service";
@@ -169,6 +169,38 @@ export class TaskEffects {
                 )
             )
         )
-    )
+    );
+
+    patchTaskById$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(patchTaskRequest),
+            exhaustMap((action) =>  this.taskService.patchTaskByTaskId(action.id, action.dataTask).pipe(
+                map((result) => patchTaskSuccess({task: result})),
+                catchError(error => {
+                    let errorMessage: string;
+                    switch (error.error) {
+                        case 'Task not found':
+                            errorMessage = 'Tarea no encontrada.';
+                            break;
+                        case 'For assigned user only':
+                            errorMessage = 'La tarea solo puede ser cambiada de estado si está asignada a usted.';
+                            break; 
+                        case 'User not related to the project':
+                            errorMessage = 'Usuario no relacionado con el proyecto.';
+                            break;
+                        case 'Sprint not found':
+                            errorMessage = 'Sprint no encontrado.';
+                            break;
+                        default:
+                            errorMessage = 'Se produjo un error inesperado.';
+                    }
+
+                    this.toastService.showInfo(errorMessage);
+                    this.loadingService.activeLoading = false;
+                    return of(patchTaskStatusFailure())
+                })
+            ))
+        )
+    );
 
 }

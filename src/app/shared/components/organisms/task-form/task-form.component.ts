@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CreateTask, Priority, Status } from '../../../../core/interfaces/task.interface';
+import { CreateTask, DetailedTask, Priority, Status, Task } from '../../../../core/interfaces/task.interface';
 import { InputControl } from '../../../../core/interfaces/input.interface';
 import { InputComponent } from '../../atom/input/input.component';
 import { OptionsKey, SelectComponent } from '../../molecules/select/select.component';
@@ -27,12 +27,15 @@ import { ProjectUsers } from '../../../../core/interfaces/project.interface';
   templateUrl: './task-form.component.html',
   styleUrl: './task-form.component.scss'
 })
-export class TaskFormComponent implements OnInit {
+export class TaskFormComponent implements OnInit, OnDestroy {
 
   @Input() taskStatus: Status | undefined = undefined;
   @Input() taskSPrintId: number | undefined = undefined;
   @Input() projectUsers: ProjectUsers[] = [];
+  @Input() editingStatus: boolean = false;
+  @Input() detailTask: DetailedTask | undefined = undefined;
   @Output() createEvent: EventEmitter<CreateTask> = new EventEmitter(); 
+  @Output() editEvent: EventEmitter<Task> = new EventEmitter(); 
   @Output() cancelEvent: EventEmitter<void> = new EventEmitter(); 
 
   public fgTask: FormGroup = new FormGroup({});
@@ -95,6 +98,7 @@ export class TaskFormComponent implements OnInit {
     },
   
   ]
+  public changesEditingForm: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -109,20 +113,26 @@ export class TaskFormComponent implements OnInit {
     this.changesThroughoutTheForm();
   }
 
+  ngOnDestroy(): void {
+    this.editingStatus = false;
+    this.detailTask = undefined;
+    this.fgTask.reset();
+  }
+
   initFormTask(){
     this.fgTask = this.fb.group(
       {
-        title: new FormControl<string>('', [Validators.required]),
-        description: new FormControl<string>(''),
-        priority: new FormControl<Priority | string>('', [Validators.required]),
+        title: new FormControl<string>(this.detailTask?.title || '', [Validators.required]),
+        description: new FormControl<string>(this.detailTask?.description || ''),
+        priority: new FormControl<Priority | string>(this.taskService.priority[this.detailTask?.priority as Priority] || '', [Validators.required]),
         status: new FormControl<Status | string>(this.taskStatus ? this.taskStatus : '', [Validators.required]),
-        storyPoints: new FormControl<number | undefined>(undefined),
-        initDate: new FormControl<Date | string>(''),
-        endDate: new FormControl<Date | string>(''),
-        sprintId: new FormControl<number | string>(this.taskSPrintId ? this.taskSPrintId : '', [Validators.required]),
-        assignedUser: new FormControl<number | string>('', [Validators.required]),
+        storyPoints: new FormControl<number | undefined>(this.detailTask?.storyPoints || undefined),
+        initDate: new FormControl<Date | string>(this.detailTask?.initDate || ''),
+        endDate: new FormControl<Date | string>(this.detailTask?.endDate || ''),
+        sprintId: new FormControl<number | string>(this.taskSPrintId ? this.taskSPrintId : this.detailTask?.sprintId || '', [Validators.required]),
+        assignedUser: new FormControl<number | string>(this.detailTask?.assignedUser|| '', [Validators.required]),
       }
-    )
+    );
   }
 
   changesThroughoutTheForm(){
@@ -137,6 +147,23 @@ export class TaskFormComponent implements OnInit {
               endDate: '',
               initDate: ''
             }, { emitEvent: false });
+          }
+        }
+
+        if (this.detailTask) {
+          const isChanged = Object.keys(value).some((key) => {
+            const formValue = value[key as keyof typeof value];
+            const taskValue = key === 'priority' 
+              ? this.taskService.priority[this.detailTask![key as keyof typeof this.detailTask] as Priority] 
+              : this.detailTask![key as keyof typeof this.detailTask];
+    
+            return formValue?.toString() !== taskValue?.toString();
+          });
+          this.changesEditingForm = isChanged;
+          if (!isChanged) {
+            this.fgTask.setErrors({ noChanges: true });
+          } else {
+            this.fgTask.setErrors(null);
           }
         }
       }
@@ -167,7 +194,11 @@ export class TaskFormComponent implements OnInit {
       sprintId: this.fgTask.get('sprintId')?.value,
       assignedUser: Number(this.fgTask.get('assignedUser')?.value),
     } 
-    this.createEvent.emit(data);
+    if(this.taskStatus && this.detailTask){
+      this.editEvent.emit({id: this.detailTask.id ,...data});
+    }else{
+      this.createEvent.emit(data);
+    }
   }
 
 }

@@ -14,6 +14,7 @@ import { DescriptionActivityComponent } from '../../../../shared/components/mole
 import { Tabs, TabsComponent } from '../../../../shared/components/organisms/tabs/tabs.component';
 import { CommentsComponent } from '../../../../shared/components/organisms/comments/comments.component';
 import { CommentCreate } from '../../../../core/interfaces/comment.interface';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-detailed-task',
@@ -26,7 +27,8 @@ import { CommentCreate } from '../../../../core/interfaces/comment.interface';
     DateFormatPipe,
     TabsComponent,
     DescriptionActivityComponent,
-    CommentsComponent
+    CommentsComponent,
+    MatTooltipModule,
   ],
   templateUrl: './detailed-task.component.html',
   styleUrl: './detailed-task.component.scss'
@@ -40,6 +42,7 @@ export class DetailedTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() user!: ProjectUsers;
   @Output() transferStatusEvent: EventEmitter<TransferStatus> = new EventEmitter();
   @Output() commentEvent: EventEmitter<CommentCreate> = new EventEmitter();
+  @Output() editionTaskEvent: EventEmitter<DetailedTask> = new EventEmitter();
 
   public optionsStatus: string[] = [];
   public statusControl: FormControl = new FormControl('');
@@ -53,18 +56,19 @@ export class DetailedTaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   constructor(
     private taskService: TaskService,
-    private userService: UserService
+    private userService: UserService,
   ){}
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['detailedTask']){
       this.statusControl.setValue(this.taskService.status[this.detailedTask.status]);
+      this.assignedUser = this.userService.userData.id === this.detailedTask.assignedUser
     }
   }
 
   ngOnInit(): void {
     this.optionsStatus = Object.values(this.taskService.status);
-    this.assignedUser = this.userService.userData.id === this.detailedTask.assignedUser
+    
   }
 
   ngAfterViewInit(): void {
@@ -101,6 +105,10 @@ export class DetailedTaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   getPriority(priority: Priority): string {
     return this.taskService.priority[priority];
+  }
+
+  editTask(){
+    this.editionTaskEvent.emit(this.detailedTask);
   }
 
 }

@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { TaskState } from "../../core/interfaces/task-state.interface";
-import { getTaskByIdRequest, getTaskByIdSuccess, getTaskBySprintIdRequest, getTaskBySprintIdSuccess, initializeDetailedTask, patchTaskStatusFailure, patchTaskStatusRequest, patchTaskStatusSuccess, postTaskCommentRequest, postTaskCommentSuccess, postTaskRequest, postTaskSuccess } from "../actions/task.actions";
+import { getTaskByIdRequest, getTaskByIdSuccess, getTaskBySprintIdRequest, getTaskBySprintIdSuccess, initializeDetailedTask, patchTaskRequest, patchTaskStatusFailure, patchTaskStatusRequest, patchTaskStatusSuccess, patchTaskSuccess, postTaskCommentRequest, postTaskCommentSuccess, postTaskRequest, postTaskSuccess } from "../actions/task.actions";
 import { Comments, DetailedTask, Status } from "../../core/interfaces/task.interface";
 
 export const initialStateTask: TaskState = {
@@ -84,5 +84,16 @@ export const _taskReducers = createReducer(
         taskDone: [...state.taskDone],
         loading: false,
         success: false
+    })),
+    on(patchTaskRequest, (state) => ({
+        ...state,
+        loading: true,
+        success: false
+    })),
+    on(patchTaskSuccess, (state, {task}) => ({
+        ...state,
+        detailedTask: task,
+        loading: false,
+        success: true
     })),
 )

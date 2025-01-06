@@ -11,8 +11,8 @@ import { SelectComponent } from '../../../../shared/components/molecules/select/
 import { FormControl } from '@angular/forms';
 import { SprintService } from '../../../../core/services/sprint/sprint.service';
 import { DragDropTaskComponent } from '../../../../shared/components/organisms/drag-drop-task/drag-drop-task.component';
-import { Comments, CreateTask, DetailedTask, DragDropTask, Status, TransferStatus } from '../../../../core/interfaces/task.interface';
-import { getTaskBySprintIdRequest, initializeDetailedTask, patchTaskStatusRequest, postTaskCommentRequest, postTaskRequest } from '../../../../store/actions/task.actions';
+import { Comments, CreateTask, DetailedTask, DragDropTask, Status, Task, TransferStatus } from '../../../../core/interfaces/task.interface';
+import { getTaskBySprintIdRequest, initializeDetailedTask, patchTaskRequest, patchTaskStatusRequest, postTaskCommentRequest, postTaskRequest } from '../../../../store/actions/task.actions';
 import { selectDetailTask, selectTaskBlocked, selectTaskDone, selectTaskInProgress, selectTaskTodo } from '../../../../store/selectors/task.selectors';
 import { TaskFormComponent } from '../../../../shared/components/organisms/task-form/task-form.component';
 import { DialogService } from '../../../../core/services/dialog/dialog.service';
@@ -24,6 +24,7 @@ import { UserService } from '../../../../core/services/user/user.service';
 import { CommentCreate } from '../../../../core/interfaces/comment.interface';
 import { TaskWebSocketService } from '../../../../core/services/task/task-web-socket.service';
 import { ProjectService } from '../../../../core/services/project/project.service';
+import { DateFormatPipe } from '../../../../shared/pipe/date-format/date-format.pipe';
 
 @Component({
   selector: 'app-sprint-task',
@@ -33,7 +34,8 @@ import { ProjectService } from '../../../../core/services/project/project.servic
     SelectComponent,
     DragDropTaskComponent,
     TaskFormComponent,
-    DetailedTaskComponent
+    DetailedTaskComponent,
+    DateFormatPipe
   ],
   templateUrl: './sprint-task.component.html',
   styleUrl: './sprint-task.component.scss'
@@ -76,6 +78,8 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
   public listProjectUsers: ProjectUsers[] = [];
   public detailTask!: DetailedTask;
   public userTask!: ProjectUsers;
+  public editingStatus: boolean = false;
+  public dataTask: DetailedTask | undefined = undefined;
 
   constructor(
     private router: Router,
@@ -155,6 +159,7 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
               statusHistory: [...detailedTask.statusHistory.map(sh => ({...sh, dateChange: new Date(sh.dateChange)}))],
               comments: detailedTask.comments.map(cm => ({...cm, creationDate: new Date(cm.creationDate)}))
             };
+            this.userTask = this.listProjectUsers.find(user => user.id == this.detailTask.assignedUser) as ProjectUsers;
           }
         );
     }
@@ -179,15 +184,26 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
     this.store.dispatch(postTaskCommentRequest({commentData: comment}));
   }
 
-  deployTaskForm(status: Status){
+  async deployEditionTask(dataTask: DetailedTask){
+    this.dialogService.closedAll();
+    this.editingStatus = true;
+    this.dataTask = dataTask;
+
+    await this.deployTaskForm(dataTask.status);
+
+    this.editingStatus = false;
+    this.dataTask = undefined;
+  }
+
+  async deployTaskForm(status: Status){
     this.taskStatus = status;
-    this.dialogService.openDialog(
+    await this.dialogService.openDialog(
       {
         title: 'Crear tarea',
         width: '57.125rem',
         templete: this.taskFormTemplate
       }
-    )
+    );
   }
 
   cancelTask(){
@@ -196,6 +212,11 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
 
   createTaskDispatch(data: CreateTask){
     this.store.dispatch(postTaskRequest({taskData: data}));
+    this.cancelTask();
+  }
+
+  editTaskDispatch(data: Task){
+    this.store.dispatch(patchTaskRequest({id: data.id, dataTask: {...data as DetailedTask}}));
     this.cancelTask();
   }
 

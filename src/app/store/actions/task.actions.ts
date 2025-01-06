@@ -59,7 +59,17 @@ export const patchTaskStatusFailure = createAction(
 export const initializeDetailedTask = createAction(
     '[Task] Initialize Detailed Task',
     props<{ detailedTask: DetailedTask }>()
-  );
+);  
+
+export const patchTaskRequest = createAction(
+    "[Task] Patch task Request",
+    props<{id: number, dataTask: DetailedTask}>()
+);
+
+export const patchTaskSuccess = createAction(
+    "[Task] Patch task Success",
+    props<{task: DetailedTask}>()
+);
 
 export const TaskFailure = createAction(
     "[Task] Taks Failure",

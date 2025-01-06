@@ -37,7 +37,9 @@
             }
         }
     }
-
     <tr class="!h-[2.625rem]" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr class="!h-[2.625rem] hover:!bg-slate-100" mat-row *matRowDef="let row; columns: displayedColumns;" (click)="rowSelection(row)"></tr>
 </table>
+@if (data.length == 0) {
+    <p colspan="3" class="w-full flex flex-col justify-center items-center font-crimson font-extrabold text-black text-base text-opacity-80 leading-[1.313rem]">No hay elementos disponibles.</p>
+}

@@ -10,7 +10,7 @@ import {
 import { DragDropTask, Status, Task, TransferStatus } from '../../../../core/interfaces/task.interface';
 import { IconComponent } from '../../atom/icon/icon.component';
 import { CardTaskComponent } from '../../molecules/card-task/card-task.component';
-import { NgFor } from '@angular/common';
+import { ProjectService } from '../../../../core/services/project/project.service';
 
 @Component({
   selector: 'app-drag-drop-task',
@@ -21,7 +21,6 @@ import { NgFor } from '@angular/common';
     CdkDrag,
     IconComponent,
     CardTaskComponent,
-    NgFor
   ],
   templateUrl: './drag-drop-task.component.html',
   styleUrl: './drag-drop-task.component.scss'
@@ -33,7 +32,14 @@ export class DragDropTaskComponent {
   @Output() taskStatusEvent: EventEmitter<Status> = new EventEmitter();
   @Output() detailedTask: EventEmitter<number> = new EventEmitter();
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private projectService: ProjectService
+  ) {}
+
+  getUser(idUser: number): string{
+    return this.projectService.projectUsers.filter(pu => pu.id === idUser)[0].name
+  }
 
   drop(event: CdkDragDrop<Task[]>, status: Status) {
     const prevIndex = event.previousIndex;

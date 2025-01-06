@@ -67,4 +67,8 @@ export class TaskService {
     return this.http.patch<DetailedTask>(`${environment.apiUrl}/api/task/status/${transfer.taskId}`, null, {params})
   }
 
+  patchTaskByTaskId(taskId: number, data: DetailedTask){
+    return this.http.patch<DetailedTask>(`${environment.apiUrl}/api/task/patch/${taskId}`, data);
+  }
+
 }
