@@ -1,0 +1,8 @@
+<button class="w-full h-[2.375rem] bg-transparent hover:bg-gray-300 rounded-lg flex flex-row items-center px-3 box-border" [ngClass]="{
+    'justify-start': position == 'left',
+    'justify-center': position == 'center',
+    'justify-end': position == 'right',  
+}" (click)="click()">
+    <app-icon class="w-6 h-6"  [name]="nameIcon"></app-icon>
+    <p class="font-crimson font-semibold text-sm">{{title}}</p>
+</button>

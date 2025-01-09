@@ -12,6 +12,10 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../../../store/app.state';
 import { deleteShareProjectRequest, editShareProjectRequest, postShareProjectRequest } from '../../../../store/actions/project.actions';
 import { DeleteSahredProject, EditRoleProject } from '../../../../core/interfaces/sharedProject.interface';
+import {MatMenuModule} from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { ButtonIconComponent } from '../../atom/button-icon/button-icon.component';
+import { AuthService } from '../../../../core/services/auth/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -20,7 +24,10 @@ import { DeleteSahredProject, EditRoleProject } from '../../../../core/interface
     IconComponent,
     ProfileIconComponent,
     ButtonComponent,
-    ProjectUserManagementComponent
+    ProjectUserManagementComponent,
+    MatMenuModule,
+    MatButtonModule,
+    ButtonIconComponent
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
@@ -37,6 +44,7 @@ export class HeaderComponent implements OnInit{
     private headerService: HeaderService,
     private dialogService: DialogService,
     private store: Store<AppState>,
+    private authService: AuthService
   ){}
 
   ngOnInit(): void {
@@ -78,6 +86,23 @@ export class HeaderComponent implements OnInit{
 
   editProjectUser(data: EditRoleProject){
     this.store.dispatch(editShareProjectRequest({editShared: data}));
+  }
+
+  async logout(){
+    const resp = await this.dialogService.openDialog(
+      {
+        title: 'Cerrar sesión',
+        text: 'Estás a punto de cerrar sesión. Si quieres volver, solo inicia sesión nuevamente.',
+        width: '28.125rem',
+        flexDirectionButton: 'row',
+        nameAcceptButton: 'Aceptar',
+        nameCancelButton: 'Cancelar'
+      }
+    );
+
+    if(resp.action === 'accept'){
+      this.authService.logout();
+    }
   }
 
 

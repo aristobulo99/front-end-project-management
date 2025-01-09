@@ -61,6 +61,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   border-radius: 20px !important;
 }
 
+.mat-mdc-menu-content {
+  padding:0 !important;
+}
+
 select {
   -webkit-appearance: none; /* Para Safari y Chrome */
   -moz-appearance: none; /* Para Firefox */
