@@ -11,7 +11,6 @@ import { NgClass } from '@angular/common';
   selector: 'app-home',
   standalone: true,
   imports: [
-    ButtonComponent,
     SidebarComponent,
     RouterOutlet,
     NgClass
