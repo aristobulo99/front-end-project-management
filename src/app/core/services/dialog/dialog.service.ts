@@ -15,7 +15,8 @@ export class DialogService {
 
   openDialog(data: DialogData): Promise<{ action: string }>{
     const dialogRef = this.dialog.open(DialogComponent, {
-      minWidth: data.width,
+      width: data.width,
+      maxWidth: '100%',
       data
     });
 

@@ -36,10 +36,8 @@ export class LoginComponent {
   async loginUser(data: Login){
     this.loading.activeLoading = true;
     try{
-      const loginResponse: LoginResponse = await this.authService.login(data);
-      localStorage.setItem('access-token', loginResponse.token);
-      this.authService.startTokenRefreshTimer();
-      this.toastService.showSuccess('¡Bienvenido!');
+      await this.authService.login(data);
+      this.toastService.showSuccess('¡Bienvenido!', '', {timeOut: 2000});
       this.router.navigate(['/project'])
     }catch(e: any){
       if(e instanceof HttpErrorResponse){
