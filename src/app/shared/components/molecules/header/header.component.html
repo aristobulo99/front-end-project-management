@@ -3,7 +3,7 @@
 
         <div class="flex flex-row gap-3">
             <div class="w-[2.25rem] h-[2.25rem] flex flex-col justify-center items-center hover:bg-pink-500" (click)="selectMenu()">
-                <app-icon class="w-[1.5rem] h-[1.5rem]" [name]="'menu'"></app-icon>
+                <app-icon class="w-[1.5rem] h-[1.5rem]" [name]="'menu'" (clickEvent)="selectMenu()"></app-icon>
             </div>
 
             <div class="flex flex-row gap-1 items-center">
