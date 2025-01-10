@@ -26,17 +26,6 @@ export class HomeComponent {
     private headerService: HeaderService,
   ){}
 
-  logout(){
-    this.loadingService.activeLoading = true;
-    setTimeout(
-      () => {
-        this.authService.logout();
-        this.loadingService.activeLoading = false;
-      }, 2000
-    )
-
-  }
-
   get sidebarDeployment(){
     return this.headerService.sidebarDeployment
   }

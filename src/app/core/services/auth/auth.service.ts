@@ -1,10 +1,11 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Login, LoginResponse } from '../../interfaces/login.interdace';
+import { Login, LoginResponse, Refresh } from '../../interfaces/login.interdace';
 import { lastValueFrom } from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import { ToastService } from '../toastr/toast.service';
 import { Router } from '@angular/router';
+import { ValidToken } from '../../interfaces/auth.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class AuthService {
   private refreshTimeout: any;
   private INACTIVITY_LIMIT = 20 * 60 * 1000;
   private isRefreshing = false;
+  private isValidToken: boolean = false;
 
   constructor(
     private http: HttpClient,
@@ -52,25 +54,45 @@ export class AuthService {
         this.startTokenRefreshTimer();
       }
     }catch (error) {
-      console.error('Error al renovar el token:', error);
+      await this.logout();
       this.toasService.showError('Sesión expirada, por favor inicia sesión de nuevo.');
-      this.logout();
+      console.error('Error al renovar el token:', error);
     } finally {
       this.isRefreshing = false;
     }
   }
 
-  logout(): void {
+  async deauthenticate(){
+    await this.http.post(`${environment.apiUrl}/auth/logout`,null);
+  }
+
+  async validToken(){
+    const token = localStorage.getItem('access-token');
+    if(token){
+      const data: Refresh = {
+        token: token
+      }
+      const valid: ValidToken = await lastValueFrom(this.http.post<ValidToken>(`${environment.apiUrl}/auth/valid-token`, data));
+      this.isValidToken = valid.valid;
+      if(!valid.valid)
+        this.logout();
+      return
+    }
+    this.isValidToken = false;
+  }
+
+  async logout(): Promise<void> {
+    await this.deauthenticate();
     localStorage.removeItem('access-token')
     clearTimeout(this.inactivityTimeout);
     clearTimeout(this.refreshTimeout);
     this.removeInactivityWatch();
-    this.router.navigate(['/login'])
+    this.router.navigate(['/login']);
+    this.isValidToken = false;
   }
 
   isAuthenticated(): boolean {
-    const token = localStorage.getItem('access-token');
-    return !!token;
+    return this.isValidToken;
   }
 
   private startInactivityWatch() {
@@ -92,8 +114,8 @@ export class AuthService {
     const accessToken = localStorage.getItem('access-token')
     if(accessToken) {
       clearTimeout(this.inactivityTimeout);
-      this.inactivityTimeout = setTimeout(() => {
-        this.logout();
+      this.inactivityTimeout = setTimeout(async () => {
+        await this.logout();
         this.toasService.showInfo('Sesión cerrada por inactividad.')
       }, this.INACTIVITY_LIMIT);
     }
