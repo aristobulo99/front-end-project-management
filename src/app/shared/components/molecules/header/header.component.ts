@@ -101,7 +101,7 @@ export class HeaderComponent implements OnInit{
     );
 
     if(resp.action === 'accept'){
-      this.authService.logout();
+      await this.authService.logout();
     }
   }
 
