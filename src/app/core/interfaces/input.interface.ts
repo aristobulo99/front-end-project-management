@@ -14,3 +14,8 @@ export interface InputControl{
         validatorEmail?: boolean,
     }
 }
+
+export interface SectionInput {
+    sectionName: string,
+    inputControl: InputControl
+}

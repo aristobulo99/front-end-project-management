@@ -12,10 +12,11 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../../../store/app.state';
 import { deleteShareProjectRequest, editShareProjectRequest, postShareProjectRequest } from '../../../../store/actions/project.actions';
 import { DeleteSahredProject, EditRoleProject } from '../../../../core/interfaces/sharedProject.interface';
-import {MatMenuModule} from '@angular/material/menu';
+import {MatMenuModule, MatMenuTrigger} from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { ButtonIconComponent } from '../../atom/button-icon/button-icon.component';
 import { AuthService } from '../../../../core/services/auth/auth.service';
+import { Menu } from '../../../utils/menu/menu';
 
 @Component({
   selector: 'app-header',
@@ -35,6 +36,7 @@ import { AuthService } from '../../../../core/services/auth/auth.service';
 export class HeaderComponent implements OnInit{
 
   @ViewChild('sharedForm') sharedTemplate: TemplateRef<any> | undefined;
+  @ViewChild(MatMenuTrigger) menuTrigger!: MatMenuTrigger;
 
   public userData: UserCreate | undefined = undefined;
   projectId: string | null = null;
@@ -86,6 +88,11 @@ export class HeaderComponent implements OnInit{
 
   editProjectUser(data: EditRoleProject){
     this.store.dispatch(editShareProjectRequest({editShared: data}));
+  }
+
+  onMenuItemClick(event: Event) {
+    const menu: Menu = new Menu();
+    menu.onMenuItemClick(event, this.menuTrigger);
   }
 
   async logout(){

@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { Comments, CreateTask, DetailedTask, Task, TransferStatus } from "../../core/interfaces/task.interface";
+import { Comments, CreateTask, DetailedTask, Status, Task, TransferStatus } from "../../core/interfaces/task.interface";
 import { CommentCreate } from "../../core/interfaces/comment.interface";
 
 export const getTaskBySprintIdRequest = createAction(
@@ -69,6 +69,11 @@ export const patchTaskRequest = createAction(
 export const patchTaskSuccess = createAction(
     "[Task] Patch task Success",
     props<{task: DetailedTask}>()
+);
+
+export const actionTasksFiltered = createAction(
+    "[Task] Get tasks filtered by status",
+    props<{listStatus: Status[], listUser: number[]}>() 
 );
 
 export const TaskFailure = createAction(
