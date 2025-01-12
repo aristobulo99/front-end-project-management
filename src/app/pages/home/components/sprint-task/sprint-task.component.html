@@ -12,7 +12,7 @@
         </div>
 
         <div>
-            <app-icon class="w-6 h-6 cursor-pointer" [name]="'filter'"  mat-button [matMenuTriggerFor]="beforeMenu"(clickEvent)="menuTrigger.openMenu()"></app-icon>
+            <app-icon class="w-6 h-6 cursor-pointer" [name]="'filter'" [matTooltip]="'Filtrar tarea'"  mat-button [matMenuTriggerFor]="beforeMenu"(clickEvent)="menuTrigger.openMenu()"></app-icon>
 
             <mat-menu class="w-[250px] !bg-gradient-to-r from-pinkCustom to-blueCustom !rounded-[0.625rem] !p-[0.094rem]" #beforeMenu="matMenu" xPosition="before">
                 <section class="w-full h-full flex flex-col gap-1 items-start justify-center p-4 box-border font-crimson text-sm truncate rounded-[0.625rem] !bg-white" (click)="onMenuItemClick($event)">
@@ -26,7 +26,10 @@
                                         [backgroundColor]="'medio'" 
                                         [valid]="true"
                                         [size]="'small'" 
-                                        [placeholder]="sectionInput.inputControl.placeholder+''"
+                                        [placeholder]="sectionInput.inputControl.placeholder+''" 
+                                        [control]="filterFg.controls[sectionInput.inputControl.formInfo?.formName+''] | formControl" 
+                                        [selectAll]="true"
+                                        (selectOptionEvent)="filterTasks()"
                                         ></app-select-multiple>
                                 }@else if (sectionInput.inputControl.optionsKey) {
                                     <app-select-multiple class="w-full" 
@@ -35,6 +38,9 @@
                                         [valid]="true"
                                         [size]="'small'" 
                                         [placeholder]="sectionInput.inputControl.placeholder+''"
+                                        [control]="filterFg.controls[sectionInput.inputControl.formInfo?.formName+''] | formControl"
+                                        [selectAll]="true"
+                                        (selectOptionEvent)="filterTasks()"
                                         ></app-select-multiple>
                                 }
                                 

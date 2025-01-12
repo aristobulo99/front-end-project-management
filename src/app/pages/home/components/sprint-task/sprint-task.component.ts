@@ -12,7 +12,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { SprintService } from '../../../../core/services/sprint/sprint.service';
 import { DragDropTaskComponent } from '../../../../shared/components/organisms/drag-drop-task/drag-drop-task.component';
 import { Comments, CreateTask, DetailedTask, DragDropTask, Status, Task, TransferStatus } from '../../../../core/interfaces/task.interface';
-import { getTaskBySprintIdRequest, initializeDetailedTask, patchTaskRequest, patchTaskStatusRequest, postTaskCommentRequest, postTaskRequest } from '../../../../store/actions/task.actions';
+import { actionTasksFiltered, getTaskBySprintIdRequest, initializeDetailedTask, patchTaskRequest, patchTaskStatusRequest, postTaskCommentRequest, postTaskRequest } from '../../../../store/actions/task.actions';
 import { selectDetailTask, selectTaskBlocked, selectTaskDone, selectTaskInProgress, selectTaskTodo } from '../../../../store/selectors/task.selectors';
 import { TaskFormComponent } from '../../../../shared/components/organisms/task-form/task-form.component';
 import { DialogService } from '../../../../core/services/dialog/dialog.service';
@@ -30,6 +30,7 @@ import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { Menu } from '../../../../shared/utils/menu/menu';
 import { SectionInput } from '../../../../core/interfaces/input.interface';
 import { SelectMultipleComponent } from '../../../../shared/components/molecules/select-multiple/select-multiple.component';
+import { FormControlPipe } from '../../../../shared/pipe/form-control/form-control.pipe';
 
 @Component({
   selector: 'app-sprint-task',
@@ -43,7 +44,8 @@ import { SelectMultipleComponent } from '../../../../shared/components/molecules
     DateFormatPipe,
     MatTooltipModule,
     MatMenuModule,
-    SelectMultipleComponent
+    SelectMultipleComponent,
+    FormControlPipe
   ],
   templateUrl: './sprint-task.component.html',
   styleUrl: './sprint-task.component.scss'
@@ -97,6 +99,10 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
         type: 'select',
         options: [],
         placeholder: 'Estado',
+        formInfo: {
+          formName: 'status',
+          validatorRequered: false
+        }
       }
     },
     {
@@ -105,6 +111,10 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
         type: 'select',
         optionsKey: [],
         placeholder: 'Usuario',
+        formInfo: {
+          formName: 'user',
+          validatorRequered: false
+        }
       }
     }
   ]
@@ -124,6 +134,7 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
   ){}
 
   async ngOnInit() {
+    this.initFilterForm();
     this.loadigService.activeLoading = true;
     this.listProjectUsers = [...this.projectService.projectUsers];
     this.stateOptions = Object.values(this.sprintService.statusSprint)
@@ -199,8 +210,8 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
   initFilterForm(){
     this.filterFg = this.fb.group(
       {
-        status: new FormControl<String>(''),
-        user: new FormControl<number | string>('')
+        status: new FormControl<String[]>([]),
+        user: new FormControl<number[]>([])
       }
     )
   }
@@ -211,7 +222,9 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
   }
 
   filterTasks(){
-
+    const listStatus: Status[] = (this.filterFg.get('status')?.value as string[]).map(st => this.taskService.getStatusKeyByValue(st)) as Status[];
+    const listUser: number[] = (this.filterFg.get('user')?.value as string[]).map(Number) as number[];
+    this.store.dispatch(actionTasksFiltered({listStatus, listUser}));
   }
 
   back(){

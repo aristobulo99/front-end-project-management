@@ -1,9 +1,10 @@
 import { createReducer, on } from "@ngrx/store";
 import { TaskState } from "../../core/interfaces/task-state.interface";
-import { getTaskByIdRequest, getTaskByIdSuccess, getTaskBySprintIdRequest, getTaskBySprintIdSuccess, initializeDetailedTask, patchTaskRequest, patchTaskStatusFailure, patchTaskStatusRequest, patchTaskStatusSuccess, patchTaskSuccess, postTaskCommentRequest, postTaskCommentSuccess, postTaskRequest, postTaskSuccess } from "../actions/task.actions";
+import { actionTasksFiltered, getTaskByIdRequest, getTaskByIdSuccess, getTaskBySprintIdRequest, getTaskBySprintIdSuccess, initializeDetailedTask, patchTaskRequest, patchTaskStatusFailure, patchTaskStatusRequest, patchTaskStatusSuccess, patchTaskSuccess, postTaskCommentRequest, postTaskCommentSuccess, postTaskRequest, postTaskSuccess } from "../actions/task.actions";
 import { Comments, DetailedTask, Status } from "../../core/interfaces/task.interface";
 
 export const initialStateTask: TaskState = {
+    allTask: [],
     taskTodo: [],
     taskInProgress: [],
     taskDone: [],
@@ -22,6 +23,7 @@ export const _taskReducers = createReducer(
     })),
     on(getTaskBySprintIdSuccess, (state, {tasks}) => ({
         ...state,
+        allTask: tasks,
         taskTodo: tasks.filter(tt =>  tt.status == Status.TO_DO),
         taskInProgress: tasks.filter(tt =>  tt.status == Status.IN_PROGRESS),
         taskBlocked: tasks.filter(tt =>  tt.status == Status.BLOCKED),
@@ -87,6 +89,15 @@ export const _taskReducers = createReducer(
     })),
     on(patchTaskRequest, (state) => ({
         ...state,
+        loading: true,
+        success: false
+    })),
+    on(actionTasksFiltered, (state, {listStatus, listUser}) => ({
+        ...state,
+        taskTodo: state.allTask.filter(tt =>  tt.status == Status.TO_DO).filter(t => listStatus.length === 0 && listUser.length === 0 ? false : listStatus.includes(t.status) && listUser.includes(t.assignedUser)),
+        taskInProgress: state.allTask.filter(tt =>  tt.status == Status.IN_PROGRESS).filter(t => listStatus.length === 0 && listUser.length === 0 ? false : listStatus.includes(t.status) && listUser.includes(t.assignedUser)),
+        taskBlocked: state.allTask.filter(tt =>  tt.status == Status.BLOCKED).filter(t => listStatus.length === 0 && listUser.length === 0 ? false : listStatus.includes(t.status) && listUser.includes(t.assignedUser)),
+        taskDone: state.allTask.filter(tt =>  tt.status == Status.DONE).filter(t => listStatus.length === 0 && listUser.length === 0 ? false : listStatus.includes(t.status) && listUser.includes(t.assignedUser)),
         loading: true,
         success: false
     })),
