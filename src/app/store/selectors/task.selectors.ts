@@ -1,28 +1,28 @@
 import { createSelector } from "@ngrx/store";
 import { AppState } from "../app.state";
-import { Comments } from "../../core/interfaces/task.interface";
+import { Comments, Status } from "../../core/interfaces/task.interface";
 
 
 export const selectTaskState = (state: AppState) => state.tasks;
 
-export const selectTaskTodo = createSelector(
-    selectTaskState,
-    (state) => state.taskTodo
-);
+export const selectAllTask = createSelector(selectTaskState,(state) => state.allTask);
 
-export const selectTaskInProgress = createSelector(
-    selectTaskState,
-    (state) => state.taskInProgress
-);
+export const selectListStates = createSelector(selectTaskState,(state) => state.listStatus);
 
-export const selectTaskBlocked = createSelector(
-    selectTaskState,
-    (state) => state.taskBlocked
-);
+export const selectListUser = createSelector(selectTaskState,(state) => state.listUser);
 
-export const selectTaskDone = createSelector(
-    selectTaskState,
-    (state) => state.taskDone
+export const selectTasks = createSelector(
+    selectAllTask,
+    selectListStates,
+    selectListUser,
+    (allTask, listStatus, listUser) => {
+        return {
+            taskTodo: allTask.filter(tt =>  tt.status == Status.TO_DO).filter(t => listStatus.length === 0 && listUser.length === 0 ? false : listStatus.includes(t.status) && listUser.includes(t.assignedUser)),
+            taskInProgress: allTask.filter(tt =>  tt.status == Status.IN_PROGRESS).filter(t => listStatus.length === 0 && listUser.length === 0 ? false : listStatus.includes(t.status) && listUser.includes(t.assignedUser)),
+            taskBlocked: allTask.filter(tt =>  tt.status == Status.BLOCKED).filter(t => listStatus.length === 0 && listUser.length === 0 ? false : listStatus.includes(t.status) && listUser.includes(t.assignedUser)),
+            taskDone: allTask.filter(tt =>  tt.status == Status.DONE).filter(t => listStatus.length === 0 && listUser.length === 0 ? false : listStatus.includes(t.status) && listUser.includes(t.assignedUser)),
+        }
+    }
 );
 
 export const selectDetailTask = createSelector(

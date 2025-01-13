@@ -1,4 +1,4 @@
-import { Comments, DetailedTask, Task } from "./task.interface";
+import { Comments, DetailedTask, Status, Task } from "./task.interface";
 
 export interface TaskState{
     allTask: Task[],
@@ -6,6 +6,8 @@ export interface TaskState{
     taskInProgress: Task[],
     taskDone: Task[],
     taskBlocked: Task[],
+    listStatus: Status[],
+    listUser: number[],
     detailedTask?: DetailedTask,
     comment?: Comments,
     loading: boolean,
