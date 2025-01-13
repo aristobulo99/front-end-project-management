@@ -9,6 +9,8 @@ export const initialStateTask: TaskState = {
     taskInProgress: [],
     taskDone: [],
     taskBlocked: [],
+    listStatus: [],
+    listUser: [],
     error: '',
     loading: false,
     success: false,
@@ -24,10 +26,6 @@ export const _taskReducers = createReducer(
     on(getTaskBySprintIdSuccess, (state, {tasks}) => ({
         ...state,
         allTask: tasks,
-        taskTodo: tasks.filter(tt =>  tt.status == Status.TO_DO),
-        taskInProgress: tasks.filter(tt =>  tt.status == Status.IN_PROGRESS),
-        taskBlocked: tasks.filter(tt =>  tt.status == Status.BLOCKED),
-        taskDone: tasks.filter(tt =>  tt.status == Status.DONE),
         loading: true,
         success: false
     })),
@@ -80,10 +78,7 @@ export const _taskReducers = createReducer(
     })),
     on(patchTaskStatusFailure, (state) => ({
         ...state,
-        taskTodo: [...state.taskTodo],
-        taskInProgress: [...state.taskInProgress],
-        taskBlocked: [...state.taskBlocked],
-        taskDone: [...state.taskDone],
+        allTask: [...state.allTask],
         loading: false,
         success: false
     })),
@@ -94,10 +89,8 @@ export const _taskReducers = createReducer(
     })),
     on(actionTasksFiltered, (state, {listStatus, listUser}) => ({
         ...state,
-        taskTodo: state.allTask.filter(tt =>  tt.status == Status.TO_DO).filter(t => listStatus.length === 0 && listUser.length === 0 ? false : listStatus.includes(t.status) && listUser.includes(t.assignedUser)),
-        taskInProgress: state.allTask.filter(tt =>  tt.status == Status.IN_PROGRESS).filter(t => listStatus.length === 0 && listUser.length === 0 ? false : listStatus.includes(t.status) && listUser.includes(t.assignedUser)),
-        taskBlocked: state.allTask.filter(tt =>  tt.status == Status.BLOCKED).filter(t => listStatus.length === 0 && listUser.length === 0 ? false : listStatus.includes(t.status) && listUser.includes(t.assignedUser)),
-        taskDone: state.allTask.filter(tt =>  tt.status == Status.DONE).filter(t => listStatus.length === 0 && listUser.length === 0 ? false : listStatus.includes(t.status) && listUser.includes(t.assignedUser)),
+        listStatus,
+        listUser,
         loading: true,
         success: false
     })),

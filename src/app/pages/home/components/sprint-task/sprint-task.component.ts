@@ -13,7 +13,7 @@ import { SprintService } from '../../../../core/services/sprint/sprint.service';
 import { DragDropTaskComponent } from '../../../../shared/components/organisms/drag-drop-task/drag-drop-task.component';
 import { Comments, CreateTask, DetailedTask, DragDropTask, Status, Task, TransferStatus } from '../../../../core/interfaces/task.interface';
 import { actionTasksFiltered, getTaskBySprintIdRequest, initializeDetailedTask, patchTaskRequest, patchTaskStatusRequest, postTaskCommentRequest, postTaskRequest } from '../../../../store/actions/task.actions';
-import { selectDetailTask, selectTaskBlocked, selectTaskDone, selectTaskInProgress, selectTaskTodo } from '../../../../store/selectors/task.selectors';
+import { selectTasks } from '../../../../store/selectors/task.selectors';
 import { TaskFormComponent } from '../../../../shared/components/organisms/task-form/task-form.component';
 import { DialogService } from '../../../../core/services/dialog/dialog.service';
 import { ProjectUsers } from '../../../../core/interfaces/project.interface';
@@ -159,6 +159,12 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
       
       this.store.dispatch(getSprintIdRequest({sprintId: this.sprintId}));
       this.store.dispatch(getTaskBySprintIdRequest({sprintId: this.sprintId}));
+      this.store.dispatch(actionTasksFiltered(
+        {
+          listStatus: Object.keys(this.taskService.status) as Status[], 
+          listUser: this.listProjectUsers.map(pu => pu.id)
+        }
+      ));
       
       await this.taskSocket.getTaskByProject(this.sprintId);
 
@@ -171,22 +177,14 @@ export class SprintTaskComponent implements OnInit, OnDestroy{
           }
         )
       
-      this.store.select(selectTaskTodo)
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(task => this.listDragDropTask[0].tasks = [...task])
-
-      this.store.select(selectTaskInProgress)
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(task => this.listDragDropTask[1].tasks = [...task])
-
-      this.store.select(selectTaskBlocked)
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(task => this.listDragDropTask[2].tasks = [...task])
-
-      this.store.select(selectTaskDone)
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(task => this.listDragDropTask[3].tasks = [...task])
-
+      this.store.select(selectTasks)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(task => {
+        this.listDragDropTask[0].tasks = [...task.taskTodo];
+        this.listDragDropTask[1].tasks = [...task.taskInProgress]
+        this.listDragDropTask[2].tasks = [...task.taskBlocked]
+        this.listDragDropTask[3].tasks = [...task.taskDone]
+      });
       
       this.taskSocket.onTaskById()
         .pipe(takeUntil(this.unsubscribe$))
